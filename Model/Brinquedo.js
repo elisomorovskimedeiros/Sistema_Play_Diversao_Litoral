@@ -1,12 +1,13 @@
 class Brinquedo{
-    constructor(nome_brinquedo, caractaristicas, foto_brinquedo, valor_brinquedo, estaDisponivel, observacao){
+    constructor(){
         this.id_brinquedo = null;
-        this. nome_brinquedo = nome_brinquedo;
-        this.caractaristicas = caractaristicas;
-        this. foto_brinquedo = foto_brinquedo;
-        this.valor_brinquedo = valor_brinquedo;
-        this.estaDisponivel = estaDisponivel;
-        this.observacao = observacao;
-    }
+        this.nome_brinquedo = String;
+        this.caracteristicas = String;
+        this.foto_brinquedo = String;
+        this.valor_brinquedo = Number;
+        this.quantidade = Number;
+        this.observacao = String;   
+    };   
+     
 }
 module.exports = Brinquedo;
