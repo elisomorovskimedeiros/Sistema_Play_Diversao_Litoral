@@ -1,0 +1,42 @@
+<% include partials/cabecalho %>
+
+<div class="container">
+    
+   
+    <form id="formListarBrinquedos" method="post" action="/inserirBrinquedosNoEvento">
+        <header class="page-header">
+            <input type="text" name="id_evento" value="<%= brinquedos.idEvento %>" style="display: none;">
+            <%console.log(brinquedos.idEvento);%>
+            <h1>Listagem de brinquedos disponiveis para <%= brinquedos.data.getDate()+"/"+brinquedos.data.getMonth()+"/"+brinquedos.data.getFullYear() %></h1>
+        </header>
+        <div id="listaBrinquedos">
+            <button class="btn btn-default">Inserir os selecionados</button>
+        
+            <% if(brinquedos != undefined){ %>       
+                
+                <% brinquedos.forEach(brinquedo=>{ %>
+
+                    <div class="col-md-4" style="margin-top: 30px; margin-left: auto; margin-right: auto; height: max-content;">
+                        Selecionar: <input type="checkbox" class="form-control" name="<%=brinquedo.id_brinquedo%>"> 
+                        <div style="width: 200px;">
+                            <img src= <%= brinquedo.foto_brinquedo %> width="200px" >
+                        </div>
+                        Id do Brinquedo: <%= brinquedo.id_brinquedo %><br>
+                        Nome: <%= brinquedo.nome_brinquedo %><br>
+                        Características: <%= brinquedo.caracteristicas %><br>                
+                        Valor da locação: <%= brinquedo.valor_brinquedo %><br>
+                        Quantidade em Estoque: <% brinquedo.quantidade %><br>
+                        <% if (brinquedo.observacao != null){ %>
+                            Observação: <%= brinquedo.observacao %><br>
+                        <% } %>
+                        
+                    </div>
+                
+                <% }); %>
+                
+            <% } %> 
+        </div> 
+    </form> 
+</div>
+
+<% include partials/rodape %>  

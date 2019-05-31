@@ -1,0 +1,51 @@
+<% include partials/cabecalho %>
+
+<div class="container">
+   		
+    <div class="page-header">
+        <h1>Inserir novo evento</h1>
+    </div>
+    <form method="post" action="/inserirEvento" name="form-evento">
+        <div class="row" id="formulario_evento">                
+            <div  class="col-md-6">
+                <div class="form-group" id="espacoNomeCliente">
+                    <label for="nome_cliente">Nome do Cliente</label>
+                    <input type="text" class="form-control" name="nome_cliente" id_cliente="1" id="nome_cliente" required>
+                </div>                    
+                <div class="form-group">
+                    <label for="data">Data</label>
+                    <input type="date" class="form-control" name="data" id="data" required>
+                </div>
+                <div class="form-group">
+                    <label for="endereco">Endereço</label>
+                    <input type="text" class="form-control" placeholder="Rua, Avenida, Praça" name="logradouro" id="logradouro" required>
+                    <input type="numero" class="form-control" placeholder="Número" name="numero" id="numero" required>
+                    <input type="text" class="form-control" placeholder="Complemento" name="complemento" id="complemento">
+                    <input type="text" class="form-control" placeholder="Observacao Endereco" name="observacao_endereco" id="observacao_endereco">
+                    <input type="text" class="form-control" placeholder="Cidade" name="cidade" id="cidade" required>
+                </div>
+                <div class="form-group">
+                    <label for="valor">Valor Total</label>
+                    <input type="number" class="form-control" name="valor_total" id="valor_total" required>
+                </div>
+                <div class="form-group">
+                    <label for="valor_desconto">Valor Desconto</label>
+                    <input type="number" class="form-control" name="valor_desconto" id="valor_desconto">
+                </div>
+                <div class="form-group">
+                    <label for="valor_sinal">Valor Desconto</label>
+                    <input type="number" class="form-control" name="valor_sinal" id="valor_sinal">
+                </div>
+                <div class="form-group">
+                    <label for="obs">Observação</label>
+                    <input type="text" class="form-control" name="observacao" id="observacao">
+                </div>                            
+            </div>
+            <div id="listaClientes" class="col-md-6"> 
+            </div>            
+        </div>
+       
+        <input type="submit" class="btn btn-default" value="Inserir Brinquedos">
+    </form>
+</div>
+<% include partials/rodape %> 

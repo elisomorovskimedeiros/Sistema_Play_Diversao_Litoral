@@ -1,0 +1,59 @@
+<% include partials/cabecalho %> 
+
+<div class="container">
+   		
+    <div class="page-header">
+        <h1>Inserir novo brinquedo</h1>
+    </div>
+
+    <div class="row">
+                      
+            <form method="post" action="/inserirBrinquedo" name="form-brinquedo" enctype="multipart/form-data">
+                
+                    <div class="form-group">
+                        <label for="nome">Nome do brinquedo</label>
+                        <input type="text" class="form-control" name="nome" id="nome">
+                    </div>
+                    <div class="form-group">
+                        <label for="carac">Características</label>
+                        <input type="text" class="form-control" name="caracteristicas" id="caracteristicas">
+                    </div>
+                    <div class="form-group">
+                        <label for="valor">Valor do Aluguel</label>
+                        <input type="number" class="form-control" name="valor" id="valor">
+                    </div>
+                    <div class="form-group">
+                        <label for="quantidade">Quantidade no Estorque</label>
+                        <input type="number" class="form-control" name="quantidade" id="quantidade">
+                    </div>
+                    <div class="form-group">
+                        <label for="obs">Observação</label>
+                        <input type="text" class="form-control" name="observacao" id="observacao">
+                    </div>
+                    <div class="form-group">
+                        <label for="foto">Foto</label>
+                        <input type="file" class="form-control" name="foto" id="foto">
+                    </div>
+                    
+                    <input type="submit" class="btn btn-default" value="Cadastrar" script="">
+            </form>
+
+    </div>
+        <div id="resposta">
+            <% if(resposta != undefined){ %>
+                <% if(resposta.status){ %>
+                    Brinquedo inserido com sucesso!
+                <% }else{ %>
+                    Ocorreu o seguinte erro na inserção do brinquedo:
+                    <%= resposta.resultado %>
+                <% } %>
+            <% } %>
+            
+        </div>
+        
+
+</div>
+       
+
+
+<% include partials/rodape %> 

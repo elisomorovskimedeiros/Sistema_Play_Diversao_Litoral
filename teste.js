@@ -8,17 +8,11 @@ const app = express();
 
 
 async function main(){
-    var int = new Interface();
-    let clientes = await int.listarTodosClientes().then(function(clientes){
-        return clientes;
-    });
-    console.log(clientes[1]);
-        /*clientes.forEach(cliente=>{
-            console.log(cliente);
-            console.log("----------------------------");
-        });*/
-        //res.render("listarTodosClientes", {clientes});
-
+    
+    var str = "INSERT INTO play.evento_brinquedo (`brinquedo`, `evento`) VALUES ('4', '16'), ('5', '16'),";
+    str = str.substring(0, (str.length - 1));
+    str += ';';
+    console.log(str);
 }
 main();
 

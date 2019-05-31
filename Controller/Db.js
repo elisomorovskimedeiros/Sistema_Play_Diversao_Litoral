@@ -106,8 +106,12 @@ class Db{
         var db = this;
         return new Promise(function (resolve, reject) {
             db.connection.query(sql, brinquedo, function (err, results, fields) {
-            if (err) return reject(err);
-            return resolve(results);
+            if (err) {
+                return resolve({status: false,
+                                resultado: err});
+            }
+            return resolve({status: true,
+                            resultado: results});
             });
         });    
     }
@@ -117,8 +121,12 @@ class Db{
         var db = this;
         return new Promise(function (resolve, reject) {
             db.connection.query(sql, cliente, function (err, results, fields) {
-            if (err) return reject(err);
-            return resolve(results);
+            if (err) {
+                return resolve({status: false,
+                                resultado: err});
+            }
+            return resolve({status: true,
+                            resultado: results});
             });
         });  
     }
@@ -128,7 +136,7 @@ class Db{
         var db = this;
         return new Promise(function (resolve, reject) {
             db.connection.query(sql, evento, function (err, results, fields) {
-            if (err) return reject(err);
+            if (err) return resolve(err);
             else{
                 return resolve(results);
                 }
@@ -136,21 +144,28 @@ class Db{
         });  
     }  
 
-    inserirBrinquedosNoEvento(id_evento, id_brinquedo){
-        var evento_brinquedo = {
-            brinquedo: id_brinquedo,
-            evento: id_evento
-        }
-        let sql = 'INSERT INTO play.evento_brinquedo SET ?';
+    inserirBrinquedoNoEvento(brinquedosEvento){
+        
+        let sql = 'INSERT INTO play.evento_brinquedo (`brinquedo`, `evento`) VALUES';
+        let valores = [];
+        brinquedosEvento.brinquedos.forEach(brinquedo => {
+            sql += " ('"+brinquedo+"', '"+brinquedosEvento.evento+"'),"
+        });
+        sql = sql.substring(0, (sql.length - 1));
+        sql += ';';     
+    
         var db = this;
         return new Promise(function (resolve, reject) {
-            db.connection.query(sql, evento_brinquedo, function (err, results, fields) {
-            if (err) return reject(err);
+            db.connection.query(sql, function (err, results, fields) {
+            if (err) {
+                console.log(err);
+                return resolve(err);
+            }
             else{
                 return resolve(results);
                 }
             });
-        });  
+        }); 
     }
 }
 
