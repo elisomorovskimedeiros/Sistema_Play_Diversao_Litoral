@@ -133,8 +133,13 @@ app.get("/inserirEvento", function(req, res){
 
 app.post("/inserirEvento", function(req, res){
     let evento = new Evento(req.body.id_cliente, req.body.data, req.body.logradouro, Number(req.body.numero), req.body.complemento, req.body.cidade, Number(req.body.valor_total), Number(req.body.valor_desconto), Number(req.body.valor_sinal), req.body.observacao);
-    let interface = new Interface();
+    let interface = new Interface();    
     let data = stringToDate(req.body.data);
+    console.log(data);
+    data.setHours(Number((req.body.hora).slice(0,2)));/*-(data.getTimezoneOffset())/60)*///para setar a hora, o sistema automaticamente guarda a hora utc, que é 
+    // a hora de Brasília +3. Portanto foi subtraído a hora do retorno do método getTimezoneOffset() que mostra o desvio UTC em minutos.
+    data.setMinutes((req.body.hora).slice(3,5)); 
+    evento.data = data;
     interface.inserirEvento(evento).then(function(resposta){
         if(resposta.errno != undefined){
             res.send("Ocorreu o seguinte erro de inserção do evento no banco de dados: "+resposta);
@@ -144,10 +149,11 @@ app.post("/inserirEvento", function(req, res){
                 brinquedos.data = data;
                 brinquedos.idEvento = idEvento;
                 console.log(brinquedos);        
-                res.render("inserirBrinquedosNoEvento.ejs",{brinquedos});                               
+                res.render("inserirBrinquedosNoEvento.ejs",{brinquedos});                              
             });  
         }       
-    });          
+    });
+              
 });
 
 app.post("/inserirBrinquedosNoEvento", function(req, res){
@@ -180,7 +186,38 @@ app.post("/inserirBrinquedosNoEvento", function(req, res){
 }); 
 
 app.get("/listarEvento", function(req, res){
-    res.render("listarEvento.ejs");
+    let evento;
+    res.render("listarEvento.ejs",{evento});
+});
+
+app.post("/listarEvento", function(req, res){
+});
+
+app.post("/editarCliente", function(req, res){
+    
+    var cliente = {
+        id_cliente: req.body.id_cliente,
+        nome: req.body.nome,
+        email: req.body.email,
+        cpf: req.body.cpf,
+        telefone: req.body.telefone,
+        telefone_recado: req.body.telefone_recado,
+        logradouro: req.body.logradouro,
+        numero: req.body.numero,
+        complemento: req.body.complemento,
+        observacao_endereco: req.body.observacao_endereco,
+        cidade: req.body.cidade,
+        observacao_cliente: req.body.observacao_cliente
+    }
+    let int =  new Interface();
+    int.editarCliente(cliente).then(function(resposta){
+        if(resposta.errno != undefined){
+            res.send("Ocorreu o seguinte erro de inserção do evento no banco de dados: "+resposta);
+        }else{
+            res.send("Inserido com sucesso!")                            
+            }  
+    });
+    
 });
 
 //###########################inicialização do servidor web ######################################
@@ -216,7 +253,32 @@ var socketio = io.on("connect", function(socketio){
             socketio.emit("receberBrinquedosDisponiveis", brinquedos);
         });
     });
+
+
+//Envio da lista de eventos segundo o filtro recebido
+// A lista de eventos é preenchida com duas querys, a primeira traz as informações do evento e do cliente e a segunda traz
+// as informações dos brinquedos que pertencem ao evento. Depois é feita a comparação dos id_evento das duas tabelas para distribuir
+// os brinquedos em seus devidos eventos.
+    socketio.on("listaEventos", function(filtroDeBuscaEventos){
+        var int = new Interface();
+        var resposta = int.filtrarEvento(filtroDeBuscaEventos).then(function(eventos){//primeira query
+            console.log(eventos);
+            int.mostrarBrinquedosNoEvento(filtroDeBuscaEventos).then(function(brinquedos){//segunda query                 
+                eventos.forEach(evento => {//laços para distribuição dos brinquedos nos eventos
+                    evento.brinquedos = [];
+                    brinquedos.forEach(brinquedo => {
+                        if (evento.id_evento == brinquedo.id_evento){
+                            evento.brinquedos.push(brinquedo.nome_brinquedo);
+                        }                          
+                    });                    
+                });
+                
+                socketio.emit("receberEventos", eventos);// envio para o cliente               
+            });                
+        });       
+    });
 });
+
 
 
 

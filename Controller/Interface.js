@@ -10,6 +10,13 @@ class Interface{
         });
     }
 
+    async inserirDiversosClientes(clientes){
+        let db = new Db();
+        return await db.inserirDiversosClientes(clientes).then(function(resposta){
+            return resposta;
+        });
+    }
+
     async listarTodosClientes(){
         let db = new Db();
         return await db.selectTodosClientes().then(function(clientes){
@@ -52,12 +59,72 @@ class Interface{
         });
     }
 
+    async inserirDiversosEventos(eventos){
+        let db = new Db();
+        return await db.inserirDiversosEventos(eventos).then(function(resposta){
+            return resposta;
+        });
+    }
+
     async inserirBrinquedoNoEvento(brinquedosEvento){
         let db = new Db();
         return await db.inserirBrinquedoNoEvento(brinquedosEvento).then(function(resposta){
             return resposta;
         });
     }
+
+    async mostrarBrinquedosNoEvento(filtroDeBuscaEventos){
+        let db = new Db();
+        if (filtroDeBuscaEventos.nomeCliente && filtroDeBuscaEventos.dataEvento){
+            return await db.selectBrinquedosNoEventoPorNomeClienteEData(filtroDeBuscaEventos.nomeCliente, filtroDeBuscaEventos.dataEvento).then(function(resposta){
+                return resposta;
+            });
+        }else if (filtroDeBuscaEventos.nomeCliente){
+            return await db.selectBrinquedosNoEventoPorNomeCliente(filtroDeBuscaEventos.nomeCliente).then(async function(brinquedos){              
+                return brinquedos;               
+            });
+        }else if (filtroDeBuscaEventos.dataEvento){
+            return await db.selectBrinquedosNoEventoPorData(filtroDeBuscaEventos.dataEvento).then(function(resposta){
+                return resposta;
+            });
+        }
+    }
+
+    async filtrarEvento(filtroDeBuscaEventos){
+        let db = new Db();
+        if (filtroDeBuscaEventos.nomeCliente && filtroDeBuscaEventos.dataEvento){
+            return await db.selectEventosPorClienteEData(filtroDeBuscaEventos.nomeCliente, filtroDeBuscaEventos.dataEvento).then(function(resposta){
+                return resposta;
+            });
+        }else if (filtroDeBuscaEventos.nomeCliente){            
+            return await db.selectEventosPorNomeCliente(filtroDeBuscaEventos.nomeCliente).then(async function(eventos){              
+                return eventos;               
+            });
+        }else if (filtroDeBuscaEventos.dataEvento){
+            return await db.selectEventosPorData(filtroDeBuscaEventos.dataEvento).then(function(resposta){
+                return resposta;
+            });
+        }
+    }
+
+    async editarCliente(cliente){
+        let db = new Db();        
+        return await db.editarCliente(cliente).then(function(resposta){
+            return resposta;
+        });
+    }
 }
 
 module.exports = Interface;
+
+/*
+let retorno = new Promise(function(resolve, reject){
+                    eventos.forEach(async function(evento) {
+                        await db.mostrarBrinquedosNoEvento(evento.id_evento).then(function(brinquedos){
+                            evento.brinquedos = brinquedos;
+                            console.log(evento.brinquedos);
+                        });
+                    });
+                    return resolve(eventos);                    
+                });
+*/

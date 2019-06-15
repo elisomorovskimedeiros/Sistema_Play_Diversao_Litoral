@@ -11,33 +11,53 @@
                 <div class="form-group" id="espacoNomeCliente">
                     <label for="nome_cliente">Nome do Cliente</label>
                     <input type="text" class="form-control" name="nome_cliente" id_cliente="1" id="nome_cliente" required>
-                </div>                    
-                <div class="form-group">
-                    <label for="data">Data</label>
-                    <input type="date" class="form-control" name="data" id="data" required>
+                </div>
+                <div class="row">                    
+                    <div class="form-group col-md-6">
+                        <label for="data">Data</label>
+                        <input type="date" class="form-control" name="data" id="data" required>
+                    </div>
+                    <div  class="form-group col-md-6">
+                        <label for="hora">Hora</label>
+                        <input type="time" id="hora" class="form-control" name="hora" id="hora" required>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-12">
+                        <label for="endereco">Endereço</label>
+                    </div>
+                    <div class="col-md-9">
+                        <input type="text" class="form-group form-control" placeholder="Rua, Avenida, Praça" name="logradouro" id="logradouro" required>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="numero" class="form-group form-control" placeholder="Número" name="numero" id="numero" required>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" class="form-group form-control" placeholder="Complemento" name="complemento" id="complemento">
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" class="form-group form-control" placeholder="Observação do Endereço" name="observacao_endereco" id="observacao_endereco">
+                    </div>
+                    <div class="col-md-12">
+                        <input type="text" class="form-group form-control" placeholder="Cidade" name="cidade" id="cidade" required>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="form-group col-md-6">
+                        <label for="valor">Valor Total</label>
+                        <input type="number" class="form-control" name="valor_total" id="valor_total" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="valor_desconto">Valor Desconto</label>
+                        <input type="number" class="form-control" name="valor_desconto" id="valor_desconto">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="valor_sinal">Valor Sinal</label>
+                        <input type="number" class="form-control" name="valor_sinal" id="valor_sinal">
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label for="endereco">Endereço</label>
-                    <input type="text" class="form-control" placeholder="Rua, Avenida, Praça" name="logradouro" id="logradouro" required>
-                    <input type="numero" class="form-control" placeholder="Número" name="numero" id="numero" required>
-                    <input type="text" class="form-control" placeholder="Complemento" name="complemento" id="complemento">
-                    <input type="text" class="form-control" placeholder="Observacao Endereco" name="observacao_endereco" id="observacao_endereco">
-                    <input type="text" class="form-control" placeholder="Cidade" name="cidade" id="cidade" required>
-                </div>
-                <div class="form-group">
-                    <label for="valor">Valor Total</label>
-                    <input type="number" class="form-control" name="valor_total" id="valor_total" required>
-                </div>
-                <div class="form-group">
-                    <label for="valor_desconto">Valor Desconto</label>
-                    <input type="number" class="form-control" name="valor_desconto" id="valor_desconto">
-                </div>
-                <div class="form-group">
-                    <label for="valor_sinal">Valor Desconto</label>
-                    <input type="number" class="form-control" name="valor_sinal" id="valor_sinal">
-                </div>
-                <div class="form-group">
-                    <label for="obs">Observação</label>
+                    <label for="obs">Observação sobre o evento</label>
                     <input type="text" class="form-control" name="observacao" id="observacao">
                 </div>                            
             </div>

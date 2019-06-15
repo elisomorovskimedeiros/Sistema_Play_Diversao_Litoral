@@ -81,24 +81,122 @@ class Db{
         });          
     }
 
-    selectEventosPorData(data){
-        //var inicio = "\'" + data + " 00:00:00\'";
-        //var fim = "\'" + data + " 23:59:59\'";
-        //data = inicio + " AND " + fim;
-        let sql = 'SELECT * FROM evento WHERE evento.data BETWEEN ' + data;
-        let sql = 'SELECT * FROM evento WHERE evento.data = ?';
+    mostrarBrinquedosNoEvento(idEvento){
         var db = this;
-        console.log(sql);
-        
-        
+        let sql = 'SELECT brinquedo.nome_brinquedo, evento_brinquedo.evento FROM brinquedo JOIN evento_brinquedo ON brinquedo.id_brinquedo = evento_brinquedo.brinquedo WHERE evento = ?';
         return new Promise(function (resolve, reject) {
-            db.connection.query(sql, function (err, results, fields) {
-            if (err) return reject(err);
-            return resolve(result);
+            db.connection.query(sql, idEvento, function (err, results, fields) {
+                if (err) return reject(err);
+                return resolve(results);
             });
         }); 
-        
+    }
 
+    selectBrinquedosNoEventoPorNomeCliente(nomeCliente){
+        nomeCliente += '%';
+        var db = this;
+        let sql = 'SELECT evento.id_evento, brinquedo.nome_brinquedo FROM brinquedo ' +
+        'JOIN evento_brinquedo ON brinquedo.id_brinquedo = evento_brinquedo.brinquedo ' +
+        'JOIN evento ON evento_brinquedo.evento = evento.id_evento ' +
+        'JOIN cliente ON evento.id_cliente = cliente.id_cliente ' +
+        'WHERE cliente.nome LIKE ?';
+        return new Promise(function (resolve, reject) {
+            db.connection.query(sql, nomeCliente, function (err, results, fields) {
+                if (err) return reject(err);
+                return resolve(results);
+            });
+        });
+    }
+
+    selectBrinquedosNoEventoPorData(data){
+        var db = this;
+        let sql = 'SELECT evento.id_evento, brinquedo.nome_brinquedo FROM brinquedo ' +
+        'JOIN evento_brinquedo ON brinquedo.id_brinquedo = evento_brinquedo.brinquedo ' +
+        'JOIN evento ON evento_brinquedo.evento = evento.id_evento ' +
+        'WHERE evento.data = ?';
+        return new Promise(function (resolve, reject) {
+            db.connection.query(sql, data, function (err, results, fields) {
+                if (err) return reject(err);
+                return resolve(results);
+            });
+        });
+    }
+
+    selectEventosPorData(data){
+        var db = this;
+        let sql = 'SELECT evento.id_evento, evento.data, cliente.nome, cliente.telefone, cliente.telefone_recado, evento.logradouro, ' +
+            'evento.numero, evento.observacao, evento.complemento, evento.cidade, evento.observacao_evento ' +
+            'FROM evento ' +
+            'JOIN cliente ON evento.id_cliente = cliente.id_cliente '+
+            'WHERE evento.data = ?';
+        return new Promise(function (resolve, reject) {
+            db.connection.query(sql, data, function (err, results, fields) {
+                if (err) return reject(err);
+                return resolve(results);
+            });
+        });
+    }
+
+    selectEventosPorNomeCliente(nomeCliente){
+        nomeCliente += '%';
+        let sql = 'SELECT evento.id_evento, evento.data, cliente.nome, cliente.telefone, cliente.telefone_recado, evento.logradouro, ' +
+                    'evento.numero, evento.observacao, evento.complemento, evento.cidade, evento.observacao_evento ' +
+                    'FROM evento ' +
+                    'JOIN cliente ON evento.id_cliente = cliente.id_cliente '+
+                    'WHERE cliente.nome LIKE ?';
+        var db = this;
+        return new Promise(function (resolve, reject) {
+            db.connection.query(sql, nomeCliente, function (err, results, fields) {
+                if (err) return reject(err);
+                return resolve(results);
+            });
+        });    
+    }
+    selectBrinquedosNoEventoPorNomeClienteEData(nomeCliente, data){
+        data = new Date(data);
+        data.setDate(data.getDate()+1);
+        let horaInicio = " 00:00:00",
+        horaFim = " 23:59:59"; 
+        let dataParaQuery = String(data.getFullYear()+"-"+(Number(data.getMonth())+1)+"-"+data.getDate());
+        let itensDeBusca = "('"+nomeCliente+"%') AND evento.data BETWEEN '"+dataParaQuery+horaInicio+"' AND '"+dataParaQuery+horaFim+"';";         
+        let sql = 'SELECT evento.id_evento, brinquedo.nome_brinquedo FROM brinquedo ' +
+            'JOIN evento_brinquedo ON brinquedo.id_brinquedo = evento_brinquedo.brinquedo ' +
+            'JOIN evento ON evento_brinquedo.evento = evento.id_evento ' +
+            'JOIN cliente ON evento.id_cliente = cliente.id_cliente ' +
+            'WHERE cliente.nome LIKE '+ itensDeBusca;
+        console.log(sql);
+        var db = this;
+        return new Promise(function (resolve, reject) {
+            db.connection.query(sql, nomeCliente, function (err, results, fields) {
+                console.log(results);
+                if (err) return reject(err);
+                return resolve(results);
+            });
+        });    
+    }
+
+    selectEventosPorClienteEData(nomeCliente, data){
+        data = new Date(data);
+        data.setDate(data.getDate()+1);
+        let horaInicio = " 00:00:00",
+            horaFim = " 23:59:59"; 
+        let dataParaQuery = String(data.getFullYear()+"-"+(Number(data.getMonth())+1)+"-"+data.getDate());
+        let itensDeBusca = "('"+nomeCliente+"%') AND evento.data BETWEEN '"+dataParaQuery+horaInicio+"' AND '"+dataParaQuery+horaFim+"';";        
+        let sql = 'SELECT evento.id_evento, evento.data, cliente.nome, cliente.telefone, cliente.telefone_recado, evento.logradouro, ' +
+                    'evento.numero, evento.observacao, evento.complemento, evento.cidade, evento.observacao_evento ' +
+                    'FROM evento ' +
+                    'JOIN cliente ON evento.id_cliente = cliente.id_cliente '+
+                    'WHERE cliente.nome LIKE '+ itensDeBusca;
+        var db = this;
+        console.log("primeira query");
+        console.log(sql);
+        return new Promise(function (resolve, reject) {
+            db.connection.query(sql, function (err, results, fields) {
+                if (err) return reject(err);
+                console.log(results);                
+                return resolve(results);
+            });
+        });    
     }
 
     inserirBrinquedo(brinquedo){
@@ -129,6 +227,64 @@ class Db{
                             resultado: results});
             });
         });  
+    }
+
+    inserirDiversosClientes(clientes){
+
+        let sql = 'INSERT INTO play.cliente (`nome`,`cpf`,`logradouro`,`numero`,`complemento`,`observacao_endereco`,`cidade`' +
+                ',`telefone`,`telefone_recado`,`email`, `observacao_cliente`) VALUES ';
+        clientes.forEach(function(cliente, indice) {
+            sql += "('"+cliente.nome+"', '"+cliente.cpf+"', '"+cliente.logradouro+"', "+Number(cliente.numero)+", '"+
+            cliente.complemento+"', '"+cliente.observacao_endereco+"', '"+cliente.cidade+"',  '"+cliente.telefone+"', '"+cliente.telefone_recado+"', '"+cliente.email+
+            "', '"+cliente.observacao_cliente+"')";
+            if(indice == clientes.length-1){
+                sql += ";";
+            }else {
+                sql += ",";
+            }
+        });
+        //console.log(sql);
+        
+        var db = this;
+        return new Promise(function (resolve, reject) {
+            db.connection.query(sql, function (err, results, fields) {
+            if (err) {
+                return resolve({status: false,
+                                resultado: err});
+            }
+            return resolve({status: true,
+                            resultado: results});
+            });
+        });      
+    }
+
+    inserirDiversosEventos(eventos){
+        
+        let sql = 'INSERT INTO play.evento (`id_cliente`, `data`, `logradouro`, `numero`, `complemento`, `cidade`, `observacao`) VALUES ';
+        eventos.forEach(function(evento, indice){
+            let dataArray = evento.data.split('/');
+            let data = (dataArray[2]+'-'+dataArray[1]+'-'+dataArray[0]);
+            sql += "('"+evento.id_cliente+"', '"+data+"', '"+evento.logradouro+"', '"+evento.numero+"', '"+evento.complemento+"', '"+evento.cidade+"', '"+
+            evento.observacao+"')";
+            if(indice == eventos.length-1){
+                sql += ";";
+            }else {
+                sql += ",";
+            }            
+        });
+        
+        var db = this;
+        return new Promise(function (resolve, reject) {
+            db.connection.query(sql, function (err, results, fields) {
+            if (err) {
+                return resolve({status: false,
+                                resultado: err});
+            }
+            return resolve({status: true,
+                            resultado: results});
+            });
+        });   
+        
     }
 
     inserirEvento(evento){
@@ -166,6 +322,20 @@ class Db{
                 }
             });
         }); 
+    }
+
+    editarCliente(cliente){
+        let sql = "UPDATE cliente SET ? WHERE cliente.id_cliente = " + cliente.id_cliente;
+        var db = this;
+        return new Promise(function (resolve){
+            db.connection.query(sql, cliente, function(err, results, fields){
+                if(err){
+                    return resolve(err);
+                }else{
+                    return resolve(results);
+                }
+            });
+        });
     }
 }
 

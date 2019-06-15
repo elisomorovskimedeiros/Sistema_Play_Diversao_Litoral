@@ -1,0 +1,45 @@
+<% include partials/cabecalho %>
+<div id="formulario_clientes" class="container">
+    <header class="page-header">
+        <h1>Listagem de Eventos</h1>
+    </header>
+    <div class="row">
+        <form id="formListarEventos" method="post" action="/listarEventos">
+            <div id="espacoNomeCliente" class="form-group col-md-4">
+                <input type="text" class="form-control" name="nome_cliente" id="nome_cliente_tela_evento" placeholder="Informe o nome do cliente">
+            </div>
+            <div class="form-group col-md-4">
+                <input type="date" class="form-control" name="data" id="data" placeholder="Informe a data do Evento" onchange="filtrarEventos()">
+            </div>            
+            <div class="form-group col-md-4">
+                <a href="/listarTodosEventos">Listar Todos os Eventos</a>
+            </div>
+        </form>
+    </div>
+    <div id="listaEventos"></div>
+    
+    <% if(evento != undefined){ %>
+        <% clientes.forEach(cliente=>{ %>
+            <div style="margin-top: 30px; margin-left: auto; margin-right: auto; width: max-content;">
+                Id do Evento: <%= evento.id_evento %><br>
+                Nome do cliente: <%= evento.cliente.nome %><br>               
+                Endereço: <%= evento.logradouro %>,&nbsp;&nbsp;
+                <%= evento.numero %>,&nbsp;&nbsp;
+                <% if (evento.complemento != null) { %>
+                    <%= evento.complemento; %>,&nbsp;&nbsp;
+                <% } %> 
+                <% if (evento.observacao_endereco != null) { %>
+                    <%= evento.observacao_endereco %>
+                <% } %> 
+                Cidade: <%= evento.cidade %><br>
+                Telefone: <%= evento.telefone %><br>               
+            </div>
+            <hr>
+        <% }); %>        
+    <% } %>   
+</div>
+<div id="formulario_listagem_evento">
+    <div id="listaClientes" ></div>
+</div>
+
+<% include partials/rodape %>
