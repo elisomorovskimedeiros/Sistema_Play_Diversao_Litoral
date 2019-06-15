@@ -221,7 +221,7 @@ app.post("/editarCliente", function(req, res){
 });
 
 //###########################inicialização do servidor web ######################################
-var server = app.listen("3000", function(){
+var server = app.listen("21045", function(){
     console.log("Queimando pneu na porta 3000");
 });
 
