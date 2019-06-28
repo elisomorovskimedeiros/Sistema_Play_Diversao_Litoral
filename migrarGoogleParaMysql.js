@@ -5,7 +5,7 @@ var Interface = require("./Controller/Interface"),
 
 let eventos = [];
 let clientes = [];
-fs.readFile('/home/eli/cadastro_google.csv', 'utf-8', function(err, data){
+fs.readFile('/home/eli/cadastro_google_atualizacao.csv', 'utf-8', function(err, data){
     if (err){
         console.log(err);
     }else{

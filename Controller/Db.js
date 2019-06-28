@@ -10,7 +10,7 @@ class Db{
             user     : 'solevento',
             password : 'Medeiros15',
             database : 'solevento', //não colocar se for criar um banco através do node
-            //multipleStatements: true //cuidado: deve ser falso (padrão) para evitar sql injection - com ele true testar a rota: http://localhost:3000/post/1;DROP%20TABLE%20posts
+            multipleStatements: true //cuidado: deve ser falso (padrão) para evitar sql injection - com ele true testar a rota: http://localhost:3000/post/1;DROP%20TABLE%20posts
         });
         this.connection.connect(function(err){
             if(err){
@@ -200,7 +200,7 @@ class Db{
     }
 
     inserirBrinquedo(brinquedo){
-        let sql = 'INSERT INTO play.brinquedo SET ?';                     
+        let sql = 'INSERT INTO brinquedo SET ?';                     
         var db = this;
         return new Promise(function (resolve, reject) {
             db.connection.query(sql, brinquedo, function (err, results, fields) {
@@ -215,7 +215,7 @@ class Db{
     }
 
     inserirCliente(cliente){
-        let sql = 'INSERT INTO play.cliente SET ?';
+        let sql = 'INSERT INTO cliente SET ?';
         var db = this;
         return new Promise(function (resolve, reject) {
             db.connection.query(sql, cliente, function (err, results, fields) {
@@ -231,7 +231,7 @@ class Db{
 
     inserirDiversosClientes(clientes){
 
-        let sql = 'INSERT INTO play.cliente (`nome`,`cpf`,`logradouro`,`numero`,`complemento`,`observacao_endereco`,`cidade`' +
+        let sql = 'INSERT INTO cliente (`nome`,`cpf`,`logradouro`,`numero`,`complemento`,`observacao_endereco`,`cidade`' +
                 ',`telefone`,`telefone_recado`,`email`, `observacao_cliente`) VALUES ';
         clientes.forEach(function(cliente, indice) {
             sql += "('"+cliente.nome+"', '"+cliente.cpf+"', '"+cliente.logradouro+"', "+Number(cliente.numero)+", '"+
@@ -260,7 +260,7 @@ class Db{
 
     inserirDiversosEventos(eventos){
         
-        let sql = 'INSERT INTO play.evento (`id_cliente`, `data`, `logradouro`, `numero`, `complemento`, `cidade`, `observacao`) VALUES ';
+        let sql = 'INSERT INTO evento (`id_cliente`, `data`, `logradouro`, `numero`, `complemento`, `cidade`, `observacao`) VALUES ';
         eventos.forEach(function(evento, indice){
             let dataArray = evento.data.split('/');
             let data = (dataArray[2]+'-'+dataArray[1]+'-'+dataArray[0]);
@@ -288,7 +288,7 @@ class Db{
     }
 
     inserirEvento(evento){
-        let sql = 'INSERT INTO play.evento SET ?';
+        let sql = 'INSERT INTO evento SET ?';
         var db = this;
         return new Promise(function (resolve, reject) {
             db.connection.query(sql, evento, function (err, results, fields) {
@@ -302,7 +302,7 @@ class Db{
 
     inserirBrinquedoNoEvento(brinquedosEvento){
         
-        let sql = 'INSERT INTO play.evento_brinquedo (`brinquedo`, `evento`) VALUES';
+        let sql = 'INSERT INTO evento_brinquedo (`brinquedo`, `evento`) VALUES';
         let valores = [];
         brinquedosEvento.brinquedos.forEach(brinquedo => {
             sql += " ('"+brinquedo+"', '"+brinquedosEvento.evento+"'),"
