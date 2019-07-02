@@ -113,7 +113,7 @@ router.post('/inserirBrinquedo', upload.single('foto'), function (req, res, next
  */ 
 
 
-
+/*
 // ROTA PARA POST, TRATAR O FORMULÁRIO
 // APLICAMOS O NOSSO MIDDLEWARE IMPORTADO PASSANDO O NAME DO INPUT A SER TRATADO
 router.post('/inserirBrinquedo', multer.storage("foto"), (req, res, next) => {
@@ -146,8 +146,8 @@ router.post('/inserirBrinquedo', multer.storage("foto"), (req, res, next) => {
     
     
 });
+*/
 
-/*
 router.post("/inserirBrinquedo", isLoggedIn, function(req, res){
     var formidable = require("formidable");
     var form = formidable.IncomingForm();
@@ -180,7 +180,7 @@ router.post("/inserirBrinquedo", isLoggedIn, function(req, res){
         }                  
     });    
 });
-*/
+
 
 router.get("/listarBrinquedos", isLoggedIn, function(req, res){
     let brinquedos;
