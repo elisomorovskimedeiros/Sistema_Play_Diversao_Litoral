@@ -1,0 +1,22 @@
+<% include partials/cabecalho %> 
+
+        <form class="form-signin" name="form-signin" action="/login" method="post">
+            
+            <h3 class="form-signin-heading">
+                Login na Play Diversão
+                
+                </h3>
+            <input type="text" name="username" placeholder="Username" class="form-control">
+            <input type="password" name="password" placeholder="password" class="form-control">
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>    
+        </form>
+        <% if(message) { %>
+            <p>
+              <label style="color:Red"><%= message %></label>
+            </p>
+          <%}%>
+          <p>
+            <a href="/users/forgot">Esqueceu sua senha?</a> | <a href="/users/signup">Não possui cadastro?</a>
+          </p>
+
+<% include partials/rodape %> 
