@@ -1,22 +1,31 @@
-<% include partials/cabecalho %> 
-
-        <form class="form-signin" name="form-signin" action="/login" method="post">
+<% include partials/cabecalho %>
+<div class="container" style="width: 400px; margin-left: auto; margin-right: auto;margin-top: auto; margin-bottom: auto;">
+  <form class="form-signin" name="form-signin" action="/login" method="post">
             
-            <h3 class="form-signin-heading">
-                Login na Play Diversão
-                
-                </h3>
-            <input type="text" name="username" placeholder="Username" class="form-control">
-            <input type="password" name="password" placeholder="password" class="form-control">
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>    
-        </form>
-        <% if(message) { %>
-            <p>
-              <label style="color:Red"><%= message %></label>
-            </p>
-          <%}%>
-          <p>
-            <a href="/users/forgot">Esqueceu sua senha?</a> | <a href="/users/signup">Não possui cadastro?</a>
-          </p>
+    <h3 class="form-signin-heading">
+        Login na Play Diversão
+        
+    </h3>
+    <div class="form-group">
+      <input type="text" name="username" placeholder="Username" class="form-control">
+    </div>
+    <div class="form-group">
+      <input type="password" name="password" placeholder="password" class="form-control">    
+    </div>
+    <div class="form-group">
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>      
+    </div>        
+</form>
+<% if(message) { %>
+    <p>
+      <label style="color:Red"><%= message %></label>
+    </p>
+  <%}%>
+  <p>
+    <a href="/users/forgot">Esqueceu sua senha?</a> | <a href="/users/signup">Não possui cadastro?</a>
+  </p>
+</div> 
+
+       
 
 <% include partials/rodape %> 
