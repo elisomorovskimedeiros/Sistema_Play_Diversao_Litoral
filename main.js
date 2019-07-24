@@ -8,7 +8,8 @@ const     express = require("express"),
             flash = require("connect-flash");
             passport = require("passport");
 
-const app = express();
+const app = express(),
+      int = new Interface();
 
 app.set("view engine", "ejs");
 
@@ -65,18 +66,29 @@ var server = app.listen("21045", function(){
 
 var io = require("socket.io")(server);
 
-// Envio da consulta por cliente
+
 var socketio = io.on("connect", function(socketio){
+// Envio da consulta por cliente
     socketio.on("listaClientesPorNome", function(nomeCliente){        
-        var int = new Interface();
         int.listarCliente(nomeCliente).then(function(clientes){
             socketio.emit("mandarClientes", clientes);
         });
     });
 
+    socketio.on("filtroCliente", function(filtroCliente){   
+         int.listarCliente(filtroCliente).then(function(clientes){
+            socketio.emit("mandarClientes", clientes);
+        });
+    });
+
+    socketio.on("excluirCliente", function(idCliente){
+        int.excluirCliente(idCliente).then(function(mensagem){
+            socketio.emit("resultadoExclusaoCliente", mensagem);
+        });
+    });
+
 // Envio da consulta por brinquedo
     socketio.on("listaBrinquedosPorNome", function(nomeBrinquedo){        
-        var int = new Interface();
         int.listarUmBrinquedo(nomeBrinquedo).then(function(brinquedos){
             socketio.emit("mandarBrinquedos", brinquedos);
         });
@@ -84,7 +96,6 @@ var socketio = io.on("connect", function(socketio){
 
 //Envio da lista de brinquedos disponíveis para inserir em evento
     socketio.on("enviarBrinquedosDisponiveis", function(dataEvento){        
-        var int = new Interface();
         int.listarTodosBrinquedos().then(function(brinquedos){
             socketio.emit("receberBrinquedosDisponiveis", brinquedos);
         });
@@ -96,7 +107,6 @@ var socketio = io.on("connect", function(socketio){
 // as informações dos brinquedos que pertencem ao evento. Depois é feita a comparação dos id_evento das duas tabelas para distribuir
 // os brinquedos em seus devidos eventos.
     socketio.on("listaEventos", function(filtroDeBuscaEventos){
-        var int = new Interface();
         var resposta = int.filtrarEvento(filtroDeBuscaEventos).then(function(eventos){//primeira query
             console.log(eventos);
             int.mostrarBrinquedosNoEvento(filtroDeBuscaEventos).then(function(brinquedos){//segunda query                 
@@ -112,6 +122,12 @@ var socketio = io.on("connect", function(socketio){
                 socketio.emit("receberEventos", eventos);// envio para o cliente               
             });                
         });       
+    });
+
+    socketio.on("listarEventosPorIdCliente", function(idCliente){
+        int.filtrarEventoPorIdCliente(idCliente).then(function(eventos){
+            socketio.emit("receberEventos",eventos);
+        });
     });
 });
 

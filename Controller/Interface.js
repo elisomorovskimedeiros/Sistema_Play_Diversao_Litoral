@@ -26,8 +26,28 @@ class Interface{
 
     async listarCliente(cliente){
         let db = new Db();
-        return await db.selectUmCliente(cliente).then(function(clientes){
-            return clientes;
+        if(cliente.data){
+            return await db.selectPorDataEvento(cliente).then(function(clientes){
+                return clientes;
+            });
+        }else{
+            return await db.selectUmCliente(cliente).then(function(clientes){
+                return clientes;
+            });
+        }       
+    }
+
+    async excluirCliente(idCliente){
+        let db = new Db();       
+        return await db.excluirCliente(idCliente).then(function(mensagem){
+            return mensagem;
+        });       
+    }
+
+    async excluirEventosPorIdCliente(idCliente){
+        let db = new Db();       
+        return await db.excluirEventosPorIdCliente(idCliente).then(function(mensagem){
+            return mensagem;
         });
     }
 
@@ -105,6 +125,13 @@ class Interface{
                 return resposta;
             });
         }
+    }
+
+    async filtrarEventoPorIdCliente(idCliente){
+        let db = new Db();
+        return await db.selectEventoPorIdCliente(idCliente).then(function(eventos){
+            return eventos;
+        });
     }
 
     async editarCliente(cliente){

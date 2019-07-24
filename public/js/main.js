@@ -41,12 +41,12 @@ socket.on("receberEventos", function(eventos){
             });                        
         }
        //montagem da lista a ser exibida
-        console.log(evento.data);
+       console.log(evento);        
         let data = new Date(evento.data);
         let dataParaExibir = (Number(data.getDate())) + '/' + (Number(data.getMonth())+1) + '/' + data.getFullYear();   
         let horaParaExibir = Number(data.getHours())+":"+Number(data.getMinutes());     
         listaDeEventos += '<div id="cliente_individual" style="margin-top: 30px; margin-left: auto; margin-right: auto; width: max-content;">' +
-                          'Data do Evento: ' + dataParaExibir + '   Hora do Evento: ' + horaParaExibir + '<br>' +
+                          'Data do Evento: ' + dataParaExibir + '   | Hora do Evento: ' + horaParaExibir + '<br>' +
                           'Nome do Cliente: ' + evento.nome + '   Telefone: ' + evento.telefone + '   Telefone para recado: ' + evento.telefone_recado + '<br>' +
                           'Endereço do Evento: ' + evento.logradouro +'&nbsp;&nbsp;' + evento.numero + ',&nbsp;&nbsp;';
                           if(evento.complemento)
@@ -135,52 +135,7 @@ $(document).ready(function(){
         }      
     });
 
-    //#################FUNÇÕES DE CLIENTES ###########################
-    //função de evento keyup do campo nome_cliente
-    //essa função é utilizada pela página inserirEvento e listarCliente
-
     
-    $("#nome_cliente").keyup(function(){
-        solicitarListaClientes();
-    });
-
-    
-
-    //função que recebe a consulta da lista de clientes no bd, conforme o filtro solicitado
-    //essa função é utilizada pela página inserirEvento e listarCliente
-    socket.on("mandarClientes", function(clientes){
-            clientesGlobal = clientes;
-            let listaClientes = '';
-            //preenchimento da lista de clientes filtrada na variável listaClientes
-            clientes.forEach(cliente => {
-                listaClientes += 
-                '<div id="cliente_individual" style="margin-top: 30px; margin-left: auto; margin-right: auto; width: max-content;">' +
-                    'Id de Cliente: '+ cliente.id_cliente +'<br>' +
-                    'Nome: <span>'+ cliente.nome +'</span> <br>' +
-                    'CPF: '+ cliente.cpf +'<br>' +
-                    'Endereço: '+ cliente.logradouro +'&nbsp;&nbsp;' +
-                    cliente.numero + ',&nbsp;&nbsp;';
-                    if(cliente.complemento)
-                        listaClientes += cliente.complemento+', &nbsp;&nbsp;';                    
-                    if(cliente.observacao_endereco)
-                        listaClientes += cliente.observacao_endereco;
-                    listaClientes +=
-                    'Cidade: '+ cliente.cidade +'<br>'+
-                    'Telefone: '+ cliente.telefone +'<br>';
-                    if(cliente.telefone_recado)
-                        listaClientes += 'Telefone para recados: '+ cliente.telefone_recado +'<br>';
-                    listaClientes +=
-                    'Email: '+cliente.email +'<br>';
-                    if(cliente.observacao_cliente)
-                        listaClientes += 'Observação: '+cliente.observacao_cliente+'<br>';
-                    listaClientes += verificarSeEEventoOuCliente(cliente) +
-                    '<hr>'+
-                '<div>';
-            });
-         
-            //envio das informações para a página
-            $("#listaClientes").wrapInner(listaClientes);       
-    });
 
 
    
@@ -243,47 +198,6 @@ onclick="exibirJanelaEdicaoCliente(\''+cliente.nome+ '\',\''+cliente.cpf+ '\',\'
                     cliente.telefoneRecado+ '\',\''+cliente.email+ '\',\''+cliente.observacaoCliente+'\')"
          */
     }
-
-    //preencher janela para edição do cliente
-    $(document).on("click", "#btnEditarCliente", function(origemClick){
-        let idCliente = origemClick.target.value;
-        clientesGlobal.forEach(cliente => {
-            if(cliente.id_cliente == idCliente){
-                $("#id_cliente").val(cliente.id_cliente);
-                $("#nome").val(cliente.nome);
-                $("#cpf").val(cliente.cpf);
-                $("#logradouro").val(cliente.logradouro);
-                $("#numero").val(cliente.numero);
-                $("#complemento").val(cliente.complemento);
-                $("#observacao_endereco").val(cliente.observacao_endereco);
-                $("#cidade").val(cliente.cidade);
-                $("#telefone").val(cliente.telefone);
-                $("#telefone_recado").val(cliente.telefone_recado);
-                $("#email").val(cliente.email);
-                $("#observacao_cliente").val(cliente.observacao_cliente);
-            }
-        });
-    });
-
-    $('#form-cliente').submit(function(){
-        var dados = $( this ).serialize();
-
-        $.ajax({
-            type: "POST",
-            url: "/editarCliente",
-            data: dados,
-            success: function( data )
-            {
-                $("#fecharModal").trigger("click");
-                alert(data);
-                $("#nome_cliente").trigger("keyup");                
-            }
-        });
-
-        return false;
-    });
-    
-    
 
 /*
     var observer = new MutationObserver(function(mutations) {

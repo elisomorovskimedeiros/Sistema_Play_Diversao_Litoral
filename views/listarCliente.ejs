@@ -7,19 +7,19 @@
     <div class="row">
         <form id="formListarClientes" method="post" action="/listarCliente">
             <div class="form-group col-md-4">
-                <input type="text" name="nome_cliente" id="nome_cliente" placeholder="Informe o nome do cliente">
+                <input type="text" name="nome" id="nome" placeholder="Informe o nome do cliente">
             </div>
             <div class="form-group col-md-4">
-                <input type="text" name="data_cliente" id="data_cliente" placeholder="Informe a data da festa">
+                <input type="date" name="data" id="data" placeholder="Informe a data da festa" onchange="filtrarClientes()">
             </div>
             <div class="form-group col-md-4">
-                <input type="text" name="endereco_cliente" id="endereco_cliente" placeholder="Informe parte do endereço">
+                <input type="text" name="logradouro" id="logradouro" placeholder="Informe parte do endereço">
             </div>
             <div class="form-group col-md-4">
-                <input type="text" name="cidade_cliente" id="cidade_cliente" placeholder="Informe parte da cidade">
+                <input type="text" name="cidade" id="cidade" placeholder="Informe parte da cidade">
             </div>
             <div class="form-group col-md-4">
-                <a href="/listarTodosClientes">Listar Todos os Cliente</a>
+                <button type="button" class="btn btn-default" id="listar-todos-clientes">Listar Todos os Clientes</button>
             </div>
         </form>
     </div>
@@ -55,7 +55,7 @@
         
     <% } %>
    
-    <!-- Janela -->
+    <!-- Janela de Edição do Cliente -->
     <div class="modal fade" id="janelaDeEdicaoCliente">
               
         <div class="modal-dialog modal-lg">
@@ -79,7 +79,7 @@
                                                 
                             <div class="form-group col-md-12">
                                 <label for="nome" name="labelDoNome" id="labelDoNome">Nome</label>
-                                <input type="text" class="form-control" name="nome" id="nome">
+                                <input type="text" class="form-control" name="nome_edicao" id="nome_edicao">
                             </div>
                     
                             <div class="form-group col-md-6">
@@ -101,7 +101,7 @@
                                                             
                                 <div class="form-group col-md-8">
                                     <label for="endereco">Endereço</label>
-                                    <input type="text" class="form-control" placeholder="Rua, Avenida, Praça" name="logradouro" id="logradouro">
+                                    <input type="text" class="form-control" placeholder="Rua, Avenida, Praça" name="logradouro_edicao" id="logradouro_edicao">
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="endereco">Número</label>
@@ -137,9 +137,41 @@
                 </form>
             </div>
         </div>     
+    </div>
+    <!-- Janela de remoção de cliente -->
+    <div class="modal fade" id="janelaDeRemocaoCliente">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <!-- cabecalho -->
+                <form method="post" action="/excluirCliente" name="form-excluir-cliente" id="form-excluir-cliente">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" id="fecharModalExcluir">
+                            <span>&times;</span>
+                        </button>
+                        <h4 class="modal-title">Você tem certeza que deseja remover esse cliente?</h4>
+
+                    </div>
+                    <!-- corpo -->
+                    <div class="modal-body" id="corpoModal">
+                        <h4>Eventos apagados com esse cliente:</h4>
+                        <input type="text" style="display: none;" id="id_cliente_excluir" name="id_cliente_excluir">
+                        <div class="row" id="listaEventos">
+                            
+                        </div>              
+                    </div>            
+                    <!-- rodape -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            Cancelar
+                        </button>
+                        <button type="submit" id="btnExcluirCliente" class="btn btn-danger">
+                            Excluir
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>   
 </div> 
-      
-
 
 <% include partials/rodape %>  

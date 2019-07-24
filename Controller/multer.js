@@ -10,7 +10,7 @@ module.export = (multer=>({
         // Qual deve ser o destino deles?
         destination: (req, file, cb) => {
             // Setamos o destino como segundo paramêtro do callback
-            cb(null, '../public/images');
+            cb(null, 'public/images');
         },
         // E como devem se chamar?
         filename: (req, file, cb) => {

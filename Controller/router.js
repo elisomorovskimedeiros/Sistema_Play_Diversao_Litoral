@@ -5,11 +5,13 @@ const express = require("express"),
        Interface = require("../Controller/Interface"),
            Evento = require("../Model/Evento"),
 
-        multer = require('../Controller/multer'), //utilizar o sharp para configurar a imagem após o upload  fonte: https://medium.com/collabcode/upload-e-compress%C3%A3o-de-imagens-com-nodejs-68109eed066e    
-        //upload  = require('multer'),
+        //multer = require('../Controller/multer'), //utilizar o sharp para configurar a imagem após o upload  fonte: https://medium.com/collabcode/upload-e-compress%C3%A3o-de-imagens-com-nodejs-68109eed066e    
+        multer  = require('multer'),
        
         login = require("../Controller/Login");
 
+//const upload = multer({dest: 'public/imagens/'});
+const int = new Interface();
 
 function stringToDate(dataString){
     dataString = dataString.split("-");
@@ -22,6 +24,7 @@ function stringToDate(dataString){
 
 function isLoggedIn(req, res, next){
     if(req.isAuthenticated()){
+        console.log("Autenticou");
         return next(); //prossegue com a execucao
     }
     res.redirect("/login"); //não prossegue com a execução e redireciona para a página login
@@ -80,7 +83,7 @@ router.get("/listarTodosClientes", isLoggedIn, function(req, res){
     });    
 });
 
-router.get("/listarCliente", isLoggedIn, function(req, res){
+router.get("/listarCliente",  isLoggedIn, function(req, res){
     let clientes = undefined;
     res.render("listarCliente.ejs",{clientes});
 });
@@ -99,54 +102,48 @@ router.get("/inserirBrinquedo", isLoggedIn, function(req, res){
 });
 
 
-/*
-router.post('/inserirBrinquedo', upload.single('foto'), function (req, res, next) {    
-    // req.file is the `avatar` file
-    // req.body will hold the text fields, if there were any
-    if(req.file){
-        res.send("upload com sucesso");
-    }else{
-        res.send("deu problema");
+//############ INSERÇÃO DE BRINQUEDO ################
+//utilizado o midlleware Multer para captura do upload do arquivo contendo a foto do brinquedo
+
+//configuração do multer
+//site que ajudou: https://code.tutsplus.com/tutorials/file-upload-with-multer-in-node--cms-32088
+var storage = multer.diskStorage({
+    destination: function(req, file, cb){
+        cb(null, "public/imagens/");//local de gravação do arquivo
+    },
+    filename: function (req, file,cb){
+        cb(null, file.originalname);//nome do arquivo
     }
-  });
-   
- */ 
-
-
-/*
-// ROTA PARA POST, TRATAR O FORMULÁRIO
-// APLICAMOS O NOSSO MIDDLEWARE IMPORTADO PASSANDO O NAME DO INPUT A SER TRATADO
-router.post('/inserirBrinquedo', multer.storage("foto"), (req, res, next) => {
-    
-       
-            // Se houve sucesso no armazenamento
-            if (req.file) {
-                // Vamos imprimir na tela o objeto com os dados do arquivo armazenado
-                console.log(req.file);
-                var brinquedo = {
-                    nome_brinquedo: req.nome,
-                    caracteristicas: req.caracteristicas,
-                    foto_brinquedo: "../public/imagens/"+ req.file.originalname,
-                    valor_brinquedo: req.valor,
-                    quantidade: req.quantidade,
-                    observacao: req.observacao
-                }
-                var int = new Interface();
-                async function inserirBrinquedo(){
-                    var resposta = await int.inserirBrinquedo(brinquedo).then(function(resposta){
-                        res.render("inserirBrinquedo.ejs",{resposta});
-                    });                           
-                }
-                inserirBrinquedo(); 
-            }else{
-                // Se o objeto req.file for undefined, ou seja, não houve sucesso, vamos imprimir um erro!
-                console.log('Houve erro no upload!');
-            
-        }
-    
-    
 });
-*/
+
+var upload = multer({ storage: storage});//variável que manipula o post
+
+router.post('/inserirBrinquedo', upload.single('foto'), (req, res, next) => {
+    const file = req.file;
+    if(!file){//caso algum erro tenha ocorrido
+        const error = new Error("Please upload a file");
+        error.httpStatusCode = 400;
+        return next(error);
+    }
+    //gravação do brinquedo no db
+    var brinquedo = {
+        nome_brinquedo: req.body.nome,
+        caracteristicas: req.body.caracteristicas,
+        foto_brinquedo: "imagens/"+ req.file.originalname,
+        valor_brinquedo: req.body.valor,
+        quantidade: req.body.quantidade,
+        observacao: req.body.observacao
+    }
+    
+    var int = new Interface();
+    async function inserirBrinquedo(){
+        var resposta = await int.inserirBrinquedo(brinquedo).then(function(resposta){
+            res.render("inserirBrinquedo.ejs",{resposta});
+        });                           
+    }
+    inserirBrinquedo();     
+});
+
 
 router.post("/inserirBrinquedo", isLoggedIn, function(req, res){
     var formidable = require("formidable");
@@ -265,12 +262,12 @@ router.post("/editarCliente", isLoggedIn, function(req, res){
     
     var cliente = {
         id_cliente: req.body.id_cliente,
-        nome: req.body.nome,
+        nome: req.body.nome_edicao,
         email: req.body.email,
         cpf: req.body.cpf,
         telefone: req.body.telefone,
         telefone_recado: req.body.telefone_recado,
-        logradouro: req.body.logradouro,
+        logradouro: req.body.logradouro_edicao,
         numero: req.body.numero,
         complemento: req.body.complemento,
         observacao_endereco: req.body.observacao_endereco,
@@ -282,10 +279,28 @@ router.post("/editarCliente", isLoggedIn, function(req, res){
         if(resposta.errno != undefined){
             res.send("Ocorreu o seguinte erro de inserção do evento no banco de dados: "+resposta);
         }else{
+            console.log("editou ok!")
             res.send("Inserido com sucesso!")                            
-            }  
+        }  
     });
     
+});
+
+router.post("/excluirCliente",  function(req, res){
+    let idCliente = req.body.id_cliente_excluir;
+    int.excluirEventosPorIdCliente(idCliente).then(function(resposta){
+        if(resposta.errno){
+            res.send("Ocorreu o seguinte erro na remoção dos eventos: "+ resposta.errno);            
+        }else{
+            int.excluirCliente(idCliente).then(function(resposta){
+                if(resposta.errno){
+                    res.send("Ocorreu o seguinte erro na remoção do usuário: "+ resposta.errno);
+                }else{
+                    res.send("Removido com sucesso");
+                }
+            });
+        }           
+    });
 });
 
 

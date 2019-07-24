@@ -9,7 +9,7 @@ const   LocalStrategy  = require('passport-local').Strategy,
 
 let login = function(passport){
    
-    connection = mysql.createConnection({
+    connection = mysql.createPool({
         supportBigNumbers: true,
         bigNumberStrings: true,          
         host     : 'mysql10-farm76.kinghost.net',
@@ -18,7 +18,7 @@ let login = function(passport){
         database : 'solevento', //não colocar se for criar um banco através do node
         multipleStatements: false
     });
-
+/*
     connection.connect(function(err){
         if(err){
             console.log("Deu erro!linha 17");
@@ -26,7 +26,7 @@ let login = function(passport){
         }else{
             console.log("Conectado com o BD!");
         }
-    });
+    });*/
     
     
 
@@ -51,6 +51,7 @@ let login = function(passport){
             if(!(dbPassword == encPassword)){
                 return done(null, false, req.flash('message','Usuário ou senha inválidos.'));
             }
+            console.log("logou dentro do passport.use");
             return done(null, rows[0]);
             });
         }

@@ -58,16 +58,70 @@ class Db{
         });          
     }
 
-    selectUmCliente(nomeCliente){
-        nomeCliente += '%';
-        let sql = 'SELECT * FROM cliente WHERE cliente.nome LIKE ?';
+    selectUmCliente(cliente){
+        let grupoDeBusca = "'%" + cliente.nome + 
+                    "%' AND cliente.logradouro like '%" + cliente.logradouro +
+                    "%' AND cliente.cidade like '%" + cliente.cidade + "%'";           
+        let sql = 'SELECT * FROM cliente WHERE cliente.nome LIKE ';
+        sql += grupoDeBusca;
         var db = this;
         return new Promise(function (resolve, reject) {
-            db.connection.query(sql, nomeCliente, function (err, results, fields) {
+            db.connection.query(sql, function (err, results, fields) {
             if (err) return reject(err);
             return resolve(results);
             });
         });          
+    }
+
+    excluirCliente(idCliente){
+        let sql = "DELETE FROM cliente WHERE id_cliente = ?";
+        var db = this;
+        return new Promise(function (resolve, reject) {
+            db.connection.query(sql, idCliente, function (err, results, fields) {                
+            if (err) return reject(err);
+            return resolve(results);
+            });
+        });
+    }
+
+    excluirEventosPorIdCliente(idCliente){
+        let sql = "DELETE FROM evento WHERE id_cliente = ?";
+        var db = this;
+        return new Promise(function (resolve, reject) {
+            db.connection.query(sql, idCliente, function (err, results, fields) {                
+            if (err) return reject(err);
+            return resolve(results);
+            });
+        });
+    }
+
+    selectEventoPorIdCliente(idCliente){
+        let sql = "SELECT * FROM evento JOIN cliente ON evento.id_cliente = cliente.id_cliente " +
+        " WHERE evento.id_cliente = ?";
+        var db = this;
+        return new Promise(function(resolve, reject){
+            db.connection.query(sql, idCliente, function(err, results, fields){
+                if(err) return reject(err);
+                return resolve(results);
+            });
+        });
+    }
+
+    selectPorDataEvento(cliente){
+        let sql = "SELECT * FROM cliente JOIN evento " +
+                    "ON cliente.id_cliente = evento.id_cliente " +
+                    "WHERE evento.data BETWEEN '" + cliente.data + " 00:00:00' AND '" + cliente.data + " 23:59:59' AND " +
+                    "cliente.nome LIKE '%" + cliente.nome + "%' AND " +
+                    "cliente.logradouro LIKE '%" + cliente.logradouro + "%' AND " +
+                    "cliente.cidade LIKE '%" + cliente.cidade + "%'";
+        var db = this;
+        console.log(sql);
+        return new Promise(function (resolve, reject) {
+            db.connection.query(sql, function (err, results, fields) {
+                if (err) return reject(err);
+                return resolve(results);
+            });
+        }); 
     }
 
     selectEventosPorCliente(idCliente){        
@@ -75,8 +129,8 @@ class Db{
         var db = this;
         return new Promise(function (resolve, reject) {
             db.connection.query(sql, idCliente, function (err, results, fields) {
-            if (err) return reject(err);
-            return resolve(results);
+                if (err) return reject(err);
+                return resolve(results);
             });
         });          
     }
