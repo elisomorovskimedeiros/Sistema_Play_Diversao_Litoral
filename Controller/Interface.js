@@ -58,6 +58,13 @@ class Interface{
         });
     }
 
+    async editarBrinquedo(brinquedo){
+        let db = new Db();
+        return await db.editarBrinquedo(brinquedo).then(function(resposta){
+            return resposta;
+        });
+    }
+
     async listarTodosBrinquedos(){
         let db = new Db();
         return await db.selectTodosBrinquedos().then(function(brinquedos){
@@ -69,6 +76,13 @@ class Interface{
         let db = new Db();
         return await db.selectUmBrinquedo(nomeBrinquedo).then(function(brinquedos){
             return brinquedos;
+        });
+    }
+
+    async listarEventoPorIdBrinquedo(id_brinquedo){        
+        let db = new Db();
+        return await db.selectEventoPorIdBrinquedo(id_brinquedo).then(function(eventos){
+            return eventos;
         });
     }
 

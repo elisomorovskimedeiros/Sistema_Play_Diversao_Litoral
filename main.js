@@ -101,6 +101,13 @@ var socketio = io.on("connect", function(socketio){
         });
     });
 
+//Envia a lista de eventos que tem o brinquedo a ser excluído
+    socketio.on("meDaOsEventosAi", function(id_brinquedo){
+        int.listarEventoPorIdBrinquedo(id_brinquedo).then(function(listaEventos){
+            socketio.emit("receberEventos", listaEventos);
+        });
+    });
+
 
 //Envio da lista de eventos segundo o filtro recebido
 // A lista de eventos é preenchida com duas querys, a primeira traz as informações do evento e do cliente e a segunda traz

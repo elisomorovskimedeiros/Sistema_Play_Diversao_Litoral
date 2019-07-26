@@ -268,6 +268,40 @@ class Db{
         });    
     }
 
+    editarBrinquedo(brinquedo){
+        let sql = "UPDATE brinquedo SET ? WHERE brinquedo.id_brinquedo = " + brinquedo.id_brinquedo;                     
+        var db = this;
+        console.log(brinquedo);
+        return new Promise(function (resolve, reject) {
+            db.connection.query(sql, brinquedo, function (err, results, fields) {
+            if (err) {
+                return resolve({status: false,
+                                resultado: err});
+            }
+            return resolve({status: true,
+                            resultado: results});
+            });
+        });    
+    }
+
+    selectEventoPorIdBrinquedo(id_brinquedo){
+        console.log(id_brinquedo);
+        let sql = "SELECT * FROM evento "+
+                    "JOIN evento_brinquedo ON evento.id_evento = evento_brinquedo.evento "+
+                    "WHERE evento_brinquedo.brinquedo = ?";                     
+        var db = this;        
+        return new Promise(function (resolve, reject) {
+            db.connection.query(sql, id_brinquedo, function (err, results, fields) {
+            if (err) {
+                return resolve({status: false,
+                                resultado: err});
+            }
+            return resolve({status: true,
+                            resultado: results});
+            });
+        });    
+    }
+
     inserirCliente(cliente){
         let sql = 'INSERT INTO cliente SET ?';
         var db = this;

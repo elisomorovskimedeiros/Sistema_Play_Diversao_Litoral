@@ -26,6 +26,7 @@ function filtrarClientes(){
     };            
 }
 
+
 //#########Exclusão de cliente############3
 
 //preenche a janela modal com os eventos relacionados ao cliente a ser excluído
@@ -36,7 +37,7 @@ function pegarEventosPorIdCliente(idCliente){
 }
 
 socket.on("resultadoExclusaoCliente", function(mensagem){
-    console.log(mensagem);
+
     if(mensagem.errno){
         alert("Ocorreu um erro");
     }else{
@@ -197,8 +198,7 @@ onclick="exibirJanelaEdicaoCliente(\''+cliente.nome+ '\',\''+cliente.cpf+ '\',\'
         });
 
         return false;
-    });   
-      
+    });     
 });
 
 

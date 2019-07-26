@@ -16,29 +16,146 @@
         </form>
     </div>
     <div id="listaBrinquedos">
-    
-        <% if(brinquedos != undefined){ %>       
+        
+        <% if(brinquedos){ %>
             
-            <% brinquedos.forEach(brinquedo=>{ %>
-
-                <div class="col-md-4" style="margin-top: 30px; margin-left: auto; margin-right: auto; height: 300px;">
-                    <div style="width: 200px;">
-                        <img src= <%= brinquedo.foto_brinquedo %> width="200px" >
+            <% if(brinquedos.status == false){%>
+                <script>
+                    alert("Ocorreu um erro na edição");                    
+                </script>
+                <%console.log(brinquedos.resultado.sqlMessage);%>
+                <%console.log(brinquedos.resultado.sql);%>        
+            <%}else if(brinquedos.status){%>
+                
+                <script>
+                    alert("Edição Ok!!");
+                </script>
+            <%}else{%>           
+            
+                <% brinquedos.forEach(brinquedo=>{ %>
+                    
+                    <div class="col-md-4" style="margin-top: 30px; margin-left: auto; margin-right: auto; height: 300px;">
+                        <div style="width: 200px;">
+                            <img src= <%= brinquedo.foto_brinquedo %> width="200px" >
+                        </div>
+                        Id do Brinquedo: <%= brinquedo.id_brinquedo %><br>
+                        Nome: <%= brinquedo.nome_brinquedo %><br>
+                        Características: <%= brinquedo.caracteristicas %><br>                
+                        Valor da locação: <%= brinquedo.valor_brinquedo %><br>
+                        Quantidade em Estoque: <%= brinquedo.quantidade %><br>
+                        <% if (brinquedo.observacao != null){ %>
+                            Observação: <%= brinquedo.observacao %><br>
+                        <% } %>
+                        <div>
+                            <button class="btn btn-primary" id="btnEditarBrinquedo"  data-toggle="modal" 
+                            data-target="#janelaDeEdicaoBrinquedo" 
+                            onclick="preencherModalEdicao('<%= brinquedo.id_brinquedo %>','<%= brinquedo.nome_brinquedo %>', '<%= brinquedo.caracteristicas %>','<%= brinquedo.valor_brinquedo %>','<%= brinquedo.quantidade %>','<%= brinquedo.observacao %>')"
+                            value="<%= brinquedo.id_brinquedo %>">Editar</button>&nbsp;&nbsp;
+                            <button class="btn btn-danger" id="btn_excluir_brinquedo" data-toggle="modal"
+                            data-target="#janelaDeRemocaoBrinquedo" onclick="listarEventosDoBrinquedoExcluido('<%= brinquedo.id_brinquedo %>')">Excluir</button>
+                        </div> 
                     </div>
-                    Id do Brinquedo: <%= brinquedo.id_brinquedo %><br>
-                    Nome: <%= brinquedo.nome_brinquedo %><br>
-                    Características: <%= brinquedo.caracteristicas %><br>                
-                    Valor da locação: <%= brinquedo.valor_brinquedo %><br>
-                    Quantidade em Estoque: <% brinquedo.quantidade %><br>
-                    <% if (brinquedo.observacao != null){ %>
-                        Observação: <%= brinquedo.observacao %><br>
-                    <% } %> 
-                </div>
-            
-            <% }); %>
+                
+                <% }); %>
+            <%}%>
             
         <% } %> 
-    </div>  
+    </div>
+     <!-- Janela de Edição do Cliente -->
+     <div class="modal fade" id="janelaDeEdicaoBrinquedo">              
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <!-- cabecalho -->
+                <form method="post" action="/editarBrinquedo" name="form-editar-brinquedo" enctype="multipart/form-data" id="form-brinquedo">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" id="fecharModal">
+                            <span>&times;</span>
+                        </button>
+                        <h4 class="modal-title">Edição de Brinquedo</h4>
+                    </div>
+            
+                    <!-- corpo -->
+                    <div class="modal-body" id="corpoModal">
+            
+                        <div class="row">
+                            <div class="form-group col-md-12" style="display: none;">                                
+                                <input type="text" class="form-control" name="id_brinquedo" id="id_brinquedo">
+                            </div>                                              
+                            <div class="form-group">
+                                <label for="nome">Nome do brinquedo</label>
+                                <input type="text" class="form-control" name="nome_edicao" id="nome_edicao">
+                            </div>
+                            <div class="form-group">
+                                <label for="carac">Características</label>
+                                <input type="text" class="form-control" name="caracteristicas_edicao" id="caracteristicas_edicao">
+                            </div>
+                            <div class="form-group">
+                                <label for="valor">Valor do Aluguel</label>
+                                <input type="number" class="form-control" name="valor_edicao" id="valor_edicao">
+                            </div>
+                            <div class="form-group">
+                                <label for="quantidade">Quantidade no Estorque</label>
+                                <input type="number" class="form-control" name="quantidade_edicao" id="quantidade_edicao">
+                            </div>
+                            <div class="form-group">
+                                <label for="obs">Observação</label>
+                                <input type="text" class="form-control" name="observacao_edicao" id="observacao_edicao">
+                            </div>
+                            <div class="form-group">
+                                <label for="foto">Foto</label>
+                                <input type="file" class="form-control" name="foto" id="foto">
+                            </div>                                     
+                        </div>
+                    </div>
+            
+                    <!-- rodape -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            Cancelar
+                        </button>
+                        <button type="submit" id="btnEnviarEdicaoBrinquedo" class="btn btn-primary">
+                            Concluir Edição
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>     
+    </div>
+    <!-- Janela de remoção de brinquedo -->
+    <div class="modal fade" id="janelaDeRemocaoBrinquedo">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <!-- cabecalho -->
+                    <form method="post" action="/excluirBrinquedo" name="form-excluir-brinquedo" id="form-excluir-brinquedo">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" id="fecharModalExcluir">
+                                <span>&times;</span>
+                            </button>
+                            <h4 class="modal-title">Você tem certeza que deseja remover esse brinquedo?</h4>
+    
+                        </div>
+                        <!-- corpo -->
+                        <div class="modal-body" id="corpoModal">
+                            <h4>Eventos apagados com esse brinquedo:</h4>
+                            <input type="text" style="display: none;" id="id_brinquedo_excluir" name="id_brinquedo_excluir">
+                            <div class="row" id="listaEventos">
+                                
+                            </div>              
+                        </div>            
+                        <!-- rodape -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                Cancelar
+                            </button>
+                            <button type="submit" id="btnExcluirBrinquedo" class="btn btn-danger">
+                                Excluir
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>     
 </div>
 
 <% include partials/rodape %>  

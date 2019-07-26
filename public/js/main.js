@@ -41,7 +41,7 @@ socket.on("receberEventos", function(eventos){
             });                        
         }
        //montagem da lista a ser exibida
-       console.log(evento);        
+       
         let data = new Date(evento.data);
         let dataParaExibir = (Number(data.getDate())) + '/' + (Number(data.getMonth())+1) + '/' + data.getFullYear();   
         let horaParaExibir = Number(data.getHours())+":"+Number(data.getMinutes());     
@@ -91,6 +91,7 @@ function inserirBrinquedosNoEvento(){
     }
     socket.emit("enviarBrinquedosDisponiveis", document.getElementById("data").value);
     socket.on("receberBrinquedosDisponiveis", function(brinquedos){
+        console.log("brinquedos recebidos");
         let listaBrinquedos = '<h1>Lista de brinquedos</h1>';
 
         brinquedos.forEach(brinquedo => {
@@ -133,84 +134,6 @@ $(document).ready(function(){
         }else{//caso tenha menos de dois caracteres no input text #nome_cliente_tela_evento, mantenha a div #listaClientes vazia
             $("#listaClientes").wrapInner("");
         }      
-    });
-
-    
-
-
-   
-
-    //#################FUNÇÕES DE BRINQUEDOS ###########################
-    $("#nome_brinquedo").keyup(function(){
-        //caso o campo nome_brinquedo tenha mais de dois caracteres, é feita a busca no bd, caso contrário a lista é mantida vazia.
-        //essa função é utilizada pela página listarBrinquedos
-        if($("#nome_brinquedo").val().length > 2){
-            socket.emit("listaBrinquedosPorNome",$("#nome_brinquedo").val());
-        }else{
-            document.getElementById("listaBrinquedos").innerHTML = '';
-        }
-    });
-
-    //função que recebe a consulta da lista de clientes no bd, conforme o filtro solicitado
-    //essa função é utilizada pela página listarBrinquedos
-    socket.on("mandarBrinquedos", function(brinquedos){
-        
-        let listaBrinquedos = '';
-        //preenchimento da lista de clientes filtrada na variável listaClientes
-        brinquedos.forEach(brinquedo => {
-            listaBrinquedos += 
-            '<div class="col-md-4" style="margin-top: 30px; margin-left: auto; margin-right: auto; height: 300px;">' +
-                '<div style="width: 200px;">'+
-                    '<img src="'+brinquedo.foto_brinquedo+'" width="200px" >' +
-                '</div>'+
-                'Id do Brinquedo: '+ brinquedo.id_brinquedo +'<br>' +
-                'Nome: '+ brinquedo.nome_brinquedo +' <br>' +
-                'Características: '+ brinquedo.caracteristicas +'<br>' +
-                'Valor da locação: '+ brinquedo.valor_brinquedo + '<br>' +
-                'Quantidade em Estoque: ' + brinquedo.quantidade + '<br>';
-                if(brinquedo.observacao)
-                    listaBrinquedos += 'Observação: ' + brinquedo.observacao +
-            '</div>';
-        }); 
-        //envio das informações para a página
-        $("#listaBrinquedos").wrapInner(listaBrinquedos);     
-    });
-
-    //edição de clientes
-    function exibirJanelaEdicaoCliente(nome, cpf, logradouro, numero, complemento, observacaoEndereco, cidade, telefone, telefoneRecado, cliente_evento, email, observacaoCliente){
-
-    }
-
-
-    //Essa função determina se a janela que está em uso é a de listagem de clientes, inserção ou listagem de eventos
-    function verificarSeEEventoOuCliente(cliente){
-        
-        if ($("#listaClientes").parent().attr('id') == 'formulario_evento'){ //opção utilizada na tela de inserção de novo evento      
-            return ('<input type="button" id="btnInserirClienteNoEvento" name="btn_inserir_cliente" id_cliente="'+cliente.id_cliente+'" class="btn btn-default" value="Inserir" onclick="inserirClienteNoEvento(this)">');
-        }else if($("#listaClientes").parent().attr('id') == 'formulario_clientes'){  //opção utilizada na tela de listagem de clientes     
-            return ('<button class="btn btn-default" id="btnEditarCliente"  data-toggle="modal" '+ 
-                    'data-target="#janelaDeEdicaoCliente" value="'+cliente.id_cliente+'">Editar</button>&nbsp;&nbsp;<button class="btn btn-default">Excluir</button>');
-        }
-       
-        /*
-onclick="exibirJanelaEdicaoCliente(\''+cliente.nome+ '\',\''+cliente.cpf+ '\',\''+cliente.logradouro+ 
-            '\',\''+cliente.numero+ '\',\''+cliente.complemento+ '\',\''+cliente.observacaoEndereco+ '\',\''+cliente.cidade+ '\',\''+cliente.telefone+ '\',\''+
-                    cliente.telefoneRecado+ '\',\''+cliente.email+ '\',\''+cliente.observacaoCliente+'\')"
-         */
-    }
-
-/*
-    var observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutationRecord) {
-            console.log('style changed!');
-        });    
-    });
-    
-    var target = document.getElementById('janelaDeEdicaoCliente');
-    observer.observe(target, { attributes : true, attributeFilter : ['style'] });
-  */
-   
-
-    
+    });  
 });
 

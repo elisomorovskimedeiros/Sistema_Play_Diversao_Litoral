@@ -144,7 +144,33 @@ router.post('/inserirBrinquedo', upload.single('foto'), (req, res, next) => {
     inserirBrinquedo();     
 });
 
+router.post("/editarBrinquedo", upload.single('foto'), (req, res, next) =>{
+    const file = req.file;
+    
+    //edição dos dados do brinquedo no db
+    var brinquedo = {
+        id_brinquedo: req.body.id_brinquedo,
+        nome_brinquedo: req.body.nome_edicao,
+        caracteristicas: req.body.caracteristicas_edicao,
+        valor_brinquedo: req.body.valor_edicao,
+        quantidade: req.body.quantidade_edicao,
+        observacao: req.body.observacao_edicao
+    }
 
+    if(file){//caso algum erro tenha ocorrido
+        brinquedo.foto_brinquedo = "imagens/"+ req.file.originalname 
+     }
+    var int = new Interface();
+    async function editarBrinquedo(){
+        var resposta = await int.editarBrinquedo(brinquedo).then(function(brinquedos){
+            res.render("listarBrinquedos",{brinquedos});
+        });                           
+    }
+    editarBrinquedo();
+});
+
+
+/*
 router.post("/inserirBrinquedo", isLoggedIn, function(req, res){
     var formidable = require("formidable");
     var form = formidable.IncomingForm();
@@ -177,6 +203,7 @@ router.post("/inserirBrinquedo", isLoggedIn, function(req, res){
         }                  
     });    
 });
+*/
 
 
 router.get("/listarBrinquedos", isLoggedIn, function(req, res){
@@ -190,6 +217,7 @@ router.get("/listarTodosBrinquedos", isLoggedIn, function(req, res){
         res.render("listarBrinquedos.ejs",{brinquedos});
     });     
 });
+
 
 router.get("/inserirEvento", isLoggedIn, function(req, res){
     let resposta;
