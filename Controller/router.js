@@ -331,6 +331,10 @@ router.post("/excluirCliente",  function(req, res){
     });
 });
 
+router.get("/cadastroPlay", function(req, res){
+    res.render("cadastro_play");
+});
+
 
 module.exports = router;
 
