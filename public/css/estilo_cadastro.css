@@ -1,0 +1,123 @@
+html, body, #capa, #formPlay{    
+    overflow: auto;
+    width: 100%;
+    height: 100%;
+}
+
+body{
+    background-image: url("../imagens/Piscina-de-bolinha.jpg");
+    background-attachment: fixed;
+    font-family: Helvetica, Arial, sans-serif;
+    overflow-x: hidden;
+}
+
+.centralizar{
+    margin: auto;    
+    width: max-content;
+}
+
+.botaoRedondo{
+    border-radius: 500px;
+    -moz-border-radius: 500px;
+    -webkit-border-radius: 500px;
+    padding: 20px;
+}
+
+.semSublinhado:hover{
+    text-decoration: none;    
+}
+
+.letraAzul{
+    color: #4245f8;
+}
+.letraAzul:hover{
+    color:#4245f8;
+}
+
+#divBotao{
+    background-color: rgba(77, 78, 74, 0.4);
+    border: 3px solid white;    
+    text-align: center;
+    margin-top: 15px;
+}
+
+#divBotao:hover{
+    background-color: rgba(255, 255, 255, 0.7);    
+}
+
+#divBotao{
+    width: 70%;
+}
+
+
+
+/* ====================Media queries====================*/
+
+@media screen and (max-height: 400px){
+
+    #capa{
+        height: 100%;
+        min-height: 100%;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-align-items: center;
+        align-items: center;
+        -webkit-justify-content: center;
+        justify-content: center;
+      }
+    #divLogo{
+        display: block;
+        float: left;
+        width: 50%;
+        
+    }
+    #divBotao{
+        display: block;
+        float: right;
+        width: 50%;
+        margin-top: auto;
+        margin-bottom: auto;
+    }
+}
+
+@media screen and (max-height: 470px){
+    #imgLogo{
+        max-height: 250px;
+        width: auto;
+    }
+}
+
+/*xs < 768 */
+@media screen and (max-width: 767px){
+    #botao{
+        font-size: 30px;
+    }
+}
+
+/*sm*/
+@media screen and (min-width: 768px){
+    #botao{
+        font-size: 30px;
+    }
+}
+
+/*md+*/
+@media screen and (min-width: 992px){
+    #botao{
+        font-size: 40px;
+    }
+}
+
+/*lg*/
+@media screen and (min-width: 1200px){
+    #botao{
+        font-size: 50px;
+    }  
+}
+/*fim do media queries*/
+
+#botao{
+    font-weight: 1000;    
+    margin-bottom: 50px;
+    text-transform: uppercase;
+}

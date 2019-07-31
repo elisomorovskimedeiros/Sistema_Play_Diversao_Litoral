@@ -134,6 +134,18 @@ $(document).ready(function(){
         }else{//caso tenha menos de dois caracteres no input text #nome_cliente_tela_evento, mantenha a div #listaClientes vazia
             $("#listaClientes").wrapInner("");
         }      
-    });  
+    });
+    
+
+    //Código muito sinistro que suaviza o scroll ## retirado de: https://www.origamid.com/codex/scroll-suave-para-link-interno/
+    $('.scrollSuave').on('click', function(e) {
+        e.preventDefault();
+        var id = $(this).attr('href'),
+                targetOffset = $(id).offset().top;
+                
+        $('html, body').animate({ 
+            scrollTop: targetOffset - 0
+        }, 1000);
+    });
 });
 
