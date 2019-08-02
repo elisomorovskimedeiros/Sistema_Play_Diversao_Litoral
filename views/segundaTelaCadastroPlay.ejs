@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>  
+<meta charset="utf-8">
+<title>Cadastro Play Diversão</title>
+
+<link rel="stylesheet" type="text/css" href="/css/animate.css" />
+<link rel="stylesheet" type="text/css" href="/css/demo.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="/css/estilo_cadastro.css" />
+<link href="/css/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+
+</head>
+    <body>
+        <div id="formPlay">
+            <div id="segundaTela" class="post hidden visible animated bounceInRight">
+                <form action="/segundaTela" method="POST">
+                    <div class="row letraAzul containerFormulario form-group">
+                        <div class="col-md-12">
+                            <h1>Preciso do seu contato!</h1>
+                        </div>
+                        <div class="col-md-6">
+                            <label><strong>Seu telefone:</strong></label>
+                            <input type="text" class="form-control" name="telefone" id="telefone">
+                        </div>
+                        <div class="col-md-6">
+                            <label><strong>Seu segundo telefone, ou de uma pessoa próxima:</strong></label>
+                            <input type="text" class="form-control centralizar" name="telefoneAltarnativo" id="telefoneAlternativo" size="5">
+                        </div>
+                        <div class="col-md-6">
+                                <label><strong>Email:</strong></label>
+                                <input type="email" class="form-control" placeholder="jose@email.com.br" name="email" id="email">
+                            </div>
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-primary">Próximo >>></button>
+                        </div>    
+                    </div>                    
+                </form>  
+            </div>                      
+        </div>
+    
+       
+    </body>
+</html>

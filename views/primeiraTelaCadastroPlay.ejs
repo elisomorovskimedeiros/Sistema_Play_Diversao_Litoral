@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>  
+<meta charset="utf-8">
+<title>Cadastro Play Diversão</title>
+<link href="/css/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="/css/animate.css" />
+<link rel="stylesheet" type="text/css" href="/css/demo.css" />
+<link rel="stylesheet" type="text/css" href="/css/estilo_cadastro.css" />
+
+
+
+</head>
+<!--Efeito de rolagem lateral retirado de:
+http://www.web2feel.com/freeby/scroll-effects/index2.html-->
+    <body>
+        <div id="formPlay">
+            <div  class="post hidden visible animated bounceInRight">
+                <form action="/primeiraTela" method="POST">
+                    <div class="row letraAzul containerFormulario form-group">                    
+                        <div class="col-md-12">
+                            <h1>Seus dados:</h1>
+                        </div>
+                        <div class="col-md-6">
+                            <label><strong>Nome:</strong></label>
+                            <input type="text" class="form-control" placeholder="José da Silva" name="nome" id="nome">
+                        </div>                        
+                        <div class="col-md-6">
+                            <label><strong>CPF (somente números):</strong></label>
+                            <input type="text" class="form-control" name="cpf" id="cpf">
+                        </div>                        
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-primary">Próximo >>></button>
+                        </div>                    
+                    </div>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>

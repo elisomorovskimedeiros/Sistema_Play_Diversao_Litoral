@@ -12,6 +12,10 @@ body{
     overflow-x: hidden;
 }
 
+input[type="number"], input[type="time"], input[type="date"] {
+    width:100px;
+ }
+
 .centralizar{
     margin: auto;    
     width: max-content;
@@ -34,6 +38,14 @@ body{
 .letraAzul:hover{
     color: rgb(58, 63, 126);
 }
+.containerFormulario{
+    margin: 10px !important;
+}
+
+.row > * {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
 
 #divBotao{
     /*background-color: rgba(77, 78, 74, 0.4);
@@ -50,11 +62,16 @@ body{
     width: 70%;
 }
 
-#contraCapa{
+#contraCapa, #formPlay{
     height: max-content; 
     display: table-cell; 
     vertical-align: middle;
 }
+#contrato{
+    background-color: white;
+    text-align: justify;
+}
+
 
 
 

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>  
+<meta charset="utf-8">
+<title>Cadastro Play Diversão</title>
+
+<link rel="stylesheet" type="text/css" href="/css/animate.css" />
+<link rel="stylesheet" type="text/css" href="/css/demo.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="/css/estilo_cadastro.css" />
+<link href="/css/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+
+</head>
+    <body>
+        <div id="formPlay">
+            <div id="quartaTela" class="post hidden visible animated bounceInRight">
+                <h1>Onde será sua festa?</h1>
+                <form action="/pularParaQuintaTela" method="POST">
+                    <strong>Caso seja na sua casa mesmo, aperte em pular</strong><br>
+                    <button type="submit" class="btn btn-primary">Pular</button>
+                </form>
+                <form action="/quartaTela" method="POST">
+                    <div class="row letraAzul containerFormulario form-group">                       
+                        <div class="col-md-6">
+                            <label><strong>Nome da rua da festa:</strong></label>
+                            <input type="text" class="form-control" placeholder="Rua Mal. Floriano" name="logradouro" id="logradouro">
+                        </div>
+                        <div class="col-md-6">
+                            <label><strong>Número do local:</strong></label>
+                            <input type="number" class="form-control centralizar" placeholder="586" name="numero" id="numero" size="5">
+                        </div>
+                        <div class="col-md-6">
+                            <label><strong>Complemento:</strong></label>
+                            <input type="text" class="form-control" placeholder="Ap. 5 ou esq. Av. Ceará" name="complemento" id="complemento">
+                        </div>
+                        <div class="col-md-6">
+                            <label><strong>Cidade:</strong></label>
+                            <input type="text" class="form-control" placeholder="Capão da Canoa" name="cidade" id="cidade">
+                        </div>
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-primary">Próximo >>></button>
+                        </div>    
+                    </div>                    
+                </form>  
+            </div>                      
+        </div>
+    
+       
+    </body>
+</html>

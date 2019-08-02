@@ -335,6 +335,30 @@ router.get("/cadastroPlay", function(req, res){
     res.render("cadastro_play");
 });
 
+router.get("/primeiraTela", function(req, res){
+    res.render("primeiraTelaCadastroPlay");
+});
+
+router.post("/:tela", function(req, res){
+    let tela = req.params.tela;
+    switch(tela){
+        case "primeiraTela": res.render("segundaTelaCadastroPlay");
+        break;
+        case "segundaTela": res.render("terceiraTelaCadastroPlay");
+        break;
+        case "terceiraTela": res.render("quartaTelaCadastroPlay");
+        break;
+        case "quartaTela": res.render("quintaTelaCadastroPlay");
+        break;
+        case "quintaTela": res.render("sextaTelaCadastroPlay");
+        break;
+        case "sextaTela": res.render("setimaTelaCadastroPlay");
+        break;
+        case "pularParaQuintaTela": res.render("quintaTelaCadastroPlay");
+        break;       
+    }
+});
+
 
 module.exports = router;
 
