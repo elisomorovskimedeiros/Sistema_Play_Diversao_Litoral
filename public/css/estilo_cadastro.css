@@ -12,7 +12,7 @@ body{
     overflow-x: hidden;
 }
 
-input[type="number"], input[type="time"], input[type="date"] {
+#numero, #numeroFesta, input[type="time"], input[type="date"] {
     width:100px;
  }
 
@@ -67,9 +67,14 @@ input[type="number"], input[type="time"], input[type="date"] {
     display: table-cell; 
     vertical-align: middle;
 }
-#contrato{
-    background-color: white;
+#contrato{    
     text-align: justify;
+}
+
+#containerContrato{
+    padding: 15px;
+    border-radius: 15px;
+    background-color: white;
 }
 
 

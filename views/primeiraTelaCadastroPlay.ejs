@@ -1,35 +1,72 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>  
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cadastro Play Diversão</title>
-<link href="/css/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="/css/animate.css" />
-<link rel="stylesheet" type="text/css" href="/css/demo.css" />
-<link rel="stylesheet" type="text/css" href="/css/estilo_cadastro.css" />
-
-
-
-</head>
+    <head>  
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Cadastro Play Diversão</title>
+        <link href="/css/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="/css/animate.css" />
+        <link rel="stylesheet" type="text/css" href="/css/demo.css" />
+        <link rel="stylesheet" type="text/css" href="/css/estilo_cadastro.css" />
+        <script src="/js/jquery-3.4.1.js"></script>
+        <script src="/js/socket.io.js"></script>
+        <script src="/js/main.js"></script>
+        <script src="/js/funcoesCadastro.js"></script>
+    </head>
 <!--Efeito de rolagem lateral retirado de:
 http://www.web2feel.com/freeby/scroll-effects/index2.html-->
-    <body>
+    <body">
         <div id="formPlay">
             <div  class="post hidden visible animated bounceInRight">
-                <form action="/primeiraTela" method="POST">
+                <form action="/primeiraTela" method="POST" class="needs-validation" novalidate>
                     <div class="row letraAzul containerFormulario form-group">                    
                         <div class="col-md-12">
-                            <h1>Seus dados:</h1>
+                            <h1>Seus dados e contato:</h1>
                         </div>
                         <div class="col-md-6">
-                            <label><strong>Nome:</strong></label>
-                            <input type="text" class="form-control" placeholder="José da Silva" name="nome" id="nome">
+                            <label for="nome"><strong>Nome:</strong></label>
+                            <input type="text" class="form-control" placeholder="José da Silva" name="nome" id="nome" onblur="validaNome(this)">
+                            <div class="valid-feedback">
+                                <img src="/imagens/certo.png"><strong>Certo!</strong>
+                            </div>
+                            <div class="invalid-feedback">
+                                <img src="/imagens/errado.png"><strong>O nome completo precisa ter mais de 2 letras e espaço</strong>                            
+                            </div>
                         </div>                        
                         <div class="col-md-6">
                             <label><strong>CPF (somente números):</strong></label>
-                            <input type="text" class="form-control" name="cpf" id="cpf">
+                            <input type="text" class="form-control" name="cpf" id="cpf" onblur="validaCPF()">
+                            <div class="valid-feedback">
+                                <img src="/imagens/certo.png"><strong>Certo!</strong>
+                            </div>
+                            <div class="invalid-feedback">
+                                <img src="/imagens/errado.png"><strong>Por favor insira um CPF válido</strong>                            
+                            </div>
                         </div>                        
+                        <div class="col-md-6">
+                            <label><strong>Seu telefone (somente números):</strong></label>
+                            <input type="text" class="form-control" name="telefone" id="telefone" onblur="validaTelefone(this)">
+                            <div class="valid-feedback">
+                                <img src="/imagens/certo.png"><strong>Certo!</strong>
+                            </div>
+                            <div class="invalid-feedback">
+                                <img src="/imagens/errado.png"><strong>Telefones celulares precisam ter 10 digitos e celulares 11</strong>                            
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label><strong>Seu segundo telefone, ou de uma pessoa próxima (somente números):</strong></label>
+                            <input type="text" class="form-control" name="telefoneAltarnativo" id="telefoneAlternativo" onblur="validaTelefone(this)">
+                            <div class="valid-feedback">
+                                <img src="/imagens/certo.png"><strong>Certo!</strong>
+                            </div>
+                            <div class="invalid-feedback">
+                                <img src="/imagens/errado.png"><strong>Telefones celulares precisam ter 10 digitos e celulares 11</strong>                            
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label><strong>Email:</strong></label>
+                            <input type="email" class="form-control" placeholder="jose@email.com.br" name="email" id="email">                            
+                        </div>                                                
                         <div class="col-md-6">
                             <button type="submit" class="btn btn-primary">Próximo >>></button>
                         </div>                    
@@ -37,7 +74,6 @@ http://www.web2feel.com/freeby/scroll-effects/index2.html-->
                 </form>
             </div>
         </div>
-        <div id="resolucao"></div>
-        
+        <div id="resolucao"></div>        
     </body>
 </html>
