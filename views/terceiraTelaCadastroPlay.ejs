@@ -20,7 +20,7 @@
     <body>
         <div id="formPlay">
             <div id="terceiraTela" class="post hidden visible animated bounceInRight">
-                <form action="/terceiraTela" method="POST">
+                <form action="/terceiraTela" method="POST" class="needs-validation" novalidate>
                     <div class="row letraAzul containerFormulario form-group">
                         <div class="col-md-12 row">
                             <div class="col-md-12">
@@ -29,7 +29,7 @@
                             </div>                       
                             <div class="col-md-6">
                                 <label><strong>Data:</strong></label>
-                                <input type="date" class="form-control centralizar" name="data" id="data" onblur="validaNumero(this)">
+                                <input type="date" required class="form-control centralizar" name="data" id="data" onblur="validaNumero(this)">
                                 <div class="valid-feedback">
                                     <img src="/imagens/certo.png"><strong>Certo!</strong>
                                 </div>
@@ -39,7 +39,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label><strong>Hora:</strong></label>
-                                <input type="time" class="form-control centralizar" name="data" id="data" onblur="validaNumero(this)">
+                                <input type="time" required class="form-control centralizar" name="hora" id="hora" onblur="validaNumero(this)">
                                 <div class="valid-feedback">
                                         <img src="/imagens/certo.png"><strong>Certo!</strong>
                                 </div>
@@ -193,7 +193,7 @@
                                     </p>
                             </div>
                             <div class="form-group">
-                                <input type="checkbox" class="form-check-input" id="checkContrato" onblur="validaCheck(this)">
+                                <input type="checkbox" required class="form-check-input" id="checkContrato" onblur="validaCheck(this)">
                                 <label>Concordo</label>
                                 <div class="valid-feedback">
                                     <img src="/imagens/certo.png"><strong>Obrigado!</strong>

@@ -20,7 +20,7 @@
     <body>
         <div id="formPlay">
             <div id="segundaTela" class="post hidden visible animated bounceInRight">
-                <form action="/segundaTela" method="POST">
+                <form action="/segundaTela" method="POST" class="needs-validation" novalidate>
                     <div class="row letraAzul containerFormulario">
                         <div class="col-md-6" id="avisoJaPossuiCadastro" style="display: none">
                             <h2>
@@ -34,7 +34,7 @@
                             </div>
                             <div class="form-group">
                                 <label><strong>Nome da rua onde mora:</strong></label>
-                                <input type="text" class="form-control" placeholder="exemplo: Rua Mal. Floriano" name="logradouro" id="logradouro" onblur="validaNome(this)">
+                                <input type="text" class="form-control" required placeholder="exemplo: Rua Mal. Floriano" name="logradouro" id="logradouro" onblur="validaNome(this)">
                                 <div class="valid-feedback">
                                     <img src="/imagens/certo.png"><strong>Certo!</strong>
                                 </div>
@@ -44,7 +44,7 @@
                             </div>
                             <div class="form-group">
                                 <label><strong>Número de sua casa:</strong></label>
-                                <input type="number" class="form-control centralizar" name="numero" id="numero" size="5" onblur="validaNumero(this)">
+                                <input type="number" required class="form-control centralizar" name="numero" id="numero" size="5" onblur="validaNumero(this)">
                                 <div class="valid-feedback">
                                     <img src="/imagens/certo.png"><strong>Certo!</strong>
                                 </div>
@@ -58,7 +58,7 @@
                             </div>
                             <div class="form-group">
                                 <label><strong>Bairro:</strong></label>
-                                <input type="text" class="form-control" placeholder="exemplo: Jardim Perdizes" name="bairro" id="bairro" onblur="validaNome(this)">
+                                <input type="text" class="form-control" required placeholder="exemplo: Jardim Perdizes" name="bairro" id="bairro" onblur="validaNome(this)">
                                 <div class="valid-feedback">
                                     <img src="/imagens/certo.png"><strong>Certo!</strong>
                                 </div>
@@ -68,7 +68,7 @@
                             </div>
                              <div class="form-group">
                                 <label><strong>Cidade:</strong></label>
-                                <input type="text" class="form-control" placeholder="exemplo: Capão da Canoa" name="cidade" id="cidade" onblur="validaNome(this)">
+                                <input type="text" class="form-control" required placeholder="exemplo: Capão da Canoa" name="cidade" id="cidade" onblur="validaNome(this)">
                                 <div class="valid-feedback">
                                     <img src="/imagens/certo.png"><strong>Certo!</strong>
                                 </div>
@@ -86,7 +86,7 @@
                             
                             <div class="form-group">
                                 <label><strong>Nome da rua da festa:</strong></label>
-                                <input type="text" class="form-control" placeholder="exemplo: Rua Mal. Floriano" name="logradouroFesta" id="logradouroFesta">
+                                <input type="text" class="form-control" required placeholder="exemplo: Rua Mal. Floriano" name="logradouroFesta" id="logradouroFesta">
                                 <div class="valid-feedback">
                                     <img src="/imagens/certo.png"><strong>Certo!</strong>
                                 </div>
@@ -96,7 +96,7 @@
                             </div>
                             <div class="form-group">
                                 <label><strong>Número do local da festa:</strong></label>
-                                <input type="number" class="form-control centralizar" name="numeroFesta" id="numeroFesta" size="5">
+                                <input type="number" required class="form-control centralizar" name="numeroFesta" id="numeroFesta" size="5">
                                 <div class="valid-feedback">
                                     <img src="/imagens/certo.png"><strong>Certo!</strong>
                                 </div>
@@ -110,7 +110,7 @@
                             </div>
                             <div class="form-group">
                                 <label><strong>Bairro da Festa:</strong></label>
-                                <input type="text" class="form-control" placeholder="exemplo: Jardim Perdizes" name="bairroFesta" id="bairroFesta">
+                                <input type="text" class="form-control" required placeholder="exemplo: Jardim Perdizes" name="bairroFesta" id="bairroFesta">
                                 <div class="valid-feedback">
                                     <img src="/imagens/certo.png"><strong>Certo!</strong>
                                 </div>
@@ -120,7 +120,7 @@
                             </div>
                             <div class="form-group">
                                 <label><strong>Cidade da Festa:</strong></label>
-                                <input type="text" class="form-control" placeholder="exemplo: Capão da Canoa" name="cidadeFesta" id="cidadeFesta">
+                                <input type="text" class="form-control" required placeholder="exemplo: Capão da Canoa" name="cidadeFesta" id="cidadeFesta">
                                 <div class="valid-feedback">
                                     <img src="/imagens/certo.png"><strong>Certo!</strong>
                                 </div>

@@ -25,7 +25,7 @@ http://www.web2feel.com/freeby/scroll-effects/index2.html-->
                         </div>
                         <div class="col-md-6">
                             <label for="nome"><strong>Nome:</strong></label>
-                            <input type="text" class="form-control" placeholder="José da Silva" name="nome" id="nome" onblur="validaNome(this)">
+                            <input type="text" class="form-control" required placeholder="exemplo: José da Silva" name="nome" id="nome" onblur="validaNome(this)">
                             <div class="valid-feedback">
                                 <img src="/imagens/certo.png"><strong>Certo!</strong>
                             </div>
@@ -35,7 +35,7 @@ http://www.web2feel.com/freeby/scroll-effects/index2.html-->
                         </div>                        
                         <div class="col-md-6">
                             <label><strong>CPF (somente números):</strong></label>
-                            <input type="text" class="form-control" name="cpf" id="cpf" onblur="validaCPF()">
+                            <input type="text" class="form-control" required name="cpf" id="cpf" onblur="validaCPF()">
                             <div class="valid-feedback">
                                 <img src="/imagens/certo.png"><strong>Certo!</strong>
                             </div>
@@ -45,7 +45,7 @@ http://www.web2feel.com/freeby/scroll-effects/index2.html-->
                         </div>                        
                         <div class="col-md-6">
                             <label><strong>Seu telefone (somente números):</strong></label>
-                            <input type="text" class="form-control" name="telefone" id="telefone" onblur="validaTelefone(this)">
+                            <input type="text" class="form-control" placeholder="exemplo: 51991625582" required name="telefone" id="telefone" onblur="validaTelefone(this)">
                             <div class="valid-feedback">
                                 <img src="/imagens/certo.png"><strong>Certo!</strong>
                             </div>
@@ -55,7 +55,7 @@ http://www.web2feel.com/freeby/scroll-effects/index2.html-->
                         </div>
                         <div class="col-md-6">
                             <label><strong>Seu segundo telefone, ou de uma pessoa próxima (somente números):</strong></label>
-                            <input type="text" class="form-control" name="telefoneAltarnativo" id="telefoneAlternativo" onblur="validaTelefone(this)">
+                            <input type="text" class="form-control" placeholder="exemplo: 51991625582" name="telefoneAltarnativo" id="telefoneAlternativo" onblur="validaTelefone(this)">
                             <div class="valid-feedback">
                                 <img src="/imagens/certo.png"><strong>Certo!</strong>
                             </div>
@@ -65,7 +65,7 @@ http://www.web2feel.com/freeby/scroll-effects/index2.html-->
                         </div>
                         <div class="col-md-6">
                             <label><strong>Email:</strong></label>
-                            <input type="email" class="form-control" placeholder="jose@email.com.br" name="email" id="email">                            
+                            <input type="email" class="form-control" placeholder="exemplo: jose@email.com.br" name="email" id="email">                            
                         </div>                                                
                         <div class="col-md-6">
                             <button type="submit" class="btn btn-primary">Próximo >>></button>
