@@ -356,7 +356,7 @@ router.post("/:tela", function(req, res){
         case "terceiraTela": 
             dadosTerceiraTela(req);
             int.inserirCliente(cliente).then(function(resposta){
-                if(false){
+                if(resposta.status){
                     evento.id_cliente = resposta.resultado.insertId;
                     int.inserirEvento(evento).then(function(resposta){
                         if(resposta.status){
