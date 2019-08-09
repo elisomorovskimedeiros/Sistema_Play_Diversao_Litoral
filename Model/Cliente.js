@@ -1,5 +1,5 @@
 class Cliente{
-    constructor(nome, cpf, logradouro, numero, complemento, observacaoEndereco, cidade, telefone, telefoneRecado, cliente_evento, email, observacaoCliente){
+    constructor(nome, cpf, logradouro, numero, complemento, observacaoEndereco, bairro, cidade, telefone, telefoneRecado, cliente_evento, email, observacaoCliente){
         this.id_cliente = null;
         this.nome = nome;
         this.cpf = cpf;
@@ -7,6 +7,7 @@ class Cliente{
         this.numero = numero;
         this.complemento = complemento;
         this.observacao_endereco = observacaoEndereco;
+        this.bairro = bairro;
         this.cidade = cidade;
         this.telefone = telefone;
         this.telefone_recado = telefoneRecado;

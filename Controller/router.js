@@ -4,6 +4,7 @@ const express = require("express"),
        fs = require("fs"),
        Interface = require("../Controller/Interface"),
            Evento = require("../Model/Evento"),
+           Cliente = require("../Model/Cliente"),
 
         //multer = require('../Controller/multer'), //utilizar o sharp para configurar a imagem após o upload  fonte: https://medium.com/collabcode/upload-e-compress%C3%A3o-de-imagens-com-nodejs-68109eed066e    
         multer  = require('multer'),
@@ -12,6 +13,8 @@ const express = require("express"),
 
 //const upload = multer({dest: 'public/imagens/'});
 const int = new Interface();
+
+let cliente, evento; //utilizado no post /cadastroPlay
 
 function stringToDate(dataString){
     dataString = dataString.split("-");
@@ -343,21 +346,61 @@ router.post("/:tela", function(req, res){
     let tela = req.params.tela;
     switch(tela){
         case "primeiraTela": res.render("segundaTelaCadastroPlay");
+                             dadosPrimeiraTela(req);
+
         break;
         case "segundaTela": res.render("terceiraTelaCadastroPlay");
+                            dadosSegundaTela(req);
+                           
         break;
-        case "terceiraTela": res.render("quartaTelaCadastroPlay");
+        case "terceiraTela": 
+            dadosTerceiraTela(req);
+            int.inserirCliente(cliente).then(function(resposta){
+                if(false){
+                    evento.id_cliente = resposta.resultado.insertId;
+                    int.inserirEvento(evento).then(function(resposta){
+                        if(resposta.status){
+                            res.render("quartaTelaCadastroPlay");
+                        }else{
+                            res.render("telaErroCadastro");
+                        }
+                    });     
+                }else{
+                    res.render("telaErroCadastro");
+                }                           
+            });                 
         break;
-        case "quartaTela": res.render("quintaTelaCadastroPlay");
-        break;
-        case "quintaTela": res.render("sextaTelaCadastroPlay");
-        break;
-        case "sextaTela": res.render("setimaTelaCadastroPlay");
-        break;
-        case "pularParaQuintaTela": res.render("quintaTelaCadastroPlay");
-        break;       
-    }
+    }    
 });
+
+function dadosPrimeiraTela(req){
+    cliente = new Cliente(req.body.nome, req.body.cpf, 
+        null, null, null, null, null, req.body.telefone, req.body.telefoneAlternativo, 
+        null, req.body.email, '');
+    return cliente;
+}
+
+function dadosSegundaTela(req){
+    
+    cliente.logradouro = req.body.logradouro;
+    cliente.numero = req.body.numero;
+    cliente.complemento = req.body.complemento;
+    cliente.bairro = req.body.bairro;
+    cliente.cidade = req.body.cidade;
+
+    evento = new Evento(null, null, req.body.logradouroFesta, Number(req.body.numeroFesta), 
+         req.body.complementoFesta, req.body.cidadeFesta, 0, 0, 0, '');
+
+}
+
+function dadosTerceiraTela(req){    
+    let data = stringToDate(req.body.data);
+    data.setHours(Number((req.body.hora).slice(0,2)));/*-(data.getTimezoneOffset())/60)*///para setar a hora, o sistema automaticamente guarda a hora utc, que é 
+    // a hora de Brasília +3. Portanto foi subtraído a hora do retorno do método getTimezoneOffset() que mostra o desvio UTC em minutos.
+    data.setMinutes((req.body.hora).slice(3,5)); 
+    evento.data = data;
+}
+
 
 
 module.exports = router;

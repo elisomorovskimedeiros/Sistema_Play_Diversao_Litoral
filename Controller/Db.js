@@ -374,16 +374,18 @@ class Db{
         });   
         
     }
-
+    //troquei o sistema de resposta, veririficar depois todos os querys que usam essa função
     inserirEvento(evento){
         let sql = 'INSERT INTO evento SET ?';
         var db = this;
         return new Promise(function (resolve, reject) {
             db.connection.query(sql, evento, function (err, results, fields) {
-            if (err) return resolve(err);
-            else{
-                return resolve(results);
-                }
+            if (err) {
+                return resolve({status: false,
+                                resultado: err});
+            }
+            return resolve({status: true,
+                            resultado: results});
             });
         });  
     }  

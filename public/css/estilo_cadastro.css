@@ -35,8 +35,17 @@ body{
 .letraAzul{
     color: rgb(58, 63, 126);
 }
+
 .letraAzul:hover{
     color: rgb(58, 63, 126);
+}
+
+.letraVermelha{
+    color: red;
+}
+
+.letraVermelha:hover{
+    color: red;
 }
 .containerFormulario{
     margin: 10px !important;
@@ -80,8 +89,6 @@ body{
 #data, #hora{
     width: max-content;
 }
-
-
 
 
 /* ====================Media queries====================*/
