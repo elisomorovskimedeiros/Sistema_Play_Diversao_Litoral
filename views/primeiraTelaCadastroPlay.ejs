@@ -1,21 +1,4 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-    <head>  
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Cadastro Play Diversão</title>
-        <link href="/css/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="/css/animate.css" />
-        <link rel="stylesheet" type="text/css" href="/css/demo.css" />
-        <link rel="stylesheet" type="text/css" href="/css/estilo_cadastro.css" />
-        <script src="/js/jquery-3.4.1.js"></script>
-        <script src="/js/socket.io.js"></script>
-        <script src="/js/main.js"></script>
-        <script src="/js/funcoesCadastro.js"></script>
-    </head>
-<!--Efeito de rolagem lateral retirado de:
-http://www.web2feel.com/freeby/scroll-effects/index2.html-->
-    <body">
+<% include partials/cabecalho_cadastro %>
         <div id="formPlay">
             <div  class="post hidden visible animated bounceInRight">
                 <form action="/primeiraTela" method="POST" class="needs-validation" novalidate>
@@ -75,5 +58,4 @@ http://www.web2feel.com/freeby/scroll-effects/index2.html-->
             </div>
         </div>
         <div id="resolucao"></div>        
-    </body>
-</html>
+ <% include partials/rodape_cadastro %>

@@ -355,6 +355,8 @@ router.post("/:tela", function(req, res){
         break;
         case "terceiraTela": 
             dadosTerceiraTela(req);
+            console.log(cliente);
+            console.log(evento);
             int.inserirCliente(cliente).then(function(resposta){
                 if(resposta.status){
                     evento.id_cliente = resposta.resultado.insertId;
@@ -374,9 +376,9 @@ router.post("/:tela", function(req, res){
 });
 
 function dadosPrimeiraTela(req){
-    cliente = new Cliente(req.body.nome, req.body.cpf, 
-        null, null, null, null, null, req.body.telefone, req.body.telefoneAlternativo, 
-        null, req.body.email, '');
+    console.log(req.body.telefoneAltarnativo);
+    cliente = new Cliente(req.body.nome,req.body.cpf,null,null,null,null,null,null,
+        req.body.telefone,req.body.telefoneAltarnativo,null,req.body.email,null);
     return cliente;
 }
 

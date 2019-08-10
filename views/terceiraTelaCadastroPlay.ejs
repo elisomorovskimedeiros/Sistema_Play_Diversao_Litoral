@@ -1,23 +1,4 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>  
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cadastro Play Diversão</title>
-
-<link rel="stylesheet" type="text/css" href="/css/animate.css" />
-<link rel="stylesheet" type="text/css" href="/css/demo.css" />
-<link rel="stylesheet" type="text/css" media="screen" href="/css/estilo_cadastro.css" />
-<link href="/css/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-<script src="/js/jquery-3.4.1.js"></script>
-<script src="/js/socket.io.js"></script>
-<script src="/js/main.js"></script>
-<script src="/js/funcoesCadastro.js"></script>
-
-
-</head>
-    <body>
+<% include partials/cabecalho_cadastro %>
         <div id="formPlay">
             <div id="terceiraTela" class="post hidden visible animated bounceInRight">
                 <form action="/terceiraTela" method="POST" class="needs-validation" novalidate>
@@ -211,5 +192,4 @@
                 </form>  
             </div>                      
         </div>    
-    </body>
-</html>
+<% include partials/rodape_cadastro %>
