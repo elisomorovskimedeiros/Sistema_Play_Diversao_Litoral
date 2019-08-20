@@ -32,7 +32,7 @@ function validar(campo, validade){
         }
         objeto.classList.add("is-invalid");
     }   
-}32.743.018/0001-70
+}
 
 
 function validaNome(campo){
