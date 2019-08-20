@@ -1,7 +1,10 @@
 const Db = require("../Controller/Db");
+//const db = new Db();
 
 class Interface{
-    constructor(){}
+    constructor(){
+        //this.db = db;
+    }
 
     async inserirCliente(cliente){
         let db = new Db();
@@ -148,9 +151,23 @@ class Interface{
         });
     }
 
+    async filtrarEventoPorIdEvento(idEvento){
+        let db = new Db();
+        return await db.selectUmEvento(idEvento).then(function(evento){
+            return evento;
+        });
+    }
+
     async editarCliente(cliente){
         let db = new Db();        
         return await db.editarCliente(cliente).then(function(resposta){
+            return resposta;
+        });
+    }
+
+    async editarEvento(evento){
+        let db = new Db();        
+        return await db.editarEvento(evento).then(function(resposta){
             return resposta;
         });
     }

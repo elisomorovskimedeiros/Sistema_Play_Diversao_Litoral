@@ -72,6 +72,21 @@ class Db{
             });
         });          
     }
+    
+    selectUmEvento(idEvento){
+        var db = this;
+        let sql = 'SELECT * FROM evento WHERE evento.id_evento LIKE ?';
+        return new Promise(function (resolve, reject) {
+            db.connection.query(sql, idEvento, function (err, results, fields) {                
+                if (err) {
+                    return resolve({status: false,
+                                    resultado: err});
+                }
+                return resolve({status: true,
+                                resultado: results});
+            });
+        });
+    }
 
     excluirCliente(idCliente){
         let sql = "DELETE FROM cliente WHERE id_cliente = ?";
@@ -424,6 +439,21 @@ class Db{
                 }else{
                     return resolve(results);
                 }
+            });
+        });
+    }
+
+    editarEvento(evento){
+        let sql = "UPDATE evento SET ? WHERE evento.id_evento = " + evento.id_evento;
+        var db = this;
+        return new Promise(function (resolve){
+            db.connection.query(sql, evento, function(err, results, fields){
+                if (err) {
+                    return resolve({status: false,
+                                    resultado: err});
+                }
+                return resolve({status: true,
+                                resultado: results});
             });
         });
     }

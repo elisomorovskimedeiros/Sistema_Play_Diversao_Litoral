@@ -8,6 +8,7 @@
                         </div>
                         <div class="col-md-6">
                             <label for="nome"><strong>Nome:</strong></label>
+                            <input type="text" name="idEvento" value="<%=idEvento%>" style="display: none;">
                             <input type="text" class="form-control" required placeholder="exemplo: José da Silva" name="nome" id="nome" onblur="validaNome(this)">
                             <div class="valid-feedback">
                                 <img src="/imagens/certo.png"><strong>Certo!</strong>
@@ -17,13 +18,13 @@
                             </div>
                         </div>                        
                         <div class="col-md-6">
-                            <label><strong>CPF (somente números):</strong></label>
+                            <label><strong>CPF ou CNPJ(somente números):</strong></label>
                             <input type="text" class="form-control" required name="cpf" id="cpf" onblur="validaCPF()">
                             <div class="valid-feedback">
                                 <img src="/imagens/certo.png"><strong>Certo!</strong>
                             </div>
                             <div class="invalid-feedback">
-                                <img src="/imagens/errado.png"><strong>Por favor insira um CPF válido</strong>                            
+                                <img src="/imagens/errado.png"><strong>Por favor insira um CPF ou CNPJ válido</strong>                            
                             </div>
                         </div>                        
                         <div class="col-md-6">
@@ -33,7 +34,7 @@
                                 <img src="/imagens/certo.png"><strong>Certo!</strong>
                             </div>
                             <div class="invalid-feedback">
-                                <img src="/imagens/errado.png"><strong>Telefones celulares precisam ter 10 digitos e celulares 11</strong>                            
+                                <img src="/imagens/errado.png"><strong>Telefones celulares precisam ter 10 dígitos e celulares 11 dígitos</strong>                            
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -43,7 +44,7 @@
                                 <img src="/imagens/certo.png"><strong>Certo!</strong>
                             </div>
                             <div class="invalid-feedback">
-                                <img src="/imagens/errado.png"><strong>Telefones celulares precisam ter 10 digitos e celulares 11</strong>                            
+                                <img src="/imagens/errado.png"><strong>Telefones celulares precisam ter 10 dígitos e celulares 11 dígitos</strong>                            
                             </div>
                         </div>
                         <div class="col-md-6">

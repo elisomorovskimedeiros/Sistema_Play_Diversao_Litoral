@@ -17,6 +17,22 @@
     }, false);
   })();
 
+function validar(campo, validade){
+    console.log(campo);
+    console.log(validade);
+    let objeto = document.getElementById(campo);
+    if(validade){
+        if(objeto.classList.contains("is-invalid")){
+            objeto.classList.remove("is-invalid");
+        }
+        objeto.classList.add("is-valid");
+    }else{
+        if(objeto.classList.contains("is-valid")){
+            objeto.classList.remove("is-valid");
+        }
+        objeto.classList.add("is-invalid");
+    }   
+}32.743.018/0001-70
 
 
 function validaNome(campo){
@@ -46,9 +62,26 @@ function validaNome(campo){
     }
 }
 
+function verificarSeEhCNPJ(valor){
+    let resposta = false;
+    for(let i = 0; i < valor.length; i++){
+        if(valor[i] == '0' && valor[i+1] == '0' && valor[i+2] == '0' && valor[i+3] == 1){
+            resposta = true;
+        }
+    }
+    return resposta;
+}
+
 function validaCPF(){
-	var cpf = document.getElementById("cpf").value;
-	if((cpf[3] == ".")
+    var cpf = document.getElementById("cpf").value;
+    if(verificarSeEhCNPJ(cpf)){
+        if(cpf.length == 18){
+            validar("cpf", true);
+        }else {
+            validar("cpf", false);
+        }
+    }else{
+        if((cpf[3] == ".")
 		&&(cpf[7] == ".")
 		&&(cpf[11] == "-")
 		&&(cpf.length == 14)
@@ -90,7 +123,9 @@ function validaCPF(){
         }
         document.getElementById("cpf").classList.add("is-invalid");
 		return false;
-	}
+	    }
+    }
+	
 }
 
 function validaTelefone(telefone){
@@ -150,6 +185,10 @@ function validaCheck(campo){
     }  
 }
 
+
+
+
+
 function monitorEvents(element) {
     var log = function(e) { console.log(e);};
     var events = [];
@@ -162,6 +201,8 @@ function monitorEvents(element) {
     }); 
   }
 
+  
+
 
 //============== JQUERY =================
 $(document).ready(function(){    
@@ -172,33 +213,55 @@ $(document).ready(function(){
         if(event.keyCode != 8 && event.keyCode != 127){
             let cpf = $("#cpf").val();
             let cpfEnviar = "";        
-            let tamCpf = cpf.length;           
-           
-            
-            //laço que não permite apenas a inserção de números e verifica a posição dos pontos e hifem
+            let tamCpf = cpf.length;
+            let ehCNPJ = false;
+
+
+            //laço que não permite apenas a inserção de números
             for(let i = 0; i < tamCpf; i++){
                 if(cpf.charCodeAt(i) >= 48 && cpf.charCodeAt(i) <= 57){
                     cpfEnviar += cpf[i];
                 }          
             }
 
-            if(tamCpf > 14){
-                cpfEnviar = cpfEnviar.substring(0, 14);
-            }
-            //if que insere os pontos e o hifem apenas após a inserção de todos os números
-            if(cpfEnviar.length == 11){
-                console.log(cpfEnviar.length);
-                
-                if(cpfEnviar[3] != '.'){
-                    cpfEnviar = cpfEnviar.substring(0,3) + '.' + cpfEnviar.substring(3, cpfEnviar.length);
+            //Bloco que decide se o valor será tratado como CNPJ ou como CPF
+            if(verificarSeEhCNPJ(cpfEnviar)){
+                if(tamCpf > 14){ 
+                    cpfEnviar = cpfEnviar.substring(0, 14);                
                 }
-                if(cpfEnviar[7] != '.'){
-                    cpfEnviar = cpfEnviar.substring(0,7) + '.' + cpfEnviar.substring(7, cpfEnviar.length);
-                }
-                if(cpfEnviar[11] != '-'){
-                    cpfEnviar = cpfEnviar.substring(0,11) + '-' + cpfEnviar.substring(11, cpfEnviar.length);
-                }            
-            }
+
+                //Inserção dos pontos, da barra e do hifem do CNPJ
+                if(cpfEnviar.length == 14){
+                    if(cpfEnviar[2] != '.'){
+                        cpfEnviar = cpfEnviar.substring(0,2) + '.' + cpfEnviar.substring(2, cpfEnviar.length);
+                    }
+                    if(cpfEnviar[6] != '.'){
+                        cpfEnviar = cpfEnviar.substring(0,6) + '.' + cpfEnviar.substring(6, cpfEnviar.length);
+                    }
+                    if(cpfEnviar[10] != '/'){
+                        cpfEnviar = cpfEnviar.substring(0,10) + '/' + cpfEnviar.substring(10, cpfEnviar.length);
+                    }
+                    if(cpfEnviar[15] != '-'){
+                        cpfEnviar = cpfEnviar.substring(0,15) + '-' + cpfEnviar.substring(15, cpfEnviar.length);
+                    }             
+                }//Fim da inserção dos pontos, da barra e do hifem do CNPJ
+            }else{                 
+                if(tamCpf > 11){ 
+                        cpfEnviar = cpfEnviar.substring(0, 11);                
+                }           
+                    //Inserção dos pontos e o hifem do CPF
+                if(cpfEnviar.length == 11){
+                    if(cpfEnviar[3] != '.'){
+                        cpfEnviar = cpfEnviar.substring(0,3) + '.' + cpfEnviar.substring(3, cpfEnviar.length);
+                    }
+                    if(cpfEnviar[7] != '.'){
+                        cpfEnviar = cpfEnviar.substring(0,7) + '.' + cpfEnviar.substring(7, cpfEnviar.length);
+                    }
+                    if(cpfEnviar[11] != '-'){
+                        cpfEnviar = cpfEnviar.substring(0,11) + '-' + cpfEnviar.substring(11, cpfEnviar.length);
+                    }            
+                }//Fim da inserção dos pontos e do hifem do CPF
+            }      
             
             $("#cpf").val(cpfEnviar);
         }    
@@ -268,5 +331,12 @@ $(document).ready(function(){
         $("#complementoFesta").val($("#complemento").val());
         $("#bairroFesta").val($("#bairro").val());
         $("#cidadeFesta").val($("#cidade").val());
+    });
+
+    //função do botão de cópiar campo para a área de transferência do sistema
+    $("#botaoDeCopia").click(function(){
+        $("#texto").select();
+        console.log($("#texto")[0].innerText);
+        document.execCommand("copy");
     });
 }); 

@@ -7,3 +7,15 @@
 	background: #5bf946;
 	border:1px solid #36ae26;
 }
+
+.centralizar{
+	margin-right: auto;
+	margin-left: auto;
+	width: max-content;
+}
+
+#botaoDeCopia{
+	margin-top: 15px;
+	width: 100px;
+}
+

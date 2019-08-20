@@ -14,7 +14,15 @@ const express = require("express"),
 //const upload = multer({dest: 'public/imagens/'});
 const int = new Interface();
 
-let cliente, evento; //utilizado no post /cadastroPlay
+class Sessao{
+    constructor(){
+        this.evento = Evento,
+        this.cliente = Cliente,
+        this.horaCriacao = Date.now();
+    }
+}
+
+let clientes, sessoes = []; //utilizado no post /cadastroPlay
 
 function stringToDate(dataString){
     dataString = dataString.split("-");
@@ -334,76 +342,134 @@ router.post("/excluirCliente",  function(req, res){
     });
 });
 
-router.get("/cadastroPlay", function(req, res){
-    res.render("cadastro_play");
+//rota que cria a sessao para cadastro do cliente
+router.get("/criarSessaoCliente", function(req,res){
+    //evento que será utilizado na sessao
+    evento = new Evento(null, new Date(), "cliente preencherá", 0, " ", " ", " ", 0, 0, 0, " ");       
+    int.inserirEvento(evento).then(function(resposta){
+        if(resposta.status){
+            let id_evento = resposta.resultado.insertId;
+            let sessao = new Sessao();
+            evento.id_evento = id_evento;
+            sessao.evento = evento;
+            sessoes.push(sessao);
+            res.render("novoEventoCliente", {id_evento});
+        }else{
+            res.send("Deu problema no db");
+            console.log(resposta.resultado);
+        }        
+    });    
 });
 
-router.get("/primeiraTela", function(req, res){
-    res.render("primeiraTelaCadastroPlay");
+//rota que o cliente usa para se cadastrar
+router.get("/cadastroPlay/:idEvento", function(req, res){
+    let idEvento = req.params.idEvento;
+    if(idEvento){ //teste para verificar se veio um id de evento
+        if (acharSessao(idEvento) === -1 || acharSessao(idEvento) == undefined){ //caso não haja nenhuma sessão com aquele id de evento                     
+            res.send("Esse cadastro expirou ou não existe");
+        }else{
+            int.filtrarEventoPorIdEvento(req.params.idEvento).then(function(resposta){
+                if(resposta.status){
+                    res.render("cadastro_play",{idEvento});
+                }else{
+                    res.send("Houve erro no banco de dados");
+                    console.log(resposta.resultado);
+                }
+            });
+        }   
+    }else{
+        res.send("Faltou informar o Evento");
+    }    
+});
+
+router.get("/primeiraTela/:idEvento", function(req, res){
+    let idEvento = req.params.idEvento;
+    res.render("primeiraTelaCadastroPlay",{idEvento});
 });
 
 router.post("/:tela", function(req, res){
     let tela = req.params.tela;
+    let idEvento = req.body.idEvento;
     switch(tela){
-        case "primeiraTela": res.render("segundaTelaCadastroPlay");
-                             dadosPrimeiraTela(req);
-
+        case "primeiraTela": res.render("segundaTelaCadastroPlay",{idEvento});
+                             dadosPrimeiraTela(req, idEvento);
         break;
-        case "segundaTela": res.render("terceiraTelaCadastroPlay");
-                            dadosSegundaTela(req);
-                           
+        case "segundaTela": res.render("terceiraTelaCadastroPlay",{idEvento});
+                            dadosSegundaTela(req, idEvento);                           
         break;
         case "terceiraTela": 
-            dadosTerceiraTela(req);
-            console.log(cliente);
-            console.log(evento);
-            int.inserirCliente(cliente).then(function(resposta){
-                if(resposta.status){
-                    evento.id_cliente = resposta.resultado.insertId;
-                    int.inserirEvento(evento).then(function(resposta){
-                        if(resposta.status){
-                            res.render("quartaTelaCadastroPlay");
-                        }else{
-                            res.render("telaErroCadastro");
-                        }
-                    });     
-                }else{
-                    res.render("telaErroCadastro");
-                }                           
-            });                 
+            dadosTerceiraTela(req, idEvento);
+            let sessao = sessoes[acharSessao(idEvento)];
+            if(sessao){
+                int.inserirCliente(sessao.cliente).then(function(resposta){
+                    console.log("linha 405");
+                    console.log(resposta);
+                    if(resposta.status){
+                        sessao.evento.id_cliente = resposta.resultado.insertId;
+                        int.editarEvento(sessao.evento).then(function(resposta){
+                            console.log("linha 410");
+                            console.log(resposta);
+                            if(resposta.status){
+                                res.render("quartaTelaCadastroPlay");
+                            }else{
+                                res.render("telaErroCadastro");
+                            }
+                        });     
+                    }else{
+                        res.render("telaErroCadastro");
+                    }                           
+                });   
+            }else{
+                res.send("Ocorreu um erro ao cadastrar seus dados");
+                console.log(sessao);
+            }                          
         break;
     }    
 });
 
-function dadosPrimeiraTela(req){
-    console.log(req.body.telefoneAltarnativo);
+function dadosPrimeiraTela(req, idEvento){
+    let sessao = sessoes[acharSessao(idEvento)];  
     cliente = new Cliente(req.body.nome,req.body.cpf,null,null,null,null,null,null,
         req.body.telefone,req.body.telefoneAltarnativo,null,req.body.email,null);
-    return cliente;
+    sessao.cliente = cliente;
 }
 
-function dadosSegundaTela(req){
+function dadosSegundaTela(req, idEvento){ 
+    let sessao = sessoes[acharSessao(idEvento)]; 
+    if(sessao){
+        sessao.cliente.logradouro = req.body.logradouro;
+        sessao.cliente.numero = req.body.numero;
+        sessao.cliente.complemento = req.body.complemento;
+        sessao.cliente.bairro = req.body.bairro;
+        sessao.cliente.cidade = req.body.cidade;
     
-    cliente.logradouro = req.body.logradouro;
-    cliente.numero = req.body.numero;
-    cliente.complemento = req.body.complemento;
-    cliente.bairro = req.body.bairro;
-    cliente.cidade = req.body.cidade;
-
-    evento = new Evento(null, null, req.body.logradouroFesta, Number(req.body.numeroFesta), 
-         req.body.complementoFesta, req.body.cidadeFesta, 0, 0, 0, '');
-
+        sessao.evento.logradouro = req.body.logradouroFesta;
+        sessao.evento.numero = Number(req.body.numeroFesta);
+        sessao.evento.complemento = req.body.complementoFesta;
+        sessao.evento.cidade = req.body.cidadeFesta;
+    }     
 }
 
-function dadosTerceiraTela(req){    
+function dadosTerceiraTela(req, idEvento){    
+    let sessao = sessoes[acharSessao(idEvento)];
     let data = stringToDate(req.body.data);
     data.setHours(Number((req.body.hora).slice(0,2)));/*-(data.getTimezoneOffset())/60)*///para setar a hora, o sistema automaticamente guarda a hora utc, que é 
     // a hora de Brasília +3. Portanto foi subtraído a hora do retorno do método getTimezoneOffset() que mostra o desvio UTC em minutos.
     data.setMinutes((req.body.hora).slice(3,5)); 
-    evento.data = data;
+    if(sessao){
+        sessao.evento.data = data;
+    }
 }
 
-
+function acharSessao(idEvento){
+    let retorno = -1;
+    sessoes.forEach(function(sessao, indice){ //laço que procura dentro da lista de sessoes, se existe uma com aquele id de evento
+        if (sessao.evento.id_evento == idEvento){
+            retorno = indice;
+        }
+    });
+    return retorno;
+}
 
 module.exports = router;
 
