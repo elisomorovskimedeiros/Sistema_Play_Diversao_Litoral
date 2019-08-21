@@ -41,7 +41,7 @@ socket.on("receberEventos", function(eventos){
             });                        
         }
        //montagem da lista a ser exibida
-       
+        console.log(evento);
         let data = new Date(evento.data);
         let dataParaExibir = (Number(data.getDate())) + '/' + (Number(data.getMonth())+1) + '/' + data.getFullYear();   
         let horaParaExibir = Number(data.getHours())+":"+Number(data.getMinutes());     
@@ -54,8 +54,12 @@ socket.on("receberEventos", function(eventos){
                           if(evento.observacao_endereco)
                               listaDeEventos += evento.observacao_endereco;
                           listaDeEventos += '<br>Cidade: '+ evento.cidade + '<br>' +
-                          'Brinquedos: <br>' + brinquedos + '<br>'
-                          'Valor a receber no ato da montagem: ' + evento.valorLiquido;
+                          'Brinquedos: <br>' + brinquedos + '<br>' +
+                          'Valor a receber no ato da montagem: ' + evento.valorLiquido + '<br>' +
+                          '<button class="btn btn-default" id="btnEditarEvento"  data-toggle="modal" '+ 
+                          'data-target="#janelaDeEdicaoEvento" value="'+evento.id_evento+'">Editar</button>&nbsp;&nbsp;'+
+                          '<button class="btn btn-default" id="btn_excluir_evento" data-toggle="modal"'+
+                          'data-target="#janelaDeRemocaoEvento" onclick="pegarEventos('+ evento.id_evento +')">Excluir</button>';
     });
 
     document.getElementById('listaEventos').innerHTML = listaDeEventos;
@@ -111,9 +115,9 @@ function inserirBrinquedosNoEvento(){
 function filtrarEventos(){
     let criteriosDeBusca;
     criteriosDeBusca = {nomeCliente: document.getElementById("nome_cliente_tela_evento").value,
-                        dataEvento: document.getElementById("data").value};
+                        dataEvento: document.getElementById("dataEvento").value};
     if (((criteriosDeBusca.dataEvento == undefined) && (criteriosDeBusca.nomeCliente.length > 2)) || (criteriosDeBusca.dataEvento != undefined)) {   
-        console.log("solicitou busca via socketio, data: "  + criteriosDeBusca.dataEvento + document.getElementById("data").value + ", cliente: " + criteriosDeBusca.nomeCliente);       
+        console.log("solicitou busca via socketio, data: "  + criteriosDeBusca.dataEvento + document.getElementById("dataEvento").value + ", cliente: " + criteriosDeBusca.nomeCliente);       
         socket.emit("listaEventos", criteriosDeBusca);
     }
 }

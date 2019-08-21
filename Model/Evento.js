@@ -10,7 +10,7 @@ class Evento{
         this.cidade = cidade;
         this.valor_total = valor_total;
         this.valor_desconto =  valor_desconto;
-        this.valor_sinal = valor_sinal;;
+        this.valor_sinal = valor_sinal;
         this.observacao = observacao;
     }    
 }

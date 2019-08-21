@@ -284,7 +284,7 @@ router.post("/inserirBrinquedosNoEvento", isLoggedIn, function(req, res){
             res.send("Ocorreu o seguinte erro de inserção do evento no banco de dados: "+resposta);
         }else{
             res.send("Inserido com sucesso!<br><a href='/'>Voltar ao início</a>")                            
-            }  
+        }  
     });
     
 }); 
@@ -353,13 +353,74 @@ router.get("/criarSessaoCliente", function(req,res){
             evento.id_evento = id_evento;
             sessao.evento = evento;
             sessoes.push(sessao);
-            res.render("novoEventoCliente", {id_evento});
+            int.listarTodosBrinquedos().then(function(brinquedos){
+                res.render("novoEventoCliente", {id_evento, brinquedos});
+            });            
         }else{
             res.send("Deu problema no db");
             console.log(resposta.resultado);
         }        
     });    
 });
+
+//rota na qual o atendente insere os brinquedos pedidos para o evento e os valores correspondentes
+router.post("/criarSessaoCliente", function(req,res){
+    let evento = sessoes[acharSessao(req.body.idEvento)].evento; //SEMPRE PROCURE O EVENTO EM SUA SESSAO    
+    evento.valor_total = req.body.valorTotal;
+    evento.valor_sinal = req.body.valorSinal;
+    evento.valor_desconto = req.body.valorDesconto;
+    evento.observacao = req.body.observacao;
+    
+    let brinquedos;
+    
+    int.editarEvento(evento).then(function(resultado){
+        console.log(resultado);
+        if(!resultado.status){
+            res.send("Não foi possível atualizar o evento");
+        }else{
+            brinquedos = separarBrinquedos(Object.keys(req.body));
+            brinquedoEvento = {brinquedos: brinquedos,
+                evento: req.body.idEvento};
+            int.inserirBrinquedoNoEvento(brinquedoEvento).then(function(resposta){
+                if(resposta.errno != undefined){
+                    res.send("Ocorreu o seguinte erro de inserção do evento no banco de dados: "+resposta);
+                }else{
+                    res.send("Inserido com sucesso!<br><a href='/'>Voltar ao início</a>")                            
+                }  
+            });
+        }
+    });
+    
+    
+});
+
+function separarBrinquedos(idsBrinquedos){
+    //Exemplo do formato do req.body vindo do cliente: [ '4', '5', 'id_evento' ].
+    //Preciso extrair apenas os ids dos brinquedos, ou seja, itens 0 e 1.
+    let posicaoASerRetirada = [];
+    //listo a posição a ser retirada com forEach
+    idsBrinquedos.forEach(function(campo, indice){
+        if(campo == "idEvento" || campo == "valorTotal" || campo == "valorDesconto" || campo == "valorSinal" || campo == "valorAto" || campo == "observacao"){
+            posicaoASerRetirada.push(indice);
+        }
+    });
+    //executo o método array.splice(posição) para retirar o item indesejado.
+    posicaoASerRetirada.forEach(function(posicao){
+        idsBrinquedos.splice(posicao);
+    });
+    return idsBrinquedos;
+    
+/*
+    brinquedoEvento = {brinquedos: idsBrinquedos,
+                       evento: req.body.id_evento};
+    let resposta = int.inserirBrinquedoNoEvento(brinquedoEvento).then(function(resposta){
+        if(resposta.errno != undefined){
+            res.send("Ocorreu o seguinte erro de inserção do evento no banco de dados: "+resposta);
+        }else{
+            res.send("Inserido com sucesso!<br><a href='/'>Voltar ao início</a>")                            
+        }  
+    });*/
+}
 
 //rota que o cliente usa para se cadastrar
 router.get("/cadastroPlay/:idEvento", function(req, res){

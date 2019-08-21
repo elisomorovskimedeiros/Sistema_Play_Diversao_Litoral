@@ -1,17 +1,64 @@
 <% include partials/cabecalho %>
 <div class="container">
-    <div class="row form-group">
-        <div class="centralizar col-md-12 text-center">
-            <h1>
-                Copie o link para o cliente:
-            </h1>
+    <form method="POST" action="/criarSessaoCliente">
+        <div class="row form-group">
+            <div class="centralizar col-md-12 text-center">
+                <h1>
+                    Copie o link para o cliente:
+                </h1>
+            </div>
+            <div class="centralizar col-md-12">
+                <input type="url" id="texto" class="form-control" readonly size="50" value="http://www.solevento.net.br:21045/cadastroPlay/<%= id_evento %>">
+                <input type="text" id="idEvento" name="idEvento" style="display:none;" value="<%=id_evento%>">
+            </div>
+            <div class="centralizar col-md-12">
+                <button id="botaoDeCopia" class="btn btn-primary form-control" type="button">Copiar</button>
+            </div>
         </div>
-        <div class="centralizar col-md-12">
-            <input type="url" id="texto" class="form-control" readonly size="50" value="http://www.solevento.net.br:21045/cadastroPlay/<%= id_evento %>">
+
+        <h2>Não precisa ser agora, mas se quizer você já pode preencher os seguintes dados:</h2>
+        <div class="row">
+            <div class="col-md-6 form-group">
+                <label for="valorTotal">Valor Total do Evento</label>
+                <input type="number" name="valorTotal" class="form-control">
+            </div>
+            <div class="col-md-6 form-group">
+                <label for="valorDesconto">Valor do desconto</label>
+                <input type="number" name="valorDesconto" class="form-control">
+            </div>
+            <div class="col-md-6 form-group">
+                <label for="valorSinal">Valor do sinal dado</label>
+                <input type="number" name="valorSinal" class="form-control">
+            </div>
+            <div class="col-md-6 form-group">
+                <label for="valorFinal">Valor a ser recebido no ato da montagem:</label>
+                <input type="number" name="valorAto" readonly class="form-control">
+            </div>
+            <div class="col-md-12 form-group">
+                <label for="observacao">Observações sobre o evento:</label>
+                <input type="text" name="observacao" class="form-control">
+            </div>
         </div>
-        <div class="centralizar col-md-12">
-            <button id="botaoDeCopia" class="btn btn-primary form-control" type="button">Copiar</button>
+        <div id="listaBrinquedos" class="row">
+            <% if(brinquedos){ %>
+                <h3 class="col-md-12">Brinquedos que vão na festa:</h3>
+                <% brinquedos.forEach(brinquedo=>{ %>                    
+                    <div class="col-md-4 form-group" style="margin-top: 30px; margin-left: auto; margin-right: auto; height: 300px;">
+                        Selecionar: <input type="checkbox" class="form-control-checkbox" name="<%=brinquedo.id_brinquedo%>">
+                        <div style="width: 200px;">
+                            <img src= <%= brinquedo.foto_brinquedo %> width="200px" >
+                        </div>
+                        Id do Brinquedo: <%= brinquedo.id_brinquedo %><br>
+                        Nome: <%= brinquedo.nome_brinquedo %><br>
+                        Características: <%= brinquedo.caracteristicas %><br>                
+                        Quantidade em Estoque: <%= brinquedo.quantidade %><br>                
+                    </div>        
+                <% }); %>
+            <%}else{%>
+                <h3>Não foi possivel listar os brinquedos disponíveis</h3>
+            <%}%>            
         </div>
-    </div>
+        <button type="submit" class="btn btn-primary">Inserir os dados do evento</button>        
+    </form>    
 </div>
 <% include partials/rodape %>

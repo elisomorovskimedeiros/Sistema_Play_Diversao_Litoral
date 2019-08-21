@@ -4,25 +4,29 @@
     <header class="page-header">
         <h1>Listagem de Clientes</h1>
     </header>
-    <div class="row">
-        <form id="formListarClientes" method="post" action="/listarCliente">
-            <div class="form-group col-md-4">
-                <input type="text" name="nome" id="nome" placeholder="Informe o nome do cliente">
+    <form id="formListarClientes" method="post" action="/listarCliente">
+        <div class="row">
+            <div class="col-md-6 form-group">
+                <label>Parte do nome do cliente</label>
+                <input type="text" class="form-control" name="nome" id="nome" placeholder="Informe o nome do cliente">
             </div>
-            <div class="form-group col-md-4">
-                <input type="date" name="data" id="data" placeholder="Informe a data da festa" onchange="filtrarClientes()">
+            <div class="col-md-6 form-group">
+                <label>Data de um evento do cliente</label>
+                <input type="date" class="form-control" name="data" id="data" placeholder="Informe a data da festa" onchange="filtrarClientes()">
             </div>
-            <div class="form-group col-md-4">
-                <input type="text" name="logradouro" id="logradouro" placeholder="Informe parte do endereço">
+            <div class="col-md-6 form-group">
+                <label>Parte do endereço do cliente</label>
+                <input type="text" class="form-control" name="logradouro" id="logradouro" placeholder="Informe parte do endereço">
             </div>
-            <div class="form-group col-md-4">
-                <input type="text" name="cidade" id="cidade" placeholder="Informe parte da cidade">
+            <div class="col-md-6 form-group">
+                <label>Parte do nome da cidade</label>
+                <input type="text" class="form-control" name="cidade" id="cidade" placeholder="Informe parte da cidade">
             </div>
-            <div class="form-group col-md-4">
-                <button type="button" class="btn btn-default" id="listar-todos-clientes">Listar Todos os Clientes</button>
-            </div>
-        </form>
-    </div>
+            <div class="col-md-6 form-group">
+                <button type="button" class="btn btn-primary form-control" id="listar-todos-clientes">Listar Todos os Clientes</button>
+            </div>        
+        </div>
+    </form>
     <div id="listaClientes"></div>
     
     <% if(clientes != undefined){ %>       

@@ -3,19 +3,21 @@
     <header class="page-header">
         <h1>Listagem de Eventos</h1>
     </header>
-    <div class="row">
-        <form id="formListarEventos" method="post" action="/listarEventos">
-            <div id="espacoNomeCliente" class="form-group col-md-4">
+    <form id="formListarEventos" method="post" action="/listarEventos"></form>
+        <div class="row">        
+            <div id="espacoNomeCliente" class="form-group col-md-6">
+                <label>Parte do nome do cliente</label>
                 <input type="text" class="form-control" name="nome_cliente" id="nome_cliente_tela_evento" placeholder="Informe o nome do cliente">
             </div>
-            <div class="form-group col-md-4">
-                <input type="date" class="form-control" name="data" id="data" placeholder="Informe a data do Evento" onchange="filtrarEventos()">
+            <div class="form-group col-md-6">
+                <label>Selecine a data do evento</label>
+                <input type="date" class="form-control" name="data" id="dataEvento" placeholder="Informe a data do Evento" onchange="filtrarEventos()">
             </div>            
-            <div class="form-group col-md-4">
-                <a href="/listarTodosEventos">Listar Todos os Eventos</a>
-            </div>
-        </form>
-    </div>
+            <div class="form-group col-md-12">
+                <a class="btn btn-primary form-control" href="/listarTodosEventos">Listar Todos os Eventos</a>
+            </div>        
+        </div>
+    </form>
     <div id="listaEventos"></div>
     
     <% if(evento != undefined){ %>
@@ -41,5 +43,63 @@
 <div id="formulario_listagem_evento">
     <div id="listaClientes" ></div>
 </div>
+<!-- Janela de Edição de Eventos -->
+    <div class="modal fade" id="janelaDeEdicaoEvento">
+              
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <!-- cabecalho -->
+                <form method="post" action="/editarEvento" name="form-evento" id="form-evento">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" id="fecharModal">
+                            <span>&times;</span>
+                        </button>
+                        <h4 class="modal-title">Edição de Cliente</h4>
+                    </div>
+            
+                    <!-- corpo -->
+                    <div class="modal-body" id="corpoModal">
+            
+                        <div class="row">
+                            <div class="form-group col-md-12" style="display: none;">                                
+                                <input type="text" class="form-control" name="id_evento" id="id_evento">
+                            </div>                        
+                            <div class="form-group col-md-8">
+                                <label for="endereco">Endereço</label>
+                                <input type="text" class="form-control" placeholder="Rua, Avenida, Praça" name="logradouro_edicao" id="logradouro_edicao">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="endereco">Número</label>
+                                <input type="numero" class="form-control" placeholder="Número" name="numero" id="numero">
+                            </div>                                
+                            <div class="form-group col-md-6">
+                                <input type="text" class="form-control" placeholder="Complemento" name="complemento" id="complemento">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <input type="text" class="form-control" placeholder="Cidade" name="cidade" id="cidade">
+                            </div>
+                            <div class="form-group col-md-12">
+                                <input type="text" class="form-control" placeholder="Observacao Endereco" name="observacao_endereco" id="observacao_endereco"> 
+                            </div> 
+                            <div class="form-group col-md-12">
+                                <label for="observacao">Observação sobre o evento</label>
+                                <input type="text" class="form-control" name="observacao_cliente" id="observacao_cliente">
+                            </div>    
+                        </div>
+                    </div>
+            
+                    <!-- rodape -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            Cancelar
+                        </button>
+                        <button type="submit" id="btnEnviarEdicaoCliente" class="btn btn-primary">
+                            Concluir Edição
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>     
+    </div>
 
 <% include partials/rodape %>

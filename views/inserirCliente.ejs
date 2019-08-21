@@ -5,58 +5,64 @@
                 <div class="page-header">
                     <h1>Inserir novo cliente</h1>
                 </div>
-
-                <div class="row">
-                                  
-                        <form method="post" action="/inserirCliente" name="form-cliente">
-                            
-                                <div class="form-group">
+                <form method="post" action="/inserirCliente" name="form-cliente"></form>
+                    <div class="row">                        
+                                <div class="form-group col-md-6">
                                     <label for="nome">Nome</label>
                                     <input type="text" class="form-control" name="nome" id="nome">
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group col-md-6">
                                     <label for="email">E-mail</label>
                                     <input type="email" class="form-control" name="email" id="email">
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group col-md-6">
                                     <label for="cpf">CPF</label>
                                     <input type="text" class="form-control" name="cpf" id="cpf">
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group col-md-6">
                                     <label for="telefone">Telefone</label>
                                     <input type="text" class="form-control" name="telefone" id="telefone">
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group col-md-6">
                                     <label for="telefone">Telefone para recado</label>
                                     <input type="text" class="form-control" name="telefone_recado" id="telefone_recado">
                                 </div>                               
-                                <div class="form-group">
-                                    <label for="endereco">Endereço</label>
-                                    <input type="text" class="form-control" placeholder="Rua, Avenida, Praça" name="logradouro" id="logradouro">
-                                    <input type="numero" class="form-control" placeholder="Número" name="numero" id="numero">
-                                    <input type="text" class="form-control" placeholder="Complemento" name="complemento" id="complemento">
-                                    <input type="text" class="form-control" placeholder="Observacao Endereco" name="observacao_endereco" id="observacao_endereco">
-                                    <input type="text" class="form-control" placeholder="Cidade" name="cidade" id="cidade">
+                                <div class="form-group col-md-12">
+                                    <div class="form-group">
+                                        <label for="logradouro">Endereço</label>
+                                        <input type="text" class="form-control" placeholder="Rua, Avenida, Praça" name="logradouro" id="logradouro">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="numero" class="form-control" placeholder="Número" name="numero" id="numero">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" placeholder="Complemento" name="complemento" id="complemento">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" placeholder="Observacao Endereco" name="observacao_endereco" id="observacao_endereco">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" placeholder="Cidade" name="cidade" id="cidade">
+                                    </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group col-md-6">
                                     <label for="data">Data</label>
                                     <input type="date" class="form-control" name="data" id="data">
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group col-md-6">
                                     <label for="horario">Horário da Festa</label>
                                     <input type="time" class="form-control" name="horario" id="horario">
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group col-md-6">
                                     <label for="observacao">Observação sobre o cliente</label>
                                     <input type="text" class="form-control" name="observacao_cliente" id="observacao_cliente">
                                 </div>
-                                
-                                <input type="submit" class="btn btn-default" value="Cadastrar" script="">
-                            </form>
-
-                        </div>        
-
+                                <div class="form-group"  style="margin-top: 32px; margin-left: 20px">
+                                    <input type="submit" class="btn btn-primary form-control" value="Cadastrar">
+                                </div>                                
+                            </div>
+                        </form>
                     </div>
                     <div id="resposta">
                         <% if(resposta != undefined){ %>
