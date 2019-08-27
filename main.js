@@ -115,7 +115,6 @@ var socketio = io.on("connect", function(socketio){
 // os brinquedos em seus devidos eventos.
     socketio.on("listaEventos", function(filtroDeBuscaEventos){
         var resposta = int.filtrarEvento(filtroDeBuscaEventos).then(function(eventos){//primeira query
-            console.log(eventos);
             int.mostrarBrinquedosNoEvento(filtroDeBuscaEventos).then(function(brinquedos){//segunda query                 
                 eventos.forEach(evento => {//laços para distribuição dos brinquedos nos eventos e cálculo do valor liquido a ser recebido
                     evento.brinquedos = [];
@@ -124,9 +123,10 @@ var socketio = io.on("connect", function(socketio){
                             evento.brinquedos.push(brinquedo.nome_brinquedo);
                         }                          
                     });
+                    
                     if(evento.valor_desconto && evento.valor_total && evento.valor_sinal){
-                        evento.valorLiquido = parseFloat(valor_total) - parseFloat(valor_desconto) -  parseFloat(valor_sinal);
-                    }                    
+                        evento.valorLiquido = parseFloat(evento.valor_total) - parseFloat(evento.valor_desconto) -  parseFloat(evento.valor_sinal);
+                    }                  
                 });
                 
                 socketio.emit("receberEventos", eventos);// envio para o cliente               

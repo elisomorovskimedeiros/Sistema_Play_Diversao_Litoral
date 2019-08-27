@@ -91,7 +91,7 @@ $(document).ready(function(){
             //preenchimento da lista de clientes filtrada na variável listaClientes
             clientes.forEach(cliente => {
                 listaClientes += 
-                '<div id="cliente_individual" style="margin-top: 30px; margin-left: auto; margin-right: auto; width: max-content;">' +
+                '<div id="cliente_individual" style="margin-top: 30px; width: max-content;">' +
                     'Id de Cliente: '+ cliente.id_cliente +'<br>' +
                     'Nome: <span>'+ cliente.nome +'</span> <br>' +
                     'CPF: '+ cliente.cpf +'<br>' +
@@ -112,7 +112,7 @@ $(document).ready(function(){
                         listaClientes += 'Observação: '+cliente.observacao_cliente+'<br>';
                     listaClientes += verificarSeEEventoOuCliente(cliente) +
                     '<hr>'+
-                '<div>';
+                '</div>';
             });
          
             //envio das informações para a página

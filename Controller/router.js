@@ -291,7 +291,11 @@ router.post("/inserirBrinquedosNoEvento", isLoggedIn, function(req, res){
 
 router.get("/listarEvento", isLoggedIn, function(req, res){
     let evento;
-    res.render("listarEvento.ejs",{evento});
+    //é necessário puxar a lista dos brinquedos do bd para o caso de edição dos eventos
+    int.listarTodosBrinquedos().then(function(brinquedos){
+        res.render("listarEvento.ejs",{evento, brinquedos});
+    });
+    
 });
 
 router.post("/listarEvento", isLoggedIn, function(req, res){
@@ -390,8 +394,95 @@ router.post("/criarSessaoCliente", function(req,res){
             });
         }
     });
+});
+
+async function editarBrinquedosNoBanco(body){
+    let listaBrinquedos = [];
+    let temBrinquedo = false;
+    //primeiro: são excluídos os brinquedos do evento
+    int.excluirBrinquedosEvento(body.id_evento).then(function(resposta){
+        console.log(resposta);
+        //segundo: são listadas as chaves que começam com "brinquedo" no body
+        Object.keys(body).forEach(function(campo){
+            if(campo.substring(0,9) == "brinquedo"){
+                //caso tenha a palavra "brinquedo", é filtrado o id do brinquedo
+                listaBrinquedos.push(campo.substring(9, campo.length));
+                temBrinquedo = true;
+            }
+        });
+        //terceito: é instanciado o objeto evento_brinquedo e enviado ao bd
+        let brinquedoEvento = {brinquedos: listaBrinquedos,
+            evento: body.id_evento};
+        if(temBrinquedo){
+            int.inserirBrinquedoNoEvento(brinquedoEvento).then(function(resposta){
+                console.log(resposta);
+            });
+        }        
+    });
+}
+
+async function editarEventoNoBanco(body){
+    //cria o objeto evento
+    let evento = {
+        id_evento: body.id_evento,
+        data: stringToDate(body.data), 
+        logradouro: body.logradouro_edicao,
+        numero: body.numero, 
+        complemento: body.complemento,
+        bairro: body.bairro, 
+        cidade: body.cidade, 
+        valor_total: body.valor_total, 
+        valor_desconto: body.valor_desconto, 
+        valor_sinal: body.valor_sinal, 
+        observacao: body.observacao
+    }
+    //variável utilizada para renderizar a tela após edição com os mesmos parâmetros anteriores
+    let filtroEvento = {
+        nome_cliente: body.nome_cliente,
+        data: body.data
+    };
+    //seta a hora do evento
+    evento.data.setHours(Number((body.hora).slice(0,2)));/*-(data.getTimezoneOffset())/60)*///para setar a hora, o sistema automaticamente guarda a hora utc, que é 
+    // a hora de Brasília +3. Portanto foi subtraído a hora do retorno do método getTimezoneOffset() que mostra o desvio UTC em minutos.
+    evento.data.setMinutes((body.hora).slice(3,5));
+    return await int.editarEvento(evento).then(function(resultado){
+        if(!resultado.status){
+            return ({
+                status: false
+            });
+        }else{
+            return ({
+                status: true
+            });
+        }            
+    }); 
+}
+
+async function editarEvento(body){
+    //função que fará o tratamento da tabela eventos no bd
+    let respostaEvento = await editarEventoNoBanco(body).then(function(respostaEvento){
+        return respostaEvento;
+    });
+    //função que fará o tratamento da tabela evento_brinquedo no bd
+    let respostaBrinquedos = await editarBrinquedosNoBanco(body).then(function(respostaBrinquedos){
+        return respostaBrinquedos;
+    });
+    return await respostaEvento;
+}
+
+
+router.post("/editarEvento", function(req,res){
     
-    
+    let listaBrinquedos = [];
+
+    //dispara função editar evento que fará a lógica e inserção no banco
+    editarEvento(req.body).then(function(resposta){
+        if(!resposta.status){
+            res.send("Ocorreu o seguinte erro de edição do evento no banco de dados: "+resposta);
+        }else{
+            res.send("Editado com sucesso!<br><a href='/'>Voltar ao início</a>");                            
+        } 
+    }); 
 });
 
 function separarBrinquedos(idsBrinquedos){
@@ -409,17 +500,6 @@ function separarBrinquedos(idsBrinquedos){
         idsBrinquedos.splice(posicao);
     });
     return idsBrinquedos;
-    
-/*
-    brinquedoEvento = {brinquedos: idsBrinquedos,
-                       evento: req.body.id_evento};
-    let resposta = int.inserirBrinquedoNoEvento(brinquedoEvento).then(function(resposta){
-        if(resposta.errno != undefined){
-            res.send("Ocorreu o seguinte erro de inserção do evento no banco de dados: "+resposta);
-        }else{
-            res.send("Inserido com sucesso!<br><a href='/'>Voltar ao início</a>")                            
-        }  
-    });*/
 }
 
 //rota que o cliente usa para se cadastrar
@@ -441,6 +521,21 @@ router.get("/cadastroPlay/:idEvento", function(req, res){
     }else{
         res.send("Faltou informar o Evento");
     }    
+});
+
+router.post("/removerEvento/:idEvento", function(req, res){
+    let idEvento = req.params.idEvento;
+    int.excluirBrinquedosEvento(idEvento).then(function(resposta){        
+        if(resposta.status){
+            int.excluirEvento(idEvento).then(function(resposta){                
+                if(!resposta.status){
+                    res.send("Ocorreu o seguinte erro de remoção do evento no banco de dados: "+resposta);
+                }else{
+                    res.send("Removido com sucesso!<br><a href='/'>Voltar ao início</a>");                            
+                } 
+            });
+        }
+    });
 });
 
 router.get("/primeiraTela/:idEvento", function(req, res){

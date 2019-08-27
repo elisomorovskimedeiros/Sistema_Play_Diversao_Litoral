@@ -14,8 +14,13 @@
 	width: max-content;
 }
 
+.naoMostrar{
+	display: none;
+}
+
 #botaoDeCopia{
 	margin-top: 15px;
 	width: 100px;
 }
+
 

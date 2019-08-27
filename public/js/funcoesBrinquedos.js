@@ -55,12 +55,11 @@ $(document).ready(function(){
         //essa função é utilizada pela página listarBrinquedos
         
         socket.on("mandarBrinquedos", function(brinquedos){
-            
             let listaBrinquedos = '';
             //preenchimento da lista de clientes filtrada na variável listaClientes
             brinquedos.forEach(brinquedo => {
                 listaBrinquedos += 
-                '<div class="col-md-4" style="margin-top: 30px; margin-left: auto; margin-right: auto; height: 300px;">' +
+                '<div class="col-md-4" style="margin-top: 30px; margin-left: auto; margin-right: auto; height: max-content; width: max-content;">' +
                     '<div style="width: 200px;">'+
                         '<img src="'+brinquedo.foto_brinquedo+'" width="200px" >' +
                     '</div>'+
@@ -71,20 +70,21 @@ $(document).ready(function(){
                     'Quantidade em Estoque:' + brinquedo.quantidade + '<br>';
                     if(brinquedo.observacao)
                         listaBrinquedos += 'Observação: ' + brinquedo.observacao + '<br>';
-                    /*listaBrinquedos +=
+                    listaBrinquedos +=
                     '<div>' +
                         '<button class="btn btn-primary" id="btnEditarBrinquedo"  data-toggle="modal" '+ 
                         'data-target="#janelaDeEdicaoBrinquedo" value="'+brinquedo.id_brinquedo+'">Editar</button>&nbsp;&nbsp;'+
                         '<button class="btn btn-danger" id="btn_excluir_brinquedo" data-toggle="modal"'+
-                        'data-target="#janelaDeRemocaoBrinquedo" onclick="removerBrinquedo('+ brinquedo.id_brinquedo +')">Excluir</button>'
-                    '</div>' +*/
-                    listaBrinquedos +='</div>';
+                        'data-target="#janelaDeRemocaoBrinquedo" onclick="removerBrinquedo('+ brinquedo.id_brinquedo +')">Excluir</button>'+
+                    '</div>'+
+                '</div>';
             }); 
             //envio das informações para a página
-            $("#listaBrinquedos").wrapInner(listaBrinquedos);     
+            document.getElementById("listaBrinquedos").innerHTML = "";
+            document.getElementById("listaBrinquedos").innerHTML = listaBrinquedos;     
         });
         
-/*
+
         $('#form-editar-brinquedo').submit(function(){
             var dados = $( this ).serialize();
     
@@ -108,5 +108,5 @@ $(document).ready(function(){
     
             return false;
         });     
-        */
+        
     });

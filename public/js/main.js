@@ -1,6 +1,7 @@
 //inicialização do socketIO
 var socket = io("/");
 var clientesGlobal;
+var listaEventosGlobal;
 
 
 //função que envia ao servidor a requisição para envio da lista de clientes disponível no bd
@@ -23,8 +24,9 @@ function solicitarListaClientes(){
 //#################FUNÇÕES DE EVENTOS ########################### 
 
 //Callback responsável por preencher a lista de eventos solicitada via filtro.
-socket.on("receberEventos", function(eventos){
+listaDeEventos = socket.on("receberEventos", function(eventos){
     let listaDeEventos = '';
+    listaEventosGlobal = eventos;
     eventos.forEach( evento => {
         let brinquedos = '';
         //if para o caso da lista de brinquedos vir vazia
@@ -36,12 +38,10 @@ socket.on("receberEventos", function(eventos){
                     brinquedos += '.';
                 }else{
                     brinquedos += ', '
-                }
-                 
+                }                 
             });                        
         }
-       //montagem da lista a ser exibida
-        console.log(evento);
+       //montagem da lista de eventos a ser exibida na listagem de eventos
         let data = new Date(evento.data);
         let dataParaExibir = (Number(data.getDate())) + '/' + (Number(data.getMonth())+1) + '/' + data.getFullYear();   
         let horaParaExibir = Number(data.getHours())+":"+Number(data.getMinutes());     
@@ -57,13 +57,17 @@ socket.on("receberEventos", function(eventos){
                           'Brinquedos: <br>' + brinquedos + '<br>' +
                           'Valor a receber no ato da montagem: ' + evento.valorLiquido + '<br>' +
                           '<button class="btn btn-default" id="btnEditarEvento"  data-toggle="modal" '+ 
-                          'data-target="#janelaDeEdicaoEvento" value="'+evento.id_evento+'">Editar</button>&nbsp;&nbsp;'+
+                          'data-target="#janelaDeEdicaoEvento" value="'+evento.id_evento+'" onclick="preencherJanelaDeEdicaoDoEvento('+evento.id_evento+')">Editar</button>&nbsp;&nbsp;'+
                           '<button class="btn btn-default" id="btn_excluir_evento" data-toggle="modal"'+
-                          'data-target="#janelaDeRemocaoEvento" onclick="pegarEventos('+ evento.id_evento +')">Excluir</button>';
+                          'data-target="#janelaDeRemocaoEvento" onclick="setarIdAExcluir('+ evento.id_evento +')">Excluir</button>';
     });
 
     document.getElementById('listaEventos').innerHTML = listaDeEventos;
 });
+
+function setarIdAExcluir(idEvento){
+    document.getElementById("form-excluir-evento").action = "/removerEvento/"+idEvento;
+}
 
 //função que faz a troca dos campos dentro da div "espacoNomeCliente", recolocando o texto e o input text que existia ao carregamento da página
 function trocarCliente(){
@@ -95,7 +99,6 @@ function inserirBrinquedosNoEvento(){
     }
     socket.emit("enviarBrinquedosDisponiveis", document.getElementById("data").value);
     socket.on("receberBrinquedosDisponiveis", function(brinquedos){
-        console.log("brinquedos recebidos");
         let listaBrinquedos = '<h1>Lista de brinquedos</h1>';
 
         brinquedos.forEach(brinquedo => {
@@ -122,6 +125,45 @@ function filtrarEventos(){
     }
 }
 
+function preencherJanelaDeEdicaoDoEvento(id_evento){    
+    listaEventosGlobal.forEach(function(evento){
+        if(evento.id_evento == id_evento){
+            console.log(evento);
+            let data = new Date(evento.data);
+            let mes = String(data.getMonth()+1);
+            if(mes.length == 1){
+                mes = "0"+mes;
+            }
+            let dataParaExibir = String(data.getFullYear() + "-" + mes + "-" + data.getDate());
+            let horas = data.getHours();
+            if(horas.length == 1){
+                horas = "0"+horas;
+            } 
+            let minutos = data.getMinutes();
+            if(minutos.length == 1){
+                minutos = "0"+minutos;
+            }  
+            let horaParaExibir = horas+":"+minutos;
+            document.getElementById("id_evento").value = evento.id_evento;
+            document.getElementById("logradouro_edicao").value = evento.logradouro;
+            document.getElementById("numero").value = evento.numero;
+            document.getElementById("bairro").value = evento.bairro;
+            document.getElementById("complemento").value = evento.complemento;
+            document.getElementById("cidade").value = evento.cidade;
+            document.getElementById("data").value = dataParaExibir;
+            document.getElementById("hora").value = horaParaExibir;
+            document.getElementById("valor_total").value = evento.valor_total;
+            document.getElementById("valor_desconto").value = evento.valor_desconto;
+            document.getElementById("valor_sinal").value = evento.valor_sinal;
+            document.getElementById("observacao").value = evento.observacao;
+            document.getElementById("receber_no_ato").value = parseInt(evento.valor_total) - parseInt(evento.valor_sinal) - parseInt(evento.valor_desconto);
+            evento.brinquedos.forEach(function(brinquedo){
+                document.getElementById(brinquedo).checked = true;
+            });           
+        }
+    });    
+}
+
 
 //###################  Inicialização do JQuery  #######################
 
@@ -139,6 +181,22 @@ $(document).ready(function(){
             $("#listaClientes").wrapInner("");
         }      
     });
+
+    //Controle da div que exibe a lista de brinquedos para cada evento na janela de edição
+    $("#exibirListaBrinquedos").click(function(){
+        if($("#listaBrinquedos").hasClass("naoMostrar")){
+            $("#listaBrinquedos").removeClass("naoMostrar");
+        }else{
+            $("#listaBrinquedos").addClass("naoMostrar");
+        }        
+    });
+
+    $("#valor_total, #valor_sinal, #valor_desconto").keyup(function(){
+        let valor = $("#valor_total").val() - $("#valor_sinal").val() - $("#valor_desconto").val();
+        $("#receber_no_ato").val(valor);
+    });
+
+    
     
 
     //Código muito sinistro que suaviza o scroll ## retirado de: https://www.origamid.com/codex/scroll-suave-para-link-interno/
@@ -151,5 +209,30 @@ $(document).ready(function(){
             scrollTop: targetOffset - 0
         }, 1000);
     });
+
+ //edição dos eventos
+    $('#form-editar-evento').submit(function(){
+        var dados = $( this ).serialize();
+
+        $.ajax({
+            type: "POST",
+            url: "/editarEvento",
+            data: dados,
+            success: function( data )
+            {
+                $("#fecharModalEditar").trigger("click");
+                if(!data.status){
+                    alert("Ocorreu um erro na edição");
+                    console.log(data.sqlMessage);
+                    console.log(data.sql);
+                }else{
+                    alert("Edição Ok!!");
+                }                    
+                window.location.href = "/listarEvento";//lista todos os brinquedos novamente       
+            }
+        });
+
+        return false;
+    });     
 });
 

@@ -110,6 +110,19 @@ class Db{
         });
     }
 
+    excluirEvento(idEvento){
+        let sql = "DELETE FROM evento WHERE id_evento = ?";
+        var db = this;
+        return new Promise(function (resolve, reject) {
+            db.connection.query(sql, idEvento, function (err, results, fields) {                
+                if (err) return resolve({status: false,
+                    resultado: err});
+                return resolve({status: true,
+                    resultado: results});
+            });
+        });
+    }
+
     selectEventoPorIdCliente(idCliente){
         let sql = "SELECT * FROM evento JOIN cliente ON evento.id_cliente = cliente.id_cliente " +
         " WHERE evento.id_cliente = ?";
@@ -161,6 +174,19 @@ class Db{
         }); 
     }
 
+    selectIdsBrinquedosPorIdEventos(idEvento){
+        var db = this;
+        let sql = 'SELECT brinquedo FROM evento_brinquedo WHERE evento = ?';
+        return new Promise(function (resolve, reject) {
+            db.connection.query(sql, idEvento, function (err, results, fields) {
+                if (err) return resolve({status: false,
+                    resultado: err});
+                return resolve({status: true,
+                    resultado: results});
+            });
+        }); 
+    }
+
     selectBrinquedosNoEventoPorNomeCliente(nomeCliente){
         nomeCliente += '%';
         var db = this;
@@ -193,8 +219,7 @@ class Db{
 
     selectEventosPorData(data){
         var db = this;
-        let sql = 'SELECT evento.id_evento, evento.data, cliente.nome, cliente.telefone, cliente.telefone_recado, evento.logradouro, ' +
-            'evento.numero, evento.observacao, evento.complemento, evento.cidade, evento.observacao_evento ' +
+        let sql = 'SELECT evento.*, cliente.nome, cliente.telefone, cliente.telefone_recado ' +
             'FROM evento ' +
             'JOIN cliente ON evento.id_cliente = cliente.id_cliente '+
             'WHERE evento.data = ?';
@@ -208,8 +233,8 @@ class Db{
 
     selectEventosPorNomeCliente(nomeCliente){
         nomeCliente += '%';
-        let sql = 'SELECT evento.id_evento, evento.data, cliente.nome, cliente.telefone, cliente.telefone_recado, evento.logradouro, ' +
-                    'evento.numero, evento.observacao, evento.complemento, evento.cidade, evento.observacao_evento ' +
+        //let sql = 'select evento.*, cliente.nome, cliente.telefone from evento join cliente on evento.id_cliente = cliente.id_cliente where cliente.nome like ?';
+        let sql = 'SELECT evento.*, cliente.nome, cliente.telefone, cliente.telefone_recado ' +
                     'FROM evento ' +
                     'JOIN cliente ON evento.id_cliente = cliente.id_cliente '+
                     'WHERE cliente.nome LIKE ?';
@@ -251,8 +276,7 @@ class Db{
             horaFim = " 23:59:59"; 
         let dataParaQuery = String(data.getFullYear()+"-"+(Number(data.getMonth())+1)+"-"+data.getDate());
         let itensDeBusca = "('"+nomeCliente+"%') AND evento.data BETWEEN '"+dataParaQuery+horaInicio+"' AND '"+dataParaQuery+horaFim+"';";        
-        let sql = 'SELECT evento.id_evento, evento.data, cliente.nome, cliente.telefone, cliente.telefone_recado, evento.logradouro, ' +
-                    'evento.numero, evento.observacao, evento.complemento, evento.cidade, evento.observacao_evento ' +
+        let sql = 'SELECT evento.*, cliente.nome, cliente.telefone, cliente.telefone_recado ' +
                     'FROM evento ' +
                     'JOIN cliente ON evento.id_cliente = cliente.id_cliente '+
                     'WHERE cliente.nome LIKE '+ itensDeBusca;
@@ -454,6 +478,44 @@ class Db{
                 }
                 return resolve({status: true,
                                 resultado: results});
+            });
+        });
+    }
+
+    selectBrinquedosPorIdEvento(id_evento){
+        let sql = "SELECT brinquedo.nome_brinquedo FROM brinquedo JOIN evento_brinquedo "+
+            "ON evento_brinquedo.brinquedo = brinquedo.id_brinquedo "+
+            "WHERE evento_brinquedo.evento = ?";
+        var db = this;
+        return new Promise(function(resolve){
+            db.connection.query(sql, id_evento, function(err, result, fields){
+                if(err){
+                    return resolve({status: false,
+                                    resultado: err
+                                    });
+                }else{
+                    return resolve({status: true,
+                                    resultado: result
+                                    });
+                }
+            });
+        });
+    }
+
+    excluirBrinquedosEvento(id_evento){
+        let sql = "DELETE FROM evento_brinquedo WHERE evento = ?";
+        var db = this;
+        return new Promise(function(resolve){
+            db.connection.query(sql, id_evento, function(err, result, fields){
+                if(err){
+                    return resolve({status: false,
+                                    resultado: err
+                                    });
+                }else{
+                    return resolve({status: true,
+                                    resultado: result
+                                    });
+                }
             });
         });
     }

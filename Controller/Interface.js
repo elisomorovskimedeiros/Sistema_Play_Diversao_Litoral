@@ -127,6 +127,13 @@ class Interface{
         }
     }
 
+    async verIdsBrinquedosPorIdEvento(idEvento){
+        let db = new Db();
+        return await db.selectIdsBrinquedosPorIdEventos(idEvento).then(function(resposta){
+            return resposta;
+        });
+    }
+
     async filtrarEvento(filtroDeBuscaEventos){
         let db = new Db();
         if (filtroDeBuscaEventos.nomeCliente && filtroDeBuscaEventos.dataEvento){
@@ -170,6 +177,21 @@ class Interface{
         return await db.editarEvento(evento).then(function(resposta){
             return resposta;
         });
+    }
+
+    async listarBrinquedosPorIdEvento(id_evento){
+        let db = new Db();
+        return await db.selectBrinquedosPorIdEvento(id_evento);
+    }
+
+    async excluirBrinquedosEvento(id_evento){
+        let db = new Db();
+        return await db.excluirBrinquedosEvento(id_evento);
+    }
+
+    async excluirEvento(idEvento){
+        let db = new Db();
+        return await db.excluirEvento(idEvento);
     }
 }
 
