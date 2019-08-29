@@ -167,7 +167,15 @@ function preencherJanelaDeEdicaoDoEvento(id_evento){
     });    
 }
 
+function enviarEmail(){
+    let idEvento = document.getElementById("id_evento").value;
+    let perfil = document.body.attributes.perfil.value;
+    socket.emit("enviarEmail", idEvento, perfil);
+}
 
+socket.on("retorno", function(mensagem){
+    alert(mensagem);
+});
 //###################  Inicialização do JQuery  #######################
 
 
@@ -194,12 +202,10 @@ $(document).ready(function(){
         }        
     });
 
-    $("#valor_total, #valor_sinal, #valor_desconto").keyup(function(){
+    $("#valor_total, #valor_sinal, #valor_desconto").keyup(function(){        
         let valor = $("#valor_total").val() - $("#valor_sinal").val() - $("#valor_desconto").val();
         $("#receber_no_ato").val(valor);
-    });
-
-    
+    });   
     
 
     //Código muito sinistro que suaviza o scroll ## retirado de: https://www.origamid.com/codex/scroll-suave-para-link-interno/

@@ -390,10 +390,18 @@ router.get("/criarSessaoCliente", isLoggedIn, function(req,res){
 //rota na qual o atendente insere os brinquedos pedidos para o evento e os valores correspondentes
 router.post("/criarSessaoCliente", isLoggedIn, function(req,res){
     let evento = sessoes[acharSessao(req.body.idEvento)].evento; //SEMPRE PROCURE O EVENTO EM SUA SESSAO    
-    evento.valor_total = req.body.valorTotal;
-    evento.valor_sinal = req.body.valorSinal;
-    evento.valor_desconto = req.body.valorDesconto;
-    evento.observacao = req.body.observacao;
+    if(Number(req.body.valorTotal))
+        evento.valor_total = Number(req.body.valorTotal);
+    if(Number(req.body.valorSinal))
+        evento.valor_sinal = req.body.valorSinal;
+    if(Number(req.body.valorDesconto))
+        evento.valor_desconto = req.body.valorDesconto;
+    if(req.body.observacao.length > 0){
+        evento.observacao = req.body.observacao;
+    }else{
+        evento.observacao = "Nenhuma";
+    }
+    
     
     let brinquedos;
     let perfil = req.user.perfil;
@@ -403,15 +411,28 @@ router.post("/criarSessaoCliente", isLoggedIn, function(req,res){
             res.send("Não foi possível atualizar o evento");
         }else{
             brinquedos = separarBrinquedos(Object.keys(req.body));
-            brinquedoEvento = {brinquedos: brinquedos,
-                evento: req.body.idEvento};
-            int.inserirBrinquedoNoEvento(brinquedoEvento,perfil).then(function(resposta){
-                if(resposta.errno != undefined){
-                    res.send("Ocorreu o seguinte erro de inserção do evento no banco de dados: "+resposta);
-                }else{
-                    res.send("Inserido com sucesso!<br><a href='/'>Voltar ao início</a>")                            
-                }  
-            });
+            if(brinquedos.length > 0){
+                brinquedoEvento = {brinquedos: brinquedos,
+                    evento: req.body.idEvento};
+                int.inserirBrinquedoNoEvento(brinquedoEvento,perfil).then(function(resposta){
+                    if(resposta.errno != undefined){
+                        res.send("Ocorreu o seguinte erro de inserção do evento no banco de dados: "+resposta);
+                    }else{
+                        res.send("Inserido com sucesso!<br><a href='/'>Voltar ao início</a>");                            
+                    }  
+                });
+            
+                brinquedoEvento = {brinquedos: brinquedos,
+                    evento: req.body.idEvento};
+                int.inserirBrinquedoNoEvento(brinquedoEvento,perfil).then(function(resposta){
+                    if(resposta.errno != undefined){
+                        res.send("Ocorreu o seguinte erro de inserção do evento no banco de dados: "+resposta);
+                    }else{
+                        res.send("Inserido com sucesso!<br><a href='/'>Voltar ao início</a>")                            
+                    }  
+                });
+            }
+            res.send("Inserido com sucesso!<br><a href='/'>Voltar ao início</a>");
         }
     });
 });

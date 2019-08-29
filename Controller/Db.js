@@ -538,6 +538,26 @@ class Db{
             });
         });
     }
+
+    selectClientePorIdEvento(idEvento){
+        let sql = "SELECT * FROM cliente JOIN evento " +
+                    "ON cliente.id_cliente = evento.id_evento " +
+                    "WHERE evento.id_evento = ?";
+        var db = this;
+        return new Promise(function(resolve){
+            db.connection.query(sql, idEvento, function(err, result){
+                if(err){
+                    return resolve({status: false,
+                                    resultado: err
+                                    });
+                }else{
+                    return resolve({status: true,
+                                    resultado: result
+                                    });
+                }
+            });
+        });
+    }
 }
 
 module.exports = Db;

@@ -2,11 +2,11 @@ const     express = require("express"),
        bodyParser = require("body-parser"),
    methodOverride = require("method-override"),
         Interface = require("./Controller/Interface"),
-           Evento = require("./Model/Evento"),
-               
-               expressSession = require('express-session'),
+           Evento = require("./Model/Evento"),               
+   expressSession = require('express-session'),
             flash = require("connect-flash");
-            passport = require("passport");
+         passport = require("passport"),
+EnvioConfirmacoes = require("./Model/EnvioConfirmacoes");
 
 const app = express(),
       int = new Interface();
@@ -142,6 +142,62 @@ var socketio = io.on("connect", function(socketio){
             socketio.emit("receberEventos",eventos);
         });
     });
+
+    socketio.on("enviarEmail", function(idEvento, perfil){
+        console.log(perfil);
+        int.filtrarEventoPorIdEvento(idEvento, perfil).then(function(resposta){
+            if(resposta.status){
+                let evento = resposta.resultado[0];
+                int.listarClientePorIdEvento(idEvento, perfil).then(function(resposta){
+                    if(resposta.status){                        
+                        let cliente = resposta.resultado[0];
+                        int.listarBrinquedosPorIdEvento(idEvento, perfil).then(function(resposta){
+                            if(resposta.status){
+                                let listaBrinquedos = 'Irá no dia ';
+                                if( resposta.resultado.lengh > 0){
+                                    resposta.resultado.forEach(function(brinquedo, indice){                                    
+                                        listaBrinquedos += brinquedo.nome_brinquedo+", "
+                                    });
+                                }else listaBrinquedos = undefined;                                
+                                let data = evento.data.getDate()+"/"+(Number(evento.data.getMonth())+1)+"/"+evento.data.getFullYear();
+                                let enderecoEvento = evento.logradouro+", "+evento.numero;
+                                let valorFinal = evento.valor_total - evento.valor_desconto - evento.valor_sinal;
+                                let mensagem = "Parabéns "+ cliente.nome+", sua festa já esta agendada!!\n Dia "+data+
+                                " estaremos no endereço, "+enderecoEvento+", para realizar a montagem dos brinquedos.\n";                                
+                                if(listaBrinquedos){
+                                    mensagem += listaBrinquedos;
+                                }
+                                mensagem += "\nApós o término da montagem você tira todas as suas "+
+                                "dúvidas e acerta o valor de R$"+valorFinal+",00 com o montador.\n"+
+                                "Atenciosamente,\n"+
+                                "Equipe Play Diversão";
+
+                                email = new EnvioConfirmacoes(cliente.email,mensagem);
+                                let retornoEmail = email.enviar();
+                                retornoEmail.then(function(retorno){
+                                    if(retorno.status){
+                                        socketio.emit("retorno", "Mensagem Enviada com sucesso");                
+                                    }
+                                    else{
+                                        socketio.emit("retorno", "Ocorreu um erro no envio do email\n"+ retorno.detalhes);
+                                    }
+                                });
+                            }else{
+                                console.log(resposta.resultado);
+                                socketio.emit("retorno", "Ocorreu um erro no banco de dados");
+                            }
+                        });                        
+                    }else{
+                        console.log(resposta.resultado);
+                        socketio.emit("retorno", "Ocorreu um erro no banco de dados");
+                    }
+                });
+            }else{
+                console.log(resposta.resultado);
+                socketio.emit("retorno", "Ocorreu um erro no banco de dados");
+            }
+        });
+    })
 });
 
 

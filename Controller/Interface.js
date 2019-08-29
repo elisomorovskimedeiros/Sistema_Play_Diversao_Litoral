@@ -193,6 +193,11 @@ class Interface{
         let db = new Db(perfil);
         return await db.excluirEvento(idEvento);
     }
+
+    async listarClientePorIdEvento(idEvento, perfil){
+        let db = new Db(perfil);
+        return await db.selectClientePorIdEvento(idEvento);
+    }
 }
 
 module.exports = Interface;
