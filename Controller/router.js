@@ -527,7 +527,7 @@ function separarBrinquedos(idsBrinquedos){
 }
 
 //rota que o cliente usa para se cadastrar
-router.get("/cadastroPlay/:idEvento", isLoggedIn,function(req, res){
+router.get("/cadastroPlay/:idEvento", function(req, res){
     let idEvento = req.params.idEvento;
     if(idEvento){ //teste para verificar se veio um id de evento
         if (acharSessao(idEvento) === -1 || acharSessao(idEvento) == undefined){ //caso não haja nenhuma sessão com aquele id de evento                     
