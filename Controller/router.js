@@ -13,11 +13,12 @@ const express = require("express"),
 
 //const upload = multer({dest: 'public/imagens/'});
 const int = new Interface();
-
+let perfil = undefined;
 class Sessao{
     constructor(){
         this.evento = Evento,
         this.cliente = Cliente,
+        this.perfil = '';
         this.horaCriacao = Date.now();
     }
 }
@@ -39,11 +40,12 @@ function isLoggedIn(req, res, next){
         return next(); //prossegue com a execucao
     }
     res.redirect("/login"); //não prossegue com a execução e redireciona para a página login
-}   
+}
+
 
 //executa o login do usuario
 router.get('/login', function(req, res, next){
-    res.render('login',{'message' :req.flash('message')});
+    res.render('login',{'message' :req.flash('message'), perfil});
 });   
 
     
@@ -55,12 +57,15 @@ router.get("/logout", function(req, res){
 });   
 
 router.get("/", isLoggedIn, function(req, res){
-    res.render("index");
+    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    let tituloIndex = perfil.tituloIndex;
+    res.render("index",{perfil});
 });
 
 router.get("/inserirCliente", isLoggedIn, function(req, res){
     let resposta;
-    res.render("inserirCliente.ejs",{resposta});
+    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    res.render("inserirCliente.ejs",{resposta, perfil});
 });
 
 router.post("/inserirCliente", isLoggedIn, function(req, res){
@@ -77,10 +82,11 @@ router.post("/inserirCliente", isLoggedIn, function(req, res){
         cidade: req.body.cidade,
         observacao_cliente: req.body.observacao_cliente
     }
+    let perfil = req.user.perfil;
     var int = new Interface();
     async function inserirCliente(){
-        var resposta = await int.inserirCliente(cliente).then(function(resposta){
-            res.render("inserirCliente.ejs",{resposta});
+        var resposta = await int.inserirCliente(cliente,perfil).then(function(resposta){
+            res.render("inserirCliente.ejs",{resposta, perfil});
         });                           
     }
     inserirCliente();
@@ -89,27 +95,31 @@ router.post("/inserirCliente", isLoggedIn, function(req, res){
 
 router.get("/listarTodosClientes", isLoggedIn, function(req, res){
     var int = new Interface();
-    int.listarTodosClientes().then(function(clientes){       
-        res.render("listarCliente.ejs",{clientes});
+    let perfil = req.user.perfil;
+    int.listarTodosClientes(perfil).then(function(clientes){       
+        res.render("listarCliente.ejs",{clientes, perfil});
     });    
 });
 
 router.get("/listarCliente",  isLoggedIn, function(req, res){
     let clientes = undefined;
-    res.render("listarCliente.ejs",{clientes});
+    let perfil = req.user.perfil;
+    res.render("listarCliente.ejs",{clientes, perfil});
 });
 
 router.post("/listarCliente", isLoggedIn, function(req, res){
     let nomeCliente = req.body.nome_cliente;
     var int = new Interface();
-    int.listarCliente(nomeCliente).then(function(clientes){
-        res.render("listarCliente.ejs",{clientes});
+    let perfil = req.user.perfil;
+    int.listarCliente(nomeCliente,perfil).then(function(clientes){
+        res.render("listarCliente.ejs",{clientes,perfil});
     });    
 });
 
 router.get("/inserirBrinquedo", isLoggedIn, function(req, res){
     let resposta;
-    res.render("inserirBrinquedo.ejs", {resposta});
+    let perfil = req.user.perfil;
+    res.render("inserirBrinquedo.ejs", {resposta,perfil});
 });
 
 
@@ -147,9 +157,10 @@ router.post('/inserirBrinquedo', upload.single('foto'), (req, res, next) => {
     }
     
     var int = new Interface();
+    let perfil = req.user.perfil;
     async function inserirBrinquedo(){
-        var resposta = await int.inserirBrinquedo(brinquedo).then(function(resposta){
-            res.render("inserirBrinquedo.ejs",{resposta});
+        var resposta = await int.inserirBrinquedo(brinquedo,perfil).then(function(resposta){
+            res.render("inserirBrinquedo.ejs",{resposta, perfil});
         });                           
     }
     inserirBrinquedo();     
@@ -172,9 +183,10 @@ router.post("/editarBrinquedo", upload.single('foto'), (req, res, next) =>{
         brinquedo.foto_brinquedo = "imagens/"+ req.file.originalname 
      }
     var int = new Interface();
+    let perfil = req.user.perfil;
     async function editarBrinquedo(){
-        var resposta = await int.editarBrinquedo(brinquedo).then(function(brinquedos){
-            res.render("listarBrinquedos",{brinquedos});
+        var resposta = await int.editarBrinquedo(brinquedo,perfil).then(function(brinquedos){
+            res.render("listarBrinquedos",{brinquedos, perfil});
         });                           
     }
     editarBrinquedo();
@@ -219,32 +231,36 @@ router.post("/inserirBrinquedo", isLoggedIn, function(req, res){
 
 router.get("/listarBrinquedos", isLoggedIn, function(req, res){
     let brinquedos;
-    res.render("listarBrinquedos.ejs", {brinquedos});
+    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    res.render("listarBrinquedos.ejs", {brinquedos, perfil});
 });
 
 router.get("/listarTodosBrinquedos", isLoggedIn, function(req, res){
     var int = new Interface();
-    int.listarTodosBrinquedos().then(function(brinquedos){       
-        res.render("listarBrinquedos.ejs",{brinquedos});
+    let perfil = req.user.perfil;
+    int.listarTodosBrinquedos(perfil).then(function(brinquedos){       
+        res.render("listarBrinquedos.ejs",{brinquedos, perfil});
     });     
 });
 
 
 router.get("/inserirEvento", isLoggedIn, function(req, res){
     let resposta;
-    res.render("inserirEvento.ejs",{resposta});
+    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    res.render("inserirEvento.ejs",{resposta, perfil});
 });
 
 router.post("/inserirEvento", isLoggedIn, function(req, res){
     let evento = new Evento(req.body.id_cliente, req.body.data, req.body.logradouro, Number(req.body.numero), req.body.complemento, req.body.cidade, Number(req.body.valor_total), Number(req.body.valor_desconto), Number(req.body.valor_sinal), req.body.observacao);
-    let interface = new Interface();    
+    let interface = new Interface();
+    let perfil = req.user.perfil;    
     let data = stringToDate(req.body.data);
     console.log(data);
     data.setHours(Number((req.body.hora).slice(0,2)));/*-(data.getTimezoneOffset())/60)*///para setar a hora, o sistema automaticamente guarda a hora utc, que é 
     // a hora de Brasília +3. Portanto foi subtraído a hora do retorno do método getTimezoneOffset() que mostra o desvio UTC em minutos.
     data.setMinutes((req.body.hora).slice(3,5)); 
     evento.data = data;
-    interface.inserirEvento(evento).then(function(resposta){
+    interface.inserirEvento(evento,perfil).then(function(resposta){
         if(resposta.errno != undefined){
             res.send("Ocorreu o seguinte erro de inserção do evento no banco de dados: "+resposta);
         }else{
@@ -253,7 +269,7 @@ router.post("/inserirEvento", isLoggedIn, function(req, res){
                 brinquedos.data = data;
                 brinquedos.idEvento = idEvento;
                 console.log(brinquedos);        
-                res.render("inserirBrinquedosNoEvento.ejs",{brinquedos});                              
+                res.render("inserirBrinquedosNoEvento.ejs",{brinquedos, perfil});                              
             });  
         }       
     });
@@ -263,6 +279,7 @@ router.post("/inserirEvento", isLoggedIn, function(req, res){
 router.post("/inserirBrinquedosNoEvento", isLoggedIn, function(req, res){
     
     let int = new Interface();
+    let perfil = req.user.perfil;
     let brinquedoEvento;
     idsBrinquedos = Object.keys(req.body);    
     console.log(idsBrinquedos);
@@ -279,7 +296,7 @@ router.post("/inserirBrinquedosNoEvento", isLoggedIn, function(req, res){
     idsBrinquedos.splice(posicaoASerRetirada);
     brinquedoEvento = {brinquedos: idsBrinquedos,
                        evento: req.body.id_evento};
-    let resposta = int.inserirBrinquedoNoEvento(brinquedoEvento).then(function(resposta){
+    let resposta = int.inserirBrinquedoNoEvento(brinquedoEvento,perfil).then(function(resposta){
         if(resposta.errno != undefined){
             res.send("Ocorreu o seguinte erro de inserção do evento no banco de dados: "+resposta);
         }else{
@@ -291,15 +308,14 @@ router.post("/inserirBrinquedosNoEvento", isLoggedIn, function(req, res){
 
 router.get("/listarEvento", isLoggedIn, function(req, res){
     let evento;
+    let perfil = req.user.perfil;
     //é necessário puxar a lista dos brinquedos do bd para o caso de edição dos eventos
-    int.listarTodosBrinquedos().then(function(brinquedos){
-        res.render("listarEvento.ejs",{evento, brinquedos});
+    int.listarTodosBrinquedos(perfil).then(function(brinquedos){
+        res.render("listarEvento.ejs",{evento, brinquedos, perfil});
     });
     
 });
 
-router.post("/listarEvento", isLoggedIn, function(req, res){
-});
 
 router.post("/editarCliente", isLoggedIn, function(req, res){
     
@@ -318,7 +334,8 @@ router.post("/editarCliente", isLoggedIn, function(req, res){
         observacao_cliente: req.body.observacao_cliente
     }
     let int =  new Interface();
-    int.editarCliente(cliente).then(function(resposta){
+    let perfil = req.user.perfil;
+    int.editarCliente(cliente,perfil).then(function(resposta){
         if(resposta.errno != undefined){
             res.send("Ocorreu o seguinte erro de inserção do evento no banco de dados: "+resposta);
         }else{
@@ -329,9 +346,10 @@ router.post("/editarCliente", isLoggedIn, function(req, res){
     
 });
 
-router.post("/excluirCliente",  function(req, res){
+router.post("/excluirCliente", isLoggedIn,  function(req, res){
     let idCliente = req.body.id_cliente_excluir;
-    int.excluirEventosPorIdCliente(idCliente).then(function(resposta){
+    let perfil = req.user.perfil;
+    int.excluirEventosPorIdCliente(idCliente,perfil).then(function(resposta){
         if(resposta.errno){
             res.send("Ocorreu o seguinte erro na remoção dos eventos: "+ resposta.errno);            
         }else{
@@ -347,18 +365,20 @@ router.post("/excluirCliente",  function(req, res){
 });
 
 //rota que cria a sessao para cadastro do cliente
-router.get("/criarSessaoCliente", function(req,res){
+router.get("/criarSessaoCliente", isLoggedIn, function(req,res){
     //evento que será utilizado na sessao
-    evento = new Evento(null, new Date(), "cliente preencherá", 0, " ", " ", " ", 0, 0, 0, " ");       
-    int.inserirEvento(evento).then(function(resposta){
+    evento = new Evento(null, new Date(), "cliente preencherá", 0, " ", " ", " ", 0, 0, 0, " ");
+    let perfil = req.user.perfil;       
+    int.inserirEvento(evento,perfil).then(function(resposta){
         if(resposta.status){
             let id_evento = resposta.resultado.insertId;
             let sessao = new Sessao();
             evento.id_evento = id_evento;
             sessao.evento = evento;
+            sessao.perfil = perfil;
             sessoes.push(sessao);
             int.listarTodosBrinquedos().then(function(brinquedos){
-                res.render("novoEventoCliente", {id_evento, brinquedos});
+                res.render("novoEventoCliente", {id_evento, brinquedos, perfil});
             });            
         }else{
             res.send("Deu problema no db");
@@ -368,7 +388,7 @@ router.get("/criarSessaoCliente", function(req,res){
 });
 
 //rota na qual o atendente insere os brinquedos pedidos para o evento e os valores correspondentes
-router.post("/criarSessaoCliente", function(req,res){
+router.post("/criarSessaoCliente", isLoggedIn, function(req,res){
     let evento = sessoes[acharSessao(req.body.idEvento)].evento; //SEMPRE PROCURE O EVENTO EM SUA SESSAO    
     evento.valor_total = req.body.valorTotal;
     evento.valor_sinal = req.body.valorSinal;
@@ -376,8 +396,8 @@ router.post("/criarSessaoCliente", function(req,res){
     evento.observacao = req.body.observacao;
     
     let brinquedos;
-    
-    int.editarEvento(evento).then(function(resultado){
+    let perfil = req.user.perfil;
+    int.editarEvento(evento,perfil).then(function(resultado){
         console.log(resultado);
         if(!resultado.status){
             res.send("Não foi possível atualizar o evento");
@@ -385,7 +405,7 @@ router.post("/criarSessaoCliente", function(req,res){
             brinquedos = separarBrinquedos(Object.keys(req.body));
             brinquedoEvento = {brinquedos: brinquedos,
                 evento: req.body.idEvento};
-            int.inserirBrinquedoNoEvento(brinquedoEvento).then(function(resposta){
+            int.inserirBrinquedoNoEvento(brinquedoEvento,perfil).then(function(resposta){
                 if(resposta.errno != undefined){
                     res.send("Ocorreu o seguinte erro de inserção do evento no banco de dados: "+resposta);
                 }else{
@@ -396,11 +416,13 @@ router.post("/criarSessaoCliente", function(req,res){
     });
 });
 
-async function editarBrinquedosNoBanco(body){
+async function editarBrinquedosNoBanco(req){
     let listaBrinquedos = [];
     let temBrinquedo = false;
+    let body = req.body;
     //primeiro: são excluídos os brinquedos do evento
-    int.excluirBrinquedosEvento(body.id_evento).then(function(resposta){
+    let perfil = req.user.perfil;
+    int.excluirBrinquedosEvento(body.id_evento,perfil).then(function(resposta){
         console.log(resposta);
         //segundo: são listadas as chaves que começam com "brinquedo" no body
         Object.keys(body).forEach(function(campo){
@@ -414,15 +436,16 @@ async function editarBrinquedosNoBanco(body){
         let brinquedoEvento = {brinquedos: listaBrinquedos,
             evento: body.id_evento};
         if(temBrinquedo){
-            int.inserirBrinquedoNoEvento(brinquedoEvento).then(function(resposta){
+            int.inserirBrinquedoNoEvento(brinquedoEvento,perfil).then(function(resposta){
                 console.log(resposta);
             });
         }        
     });
 }
 
-async function editarEventoNoBanco(body){
+async function editarEventoNoBanco(req){
     //cria o objeto evento
+    let body = req.body;
     let evento = {
         id_evento: body.id_evento,
         data: stringToDate(body.data), 
@@ -445,7 +468,8 @@ async function editarEventoNoBanco(body){
     evento.data.setHours(Number((body.hora).slice(0,2)));/*-(data.getTimezoneOffset())/60)*///para setar a hora, o sistema automaticamente guarda a hora utc, que é 
     // a hora de Brasília +3. Portanto foi subtraído a hora do retorno do método getTimezoneOffset() que mostra o desvio UTC em minutos.
     evento.data.setMinutes((body.hora).slice(3,5));
-    return await int.editarEvento(evento).then(function(resultado){
+    let perfil = req.user.perfil;
+    return await int.editarEvento(evento,perfil).then(function(resultado){
         if(!resultado.status){
             return ({
                 status: false
@@ -458,25 +482,25 @@ async function editarEventoNoBanco(body){
     }); 
 }
 
-async function editarEvento(body){
+async function editarEvento(req){
     //função que fará o tratamento da tabela eventos no bd
-    let respostaEvento = await editarEventoNoBanco(body).then(function(respostaEvento){
+    let respostaEvento = await editarEventoNoBanco(req).then(function(respostaEvento){
         return respostaEvento;
     });
     //função que fará o tratamento da tabela evento_brinquedo no bd
-    let respostaBrinquedos = await editarBrinquedosNoBanco(body).then(function(respostaBrinquedos){
+    let respostaBrinquedos = await editarBrinquedosNoBanco(req).then(function(respostaBrinquedos){
         return respostaBrinquedos;
     });
     return await respostaEvento;
 }
 
 
-router.post("/editarEvento", function(req,res){
+router.post("/editarEvento", isLoggedIn, function(req,res){
     
     let listaBrinquedos = [];
 
     //dispara função editar evento que fará a lógica e inserção no banco
-    editarEvento(req.body).then(function(resposta){
+    editarEvento(req).then(function(resposta){
         if(!resposta.status){
             res.send("Ocorreu o seguinte erro de edição do evento no banco de dados: "+resposta);
         }else{
@@ -503,7 +527,7 @@ function separarBrinquedos(idsBrinquedos){
 }
 
 //rota que o cliente usa para se cadastrar
-router.get("/cadastroPlay/:idEvento", function(req, res){
+router.get("/cadastroPlay/:idEvento", isLoggedIn,function(req, res){
     let idEvento = req.params.idEvento;
     if(idEvento){ //teste para verificar se veio um id de evento
         if (acharSessao(idEvento) === -1 || acharSessao(idEvento) == undefined){ //caso não haja nenhuma sessão com aquele id de evento                     
@@ -511,7 +535,7 @@ router.get("/cadastroPlay/:idEvento", function(req, res){
         }else{
             int.filtrarEventoPorIdEvento(req.params.idEvento).then(function(resposta){
                 if(resposta.status){
-                    res.render("cadastro_play",{idEvento});
+                    res.render("cadastro_play",{idEvento,perfil});
                 }else{
                     res.send("Houve erro no banco de dados");
                     console.log(resposta.resultado);
@@ -557,12 +581,12 @@ router.post("/:tela", function(req, res){
             dadosTerceiraTela(req, idEvento);
             let sessao = sessoes[acharSessao(idEvento)];
             if(sessao){
-                int.inserirCliente(sessao.cliente).then(function(resposta){
+                int.inserirCliente(sessao.cliente,sessao.perfil).then(function(resposta){
                     console.log("linha 405");
                     console.log(resposta);
                     if(resposta.status){
                         sessao.evento.id_cliente = resposta.resultado.insertId;
-                        int.editarEvento(sessao.evento).then(function(resposta){
+                        int.editarEvento(sessao.evento,sessao.perfil).then(function(resposta){
                             console.log("linha 410");
                             console.log(resposta);
                             if(resposta.status){

@@ -18,6 +18,8 @@ app.use(methodOverride("_method"));
 app.use(express.static("public"));
 app.use(flash());
 
+let user;
+
 
 
 //####################### PASSPORT ####################################
@@ -39,8 +41,8 @@ app.use(expressSession({
         failureRedirect: '/login',
         failureFlash: true
         }), function(req, res, info){
-        res.render('index',{'message' :req.flash('message')});
-    });
+            res.render('index',{'message' :req.flash('message')});
+    });    
 
     //funcao que será usada como middleware para verificar se o usuário está logado antes de mostrar a página
 function isLoggedIn(req, res, next){
@@ -56,7 +58,6 @@ function isLoggedIn(req, res, next){
 app.use(require("./Controller/router"));
 
 
-
 //###########################inicialização do servidor web ######################################
 var server = app.listen("21045", function(){
     console.log("Queimando pneu na porta 21045");
@@ -69,41 +70,41 @@ var io = require("socket.io")(server);
 
 var socketio = io.on("connect", function(socketio){
 // Envio da consulta por cliente
-    socketio.on("listaClientesPorNome", function(nomeCliente){        
-        int.listarCliente(nomeCliente).then(function(clientes){
+    socketio.on("listaClientesPorNome", function(nomeCliente, perfil){       
+        int.listarCliente(nomeCliente, perfil).then(function(clientes){
             socketio.emit("mandarClientes", clientes);
         });
     });
 
-    socketio.on("filtroCliente", function(filtroCliente){   
-         int.listarCliente(filtroCliente).then(function(clientes){
+    socketio.on("filtroCliente", function(filtroCliente, perfil){   
+         int.listarCliente(filtroCliente, perfil).then(function(clientes){
             socketio.emit("mandarClientes", clientes);
         });
     });
 
-    socketio.on("excluirCliente", function(idCliente){
-        int.excluirCliente(idCliente).then(function(mensagem){
+    socketio.on("excluirCliente", function(idCliente, perfil){
+        int.excluirCliente(idCliente, perfil).then(function(mensagem){
             socketio.emit("resultadoExclusaoCliente", mensagem);
         });
     });
 
 // Envio da consulta por brinquedo
-    socketio.on("listaBrinquedosPorNome", function(nomeBrinquedo){        
-        int.listarUmBrinquedo(nomeBrinquedo).then(function(brinquedos){
+    socketio.on("listaBrinquedosPorNome", function(nomeBrinquedo, perfil){        
+        int.listarUmBrinquedo(nomeBrinquedo, perfil).then(function(brinquedos){
             socketio.emit("mandarBrinquedos", brinquedos);
         });
     });
 
 //Envio da lista de brinquedos disponíveis para inserir em evento
-    socketio.on("enviarBrinquedosDisponiveis", function(dataEvento){        
-        int.listarTodosBrinquedos().then(function(brinquedos){
+    socketio.on("enviarBrinquedosDisponiveis", function(dataEvento, perfil){        
+        int.listarTodosBrinquedos(perfil).then(function(brinquedos){
             socketio.emit("receberBrinquedosDisponiveis", brinquedos);
         });
     });
 
 //Envia a lista de eventos que tem o brinquedo a ser excluído
-    socketio.on("meDaOsEventosAi", function(id_brinquedo){
-        int.listarEventoPorIdBrinquedo(id_brinquedo).then(function(listaEventos){
+    socketio.on("meDaOsEventosAi", function(id_brinquedo, perfil){
+        int.listarEventoPorIdBrinquedo(id_brinquedo, perfil).then(function(listaEventos){
             socketio.emit("receberEventos", listaEventos);
         });
     });
@@ -113,9 +114,11 @@ var socketio = io.on("connect", function(socketio){
 // A lista de eventos é preenchida com duas querys, a primeira traz as informações do evento e do cliente e a segunda traz
 // as informações dos brinquedos que pertencem ao evento. Depois é feita a comparação dos id_evento das duas tabelas para distribuir
 // os brinquedos em seus devidos eventos.
-    socketio.on("listaEventos", function(filtroDeBuscaEventos){
-        var resposta = int.filtrarEvento(filtroDeBuscaEventos).then(function(eventos){//primeira query
-            int.mostrarBrinquedosNoEvento(filtroDeBuscaEventos).then(function(brinquedos){//segunda query                 
+    socketio.on("listaEventos", function(filtroDeBuscaEventos, perfil){
+        console.log(perfil);
+
+        var resposta = int.filtrarEvento(filtroDeBuscaEventos, perfil).then(function(eventos){//primeira query
+            int.mostrarBrinquedosNoEvento(filtroDeBuscaEventos, perfil).then(function(brinquedos){//segunda query                 
                 eventos.forEach(evento => {//laços para distribuição dos brinquedos nos eventos e cálculo do valor liquido a ser recebido
                     evento.brinquedos = [];
                     brinquedos.forEach(brinquedo => {
@@ -134,8 +137,8 @@ var socketio = io.on("connect", function(socketio){
         });       
     });
 
-    socketio.on("listarEventosPorIdCliente", function(idCliente){
-        int.filtrarEventoPorIdCliente(idCliente).then(function(eventos){
+    socketio.on("listarEventosPorIdCliente", function(idCliente, perfil){
+        int.filtrarEventoPorIdCliente(idCliente, perfil).then(function(eventos){
             socketio.emit("receberEventos",eventos);
         });
     });

@@ -1,3 +1,13 @@
+/*Barra de navegação*/
+.img-logo {
+    height: 80px;
+    width:83px;
+    display: block;
+    background: url("/imagens/logo_play_diversao_sem_contato.png") no-repeat;
+    background-size: contain; /*informa que o tamanho da figura será o mesmo da div pai*/
+    color: transparent;
+}
+
 .marcador{
 	background: #fe9d9d;
 	border:1px solid #f94646;
@@ -18,9 +28,37 @@
 	display: none;
 }
 
+nav.navbar-transparente {	
+	 background: rgba(0, 119, 255, 0.2);
+	 border: none;
+ }
+ 
+ .navbar-brand{
+	 padding: 5px 15px;
+ }
+ 
+ .divisor{
+	 width: 1px;
+	 height: 16px;
+	 background: white;
+	 margin: 16px 10px;
+ }
+ 
+ .navbar-inverse .navbar-nav>li>a, footer .nav a{
+	 color:white;
+ }
+ 
+ .navbar-inverse .navbar-nav>li>a:hover, footer .nav a:hover{
+	 color: #9bf0e1;
+	 background: none;
+ }
+ 
+
 #botaoDeCopia{
 	margin-top: 15px;
 	width: 100px;
 }
+
+
 
 

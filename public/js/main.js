@@ -1,7 +1,9 @@
+
 //inicialização do socketIO
 var socket = io("/");
 var clientesGlobal;
 var listaEventosGlobal;
+var perfil;
 
 
 //função que envia ao servidor a requisição para envio da lista de clientes disponível no bd
@@ -11,10 +13,11 @@ function solicitarListaClientes(){
     if(nomeCliente.length > 2){
         if ($("#listaClientes").parent().attr('id') == 'formulario_listagem_evento'){ //oção utilizada na tela de listagem de eventos
             let filtroDeBuscaEventos = {nomeCliente: cliente.id_cliente}; //filtro de busca é o objeto que contém os itens como nome de cliente e data para buscar eventos no bd
-            socket.emit("listaEventos", filtroDeBuscaEventos);       
+            
+            socket.emit(filtroDeBuscaEventos, perfil);       
             return ('<input type="button" id="btnInserirClienteNoEvento" name="btn_inserir_cliente" id_cliente="'+cliente.id_cliente+'" class="btn btn-default" value="Inserir" onclick="inserirClienteNoEvento(this)">');
-        }else {       
-            socket.emit("listaClientesPorNome", nomeCliente);
+        }else {                  
+            socket.emit("listaClientesPorNome", nomeCliente, perfil);
         }
     }else{
         document.getElementById("listaClientes").innerHTML = '';
@@ -97,7 +100,7 @@ function inserirBrinquedosNoEvento(){
     if (document.getElementById('data').value == ''){
         
     }
-    socket.emit("enviarBrinquedosDisponiveis", document.getElementById("data").value);
+    socket.emit("enviarBrinquedosDisponiveis", document.getElementById("data").value, perfil);
     socket.on("receberBrinquedosDisponiveis", function(brinquedos){
         let listaBrinquedos = '<h1>Lista de brinquedos</h1>';
 
@@ -121,7 +124,7 @@ function filtrarEventos(){
                         dataEvento: document.getElementById("dataEvento").value};
     if (((criteriosDeBusca.dataEvento == undefined) && (criteriosDeBusca.nomeCliente.length > 2)) || (criteriosDeBusca.dataEvento != undefined)) {   
         console.log("solicitou busca via socketio, data: "  + criteriosDeBusca.dataEvento + document.getElementById("dataEvento").value + ", cliente: " + criteriosDeBusca.nomeCliente);       
-        socket.emit("listaEventos", criteriosDeBusca);
+        socket.emit("listaEventos", criteriosDeBusca, perfil);
     }
 }
 
@@ -168,8 +171,8 @@ function preencherJanelaDeEdicaoDoEvento(id_evento){
 //###################  Inicialização do JQuery  #######################
 
 
-$(document).ready(function(){    
-    
+$(document).ready(function(){ 
+    perfil = $("body").attr("perfil");
     $("#btn_iserir_brinquedos_no_evento").click(function(){
         inserirBrinquedosNoEvento();
     });

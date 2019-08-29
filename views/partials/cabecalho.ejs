@@ -6,7 +6,7 @@
 
         
         <title>Play Diversão</title>
-        <!-- <link rel="shortcut icon" href="/imagens/Logotipo.ico" > -->
+        <link rel="shortcut icon" href="/imagens/logo_play_diversao_sem_contato.png">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" />
         <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css" />
@@ -38,5 +38,47 @@
         
     
 
-    </head>    
-    <body>
+    </head> 
+    <% if (perfil) { %>
+        <body perfil="<%= perfil %>">
+    <% }else{ %>
+        <body>
+    <% } %>
+
+    
+    <nav class="navbar navbar-expand-lg navbar-light navbar-transparente">
+        <div class="navbar mr-auto">
+            <a href="/" class="navbar-brand">
+                <img src="/imagens/logo_play_diversao_sem_contato.png" width="30" height="30" class="d-inline-block align-top" alt="">
+                <span class="align-bottom">Play Diversão</span> 
+            </a> 
+        </div>                
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#opcoesCabecalho" aria-controls="opcoesCabecalho" aria-expanded="false" aria-label="Alterna navegação">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+          
+        <div class="collapse navbar-collapse" id="opcoesCabecalho">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/">Home <span class="sr-only">(página atual)</span></a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Opções
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#">Editar usuário</a>
+                        <a class="dropdown-item" href="#">Editar senha</a>
+                        <div class="dropdown-divider" style="display: none;"></div>
+                        <a class="dropdown-item" style="display: none;"href="#">Editar outros usuários</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Sair</a>
+                </li>                
+            </ul>
+        </div>       
+    </nav>
+
+        
+    

@@ -4,7 +4,7 @@
 var socket = io("/");
 var clientesGlobal;
 var filtroCliente;
-
+var perfil;
 
 //envia os dados para filtro no db e caso não exista nenhum campo com mais de 3
 //caracteres ela apaga os dados da div listaClientes
@@ -22,7 +22,7 @@ function filtrarClientes(){
         filtroCliente.data.length < 10){
             document.getElementById("listaClientes").innerHTML = '';
     }else{
-        socket.emit("filtroCliente", filtroCliente);
+        socket.emit("filtroCliente", filtroCliente, perfil);
     };            
 }
 
@@ -31,7 +31,7 @@ function filtrarClientes(){
 
 //preenche a janela modal com os eventos relacionados ao cliente a ser excluído
 function pegarEventosPorIdCliente(idCliente){
-    socket.emit("listarEventosPorIdCliente", idCliente);
+    socket.emit("listarEventosPorIdCliente", idCliente, perfil);
     $("#id_cliente_excluir").val(idCliente);
     console.log($("#id_cliente_excluir").val());   
 }
@@ -47,7 +47,7 @@ socket.on("resultadoExclusaoCliente", function(mensagem){
 });
 
 $(document).ready(function(){ 
-
+    perfil = $("body").attr("perfil");
 
     
     //função de evento keyup do campo nome_cliente
@@ -80,7 +80,7 @@ $(document).ready(function(){
         $("#data").val("");
         $("#logradouro").val("");
         $("#cidade").val("");
-        socket.emit("filtroCliente", filtroCliente);
+        socket.emit("filtroCliente", filtroCliente, perfil);
     });
 
     //função que recebe a consulta da lista de clientes no bd, conforme o filtro solicitado

@@ -4,6 +4,25 @@ const mysql = require("mysql"),
     Evento = require("../Model/Evento");
 
 class Db{
+    
+    constructor(perfil){
+        if(perfil){
+            this.esquemaConexao = require("../Model/perfis/"+perfil+"/conexaoDb");
+        }else{
+            this.esquemaConexao = require("../Model/perfis/play_litoral/conexaoDb");
+        }
+        
+        this.connection = mysql.createConnection(this.esquemaConexao);
+        this.connection.connect(function(err){
+            if(err){
+                console.log("Deu erro!linha 20");
+                console.log(err);
+            }else{
+                console.log("Conectado com o BD!");
+            }
+        });
+    }
+/*
     constructor(){
         this.connection = mysql.createConnection({
             host     : 'mysql10-farm76.kinghost.net',
@@ -21,7 +40,7 @@ class Db{
             }
         });
     }
-
+*/
     selectTodosBrinquedos(){
         let sql = 'SELECT * FROM brinquedo';            
         var db = this;
@@ -389,9 +408,9 @@ class Db{
         
         let sql = 'INSERT INTO evento (`id_cliente`, `data`, `logradouro`, `numero`, `complemento`, `cidade`, `observacao`) VALUES ';
         eventos.forEach(function(evento, indice){
-            let dataArray = evento.data.split('/');
-            let data = (dataArray[2]+'-'+dataArray[1]+'-'+dataArray[0]);
-            sql += "('"+evento.id_cliente+"', '"+data+"', '"+evento.logradouro+"', '"+evento.numero+"', '"+evento.complemento+"', '"+evento.cidade+"', '"+
+            //let dataArray = evento.data.split('/');
+            //let data = (dataArray[2]+'-'+dataArray[1]+'-'+dataArray[0]);
+            sql += "('"+evento.id_cliente+"', '"+evento.data+"', '"+evento.logradouro+"', '"+evento.numero+"', '"+evento.complemento+"', '"+evento.cidade+"', '"+
             evento.observacao+"')";
             if(indice == eventos.length-1){
                 sql += ";";

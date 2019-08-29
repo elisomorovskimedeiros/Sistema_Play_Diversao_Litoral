@@ -1,5 +1,5 @@
 //################# FUNÇÕES DOS BRINQUEDOS #####################
-
+var perfil;
 //preencher a tela de edição dos brinquedos
 function preencherModalEdicao(id_brinquedo,nome_brinquedo,caracteristicas,valor_brinquedo,quantidade,observacao){
     $("#id_brinquedo").val(id_brinquedo);
@@ -11,9 +11,10 @@ function preencherModalEdicao(id_brinquedo,nome_brinquedo,caracteristicas,valor_
 }
 //pergunta quais os eventos que serão alterados com a exclusão do brinquedo
 function listarEventosDoBrinquedoExcluido(id_brinquedo){
-    socket.emit("meDaOsEventosAi", id_brinquedo);
+    socket.emit("meDaOsEventosAi", id_brinquedo, perfil);
 }
 $(document).ready(function(){ 
+    perfil = $("body").attr("perfil");
     //recebe a lista de eventos alterados com a exclusão do brinquedo
     socket.on("mandarEssesEventos", function(listaEventos){
         let lista = listaEventos.resultado;
@@ -44,7 +45,7 @@ $(document).ready(function(){
         //caso o campo nome_brinquedo tenha mais de dois caracteres, é feita a busca no bd, caso contrário a lista é mantida vazia.
         //essa função é utilizada pela página listarBrinquedos
         if($("#nome_brinquedo").val().length > 2){
-            socket.emit("listaBrinquedosPorNome",$("#nome_brinquedo").val());
+            socket.emit("listaBrinquedosPorNome",$("#nome_brinquedo").val(), perfil);
         }else{
             document.getElementById("listaBrinquedos").innerHTML = '';
         }

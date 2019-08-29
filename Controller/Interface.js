@@ -6,29 +6,29 @@ class Interface{
         //this.db = db;
     }
 
-    async inserirCliente(cliente){
-        let db = new Db();
+    async inserirCliente(cliente, perfil){
+        let db = new Db(perfil);
         return await db.inserirCliente(cliente).then(function(resposta){
             return resposta;
         });
     }
 
-    async inserirDiversosClientes(clientes){
-        let db = new Db();
+    async inserirDiversosClientes(clientes,perfil){
+        let db = new Db(perfil);
         return await db.inserirDiversosClientes(clientes).then(function(resposta){
             return resposta;
         });
     }
 
-    async listarTodosClientes(){
-        let db = new Db();
+    async listarTodosClientes(perfil){
+        let db = new Db(perfil);
         return await db.selectTodosClientes().then(function(clientes){
             return clientes;
         });
     }
 
-    async listarCliente(cliente){
-        let db = new Db();
+    async listarCliente(cliente,perfil){
+        let db = new Db(perfil);
         if(cliente.data){
             return await db.selectPorDataEvento(cliente).then(function(clientes){
                 return clientes;
@@ -40,78 +40,78 @@ class Interface{
         }       
     }
 
-    async excluirCliente(idCliente){
-        let db = new Db();       
+    async excluirCliente(idCliente,perfil){
+        let db = new Db(perfil);       
         return await db.excluirCliente(idCliente).then(function(mensagem){
             return mensagem;
         });       
     }
 
-    async excluirEventosPorIdCliente(idCliente){
-        let db = new Db();       
+    async excluirEventosPorIdCliente(idCliente,perfil){
+        let db = new Db(perfil);       
         return await db.excluirEventosPorIdCliente(idCliente).then(function(mensagem){
             return mensagem;
         });
     }
 
-    async inserirBrinquedo(brinquedo){
-        let db = new Db();
+    async inserirBrinquedo(brinquedo,perfil){
+        let db = new Db(perfil);
         return await db.inserirBrinquedo(brinquedo).then(function(resposta){
             return resposta;
         });
     }
 
-    async editarBrinquedo(brinquedo){
-        let db = new Db();
+    async editarBrinquedo(brinquedo,perfil){
+        let db = new Db(perfil);
         return await db.editarBrinquedo(brinquedo).then(function(resposta){
             return resposta;
         });
     }
 
-    async listarTodosBrinquedos(){
-        let db = new Db();
+    async listarTodosBrinquedos(perfil){
+        let db = new Db(perfil);
         return await db.selectTodosBrinquedos().then(function(brinquedos){
             return brinquedos;
         });
     }
 
-    async listarUmBrinquedo(nomeBrinquedo){
-        let db = new Db();
+    async listarUmBrinquedo(nomeBrinquedo,perfil){
+        let db = new Db(perfil);
         return await db.selectUmBrinquedo(nomeBrinquedo).then(function(brinquedos){
             return brinquedos;
         });
     }
 
-    async listarEventoPorIdBrinquedo(id_brinquedo){        
-        let db = new Db();
+    async listarEventoPorIdBrinquedo(id_brinquedo,perfil){        
+        let db = new Db(perfil);
         return await db.selectEventoPorIdBrinquedo(id_brinquedo).then(function(eventos){
             return eventos;
         });
     }
 
-    async inserirEvento(evento){
-        let db = new Db();
+    async inserirEvento(evento,perfil){
+        let db = new Db(perfil);
         return await db.inserirEvento(evento).then(function(resposta){
             return resposta;
         });
     }
 
-    async inserirDiversosEventos(eventos){
-        let db = new Db();
+    async inserirDiversosEventos(eventos,perfil){
+        let db = new Db(perfil);
         return await db.inserirDiversosEventos(eventos).then(function(resposta){
             return resposta;
         });
     }
 
-    async inserirBrinquedoNoEvento(brinquedosEvento){
-        let db = new Db();
+    async inserirBrinquedoNoEvento(brinquedosEvento,perfil){
+        let db = new Db(perfil);
         return await db.inserirBrinquedoNoEvento(brinquedosEvento).then(function(resposta){
             return resposta;
         });
     }
 
-    async mostrarBrinquedosNoEvento(filtroDeBuscaEventos){
-        let db = new Db();
+    async mostrarBrinquedosNoEvento(filtroDeBuscaEventos,perfil){
+        let db = new Db(perfil);
         if (filtroDeBuscaEventos.nomeCliente && filtroDeBuscaEventos.dataEvento){
             return await db.selectBrinquedosNoEventoPorNomeClienteEData(filtroDeBuscaEventos.nomeCliente, filtroDeBuscaEventos.dataEvento).then(function(resposta){
                 return resposta;
@@ -127,15 +127,15 @@ class Interface{
         }
     }
 
-    async verIdsBrinquedosPorIdEvento(idEvento){
-        let db = new Db();
+    async verIdsBrinquedosPorIdEvento(idEvento,perfil){
+        let db = new Db(perfil);
         return await db.selectIdsBrinquedosPorIdEventos(idEvento).then(function(resposta){
             return resposta;
         });
     }
 
-    async filtrarEvento(filtroDeBuscaEventos){
-        let db = new Db();
+    async filtrarEvento(filtroDeBuscaEventos,perfil){
+        let db = new Db(perfil);
         if (filtroDeBuscaEventos.nomeCliente && filtroDeBuscaEventos.dataEvento){
             return await db.selectEventosPorClienteEData(filtroDeBuscaEventos.nomeCliente, filtroDeBuscaEventos.dataEvento).then(function(resposta){
                 return resposta;
@@ -151,46 +151,46 @@ class Interface{
         }
     }
 
-    async filtrarEventoPorIdCliente(idCliente){
-        let db = new Db();
+    async filtrarEventoPorIdCliente(idCliente,perfil){
+        let db = new Db(perfil);
         return await db.selectEventoPorIdCliente(idCliente).then(function(eventos){
             return eventos;
         });
     }
 
-    async filtrarEventoPorIdEvento(idEvento){
-        let db = new Db();
+    async filtrarEventoPorIdEvento(idEvento,perfil){
+        let db = new Db(perfil);
         return await db.selectUmEvento(idEvento).then(function(evento){
             return evento;
         });
     }
 
-    async editarCliente(cliente){
-        let db = new Db();        
+    async editarCliente(cliente,perfil){
+        let db = new Db(perfil);        
         return await db.editarCliente(cliente).then(function(resposta){
             return resposta;
         });
     }
 
-    async editarEvento(evento){
-        let db = new Db();        
+    async editarEvento(evento,perfil){
+        let db = new Db(perfil);        
         return await db.editarEvento(evento).then(function(resposta){
             return resposta;
         });
     }
 
-    async listarBrinquedosPorIdEvento(id_evento){
-        let db = new Db();
+    async listarBrinquedosPorIdEvento(id_evento,perfil){
+        let db = new Db(perfil);
         return await db.selectBrinquedosPorIdEvento(id_evento);
     }
 
-    async excluirBrinquedosEvento(id_evento){
-        let db = new Db();
+    async excluirBrinquedosEvento(id_evento,perfil){
+        let db = new Db(perfil);
         return await db.excluirBrinquedosEvento(id_evento);
     }
 
-    async excluirEvento(idEvento){
-        let db = new Db();
+    async excluirEvento(idEvento,perfil){
+        let db = new Db(perfil);
         return await db.excluirEvento(idEvento);
     }
 }

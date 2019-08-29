@@ -1,7 +1,9 @@
 const   LocalStrategy  = require('passport-local').Strategy,                
         mysql          = require("mysql"),
         crypto         = require('crypto'),
-        flash          = require('connect-flash');
+        flash          = require('connect-flash'),
+        Perfil         = require('../Model/Perfil'),
+        Usuario        = require('../Model/Usuario');  
         //express = require('express'),
         //router = express.Router(),
         
@@ -18,19 +20,7 @@ let login = function(passport){
         database : 'solevento', //não colocar se for criar um banco através do node
         multipleStatements: false
     });
-/*
-    connection.connect(function(err){
-        if(err){
-            console.log("Deu erro!linha 17");
-            console.log(err);
-        }else{
-            console.log("Conectado com o BD!");
-        }
-    });*/
-    
-    
 
-  
     
     passport.use('local', new LocalStrategy({
         usernameField: 'username',
@@ -43,22 +33,25 @@ let login = function(passport){
             }
             var salt = '7fa73b47df808d36c5fe328546ddef8b9011b2c6';
             connection.query("select * from usuario where username = ?", [username], function(err, rows){
-                console.log(err); 
-                console.log(rows);
+
                 if (err) 
                     return done(req.flash('message',err));
                 if(!rows.length){ 
                     return done(null, false, req.flash('message','Usuário ou senha inválidos.')); 
                 }
+
+                perfil = new Perfil();
+                usuario = rows[0];
+                
                 salt = salt+''+password;
                 var encPassword = crypto.createHash('sha1').update(salt).digest('hex');
-                
-                var dbPassword  = rows[0].password;
+                        
+                var dbPassword  = usuario.password;
                 if(!(dbPassword == encPassword)){
                     return done(null, false, req.flash('message','Usuário ou senha inválidos.'));
                 }
-                console.log("logou dentro do passport.use");
-                return done(null, rows[0]);
+                
+                return done(null, usuario);                                        
             });
         }
     ));
