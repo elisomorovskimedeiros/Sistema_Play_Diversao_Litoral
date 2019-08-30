@@ -152,9 +152,7 @@ var socketio = io.on("connect", function(socketio){
                 console.log(resposta);
                 int.listarClientePorIdEvento(idEvento, perfil).then(function(resposta){
                     if(resposta.status){                        
-                        let cliente = resposta;
-                        console.log("cliente");
-                        console.log(cliente);
+                        let cliente = resposta.resultado[0];
                         int.listarBrinquedosPorIdEvento(idEvento, perfil).then(function(resposta){
                             if(resposta.status){
                                 let listaBrinquedos = 'Irá no dia ';
@@ -175,7 +173,7 @@ var socketio = io.on("connect", function(socketio){
                                 "dúvidas e acerta o valor de R$"+valorFinal+",00 com o montador.\n"+
                                 "Atenciosamente,\n"+
                                 "Equipe Play Diversão";
-
+                                console.log(cliente.email);
                                 email = new EnvioConfirmacoes(cliente.email,mensagem);
                                 let retornoEmail = email.enviar();
                                 retornoEmail.then(function(retorno){
