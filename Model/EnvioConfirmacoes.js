@@ -7,7 +7,9 @@ class EnvioConfirmacoes{
         this.email = email;
         this.mensagem = mensagem
         this.transporter = nodemailer.createTransport({
-            service: 'gmail',
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true,
             auth: {
                 user: 'playlitoral@gmail.com',
                 pass: 'd09m04a11'

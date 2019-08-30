@@ -541,7 +541,7 @@ class Db{
 
     selectClientePorIdEvento(idEvento){
         let sql = "SELECT * FROM cliente JOIN evento " +
-                    "ON cliente.id_cliente = evento.id_evento " +
+                    "ON cliente.id_cliente = evento.id_cliente " +
                     "WHERE evento.id_evento = ?";
         var db = this;
         return new Promise(function(resolve){

@@ -148,9 +148,13 @@ var socketio = io.on("connect", function(socketio){
         int.filtrarEventoPorIdEvento(idEvento, perfil).then(function(resposta){
             if(resposta.status){
                 let evento = resposta.resultado[0];
+                console.log("evento");
+                console.log(resposta);
                 int.listarClientePorIdEvento(idEvento, perfil).then(function(resposta){
                     if(resposta.status){                        
-                        let cliente = resposta.resultado[0];
+                        let cliente = resposta;
+                        console.log("cliente");
+                        console.log(cliente);
                         int.listarBrinquedosPorIdEvento(idEvento, perfil).then(function(resposta){
                             if(resposta.status){
                                 let listaBrinquedos = 'Irá no dia ';
@@ -186,7 +190,7 @@ var socketio = io.on("connect", function(socketio){
                                 console.log(resposta.resultado);
                                 socketio.emit("retorno", "Ocorreu um erro no banco de dados");
                             }
-                        });                        
+                        });                     
                     }else{
                         console.log(resposta.resultado);
                         socketio.emit("retorno", "Ocorreu um erro no banco de dados");
