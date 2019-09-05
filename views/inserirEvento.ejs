@@ -7,19 +7,25 @@
     </div>
     <form method="post" action="/inserirEvento" name="form-evento">
         <div class="row" id="formulario_evento">                
-            <div  class="col-md-6">
-                <div class="form-group" id="espacoNomeCliente">
+            <div  class="col-md-12">
+                <button type="button" id="abrirModalInsercaoClienteNoEvento" 
+                    class="btn btn-primary" data-toggle="modal" data-target="#janelaDeInsercaoClienteNoEvento">
+                    Selecionar cliente
+                </button>
+            
+                <div class="form-group">
                     <label for="nome_cliente">Nome do Cliente</label>
-                    <input type="text" class="form-control" name="nome_cliente" id_cliente="1" id="nome_cliente" required>
+                    <input type="text" class="form-control" readonly name="nome_cliente" id="espacoNomeCliente" required>
                 </div>
+            
                 <div class="row">                    
                     <div class="form-group col-md-6">
                         <label for="data">Data</label>
-                        <input type="date" class="form-control" name="data" id="data" required>
+                        <input type="date" class="form-control" name="data_evento" id="data_evento" required>
                     </div>
                     <div  class="form-group col-md-6">
                         <label for="hora">Hora</label>
-                        <input type="time" id="hora" class="form-control" name="hora" id="hora" required>
+                        <input type="time" id="hora" class="form-control" name="hora_evento" id="hora_evento" required>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -27,7 +33,7 @@
                         <label for="endereco">Endereço</label>
                     </div>
                     <div class="col-md-9">
-                        <input type="text" class="form-group form-control" placeholder="Rua, Avenida, Praça" name="logradouro" id="logradouro" required>
+                        <input type="text" class="form-group form-control" placeholder="Rua, Avenida, Praça" name="logradouro_evento" id="logradouro_evento" required>
                     </div>
                     <div class="col-md-3">
                         <input type="numero" class="form-group form-control" placeholder="Número" name="numero" id="numero" required>
@@ -36,10 +42,10 @@
                         <input type="text" class="form-group form-control" placeholder="Complemento" name="complemento" id="complemento">
                     </div>
                     <div class="col-md-6">
-                        <input type="text" class="form-group form-control" placeholder="Observação do Endereço" name="observacao_endereco" id="observacao_endereco">
+                        <input type="text" class="form-group form-control" placeholder="Bairro" name="bairro_evento" id="bairro_evento">
                     </div>
                     <div class="col-md-12">
-                        <input type="text" class="form-group form-control" placeholder="Cidade" name="cidade" id="cidade" required>
+                        <input type="text" class="form-group form-control" placeholder="Cidade" name="cidade_evento" id="cidade_evento" required>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -59,13 +65,99 @@
                 <div class="form-group">
                     <label for="obs">Observação sobre o evento</label>
                     <input type="text" class="form-control" name="observacao" id="observacao">
-                </div>                            
-            </div>
-            <div id="listaClientes" class="col-md-6"> 
-            </div>            
-        </div>
-       
-        <input type="submit" class="btn btn-default" value="Inserir Brinquedos">
+                </div>
+                <input type="text" id="listaBrinquedosInseridos" name="listaBrinquedosInseridos" style="display: none;">
+                <input type="text" id="idClienteEscolhido" name="idClienteEscolhido" style="display: none;">                            
+            </div>                      
+        </div>       
+        <input type="button" id="listarBrinquedos" class="btn btn-primary" value="Inserir Brinquedos" data-toggle="modal" data-target="#janelaDeInsercaoBrinquedoNoEvento">
+        <input type="submit" id="inserirEvento" class="btn btn-success" value="Inserir Evento" style="float: right;">
     </form>
+    <!-- Janela de Inserção de cliente -->
+    <div class="modal fade" id="janelaDeInsercaoClienteNoEvento">              
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <!-- cabecalho -->
+                <form id="form-cliente">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="tituloInsercaoCliente">Informe o cliente</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar"  id="fecharModalCliente">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>            
+                    <!-- corpo -->
+                    <div class="modal-body" id="corpoModal">
+                        <div class="row" id="insercaoClienteNoEvento">
+                            <div class="col-md-6 form-group">
+                                <label>Parte do nome do cliente</label>
+                                <input type="text" class="form-control" name="nome" id="nome" placeholder="Informe o nome do cliente">
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>Data de um evento do cliente</label>
+                                <input type="date" class="form-control" name="data" id="data" placeholder="Informe a data da festa" onchange="filtrarClientes()">
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>Parte do endereço do cliente</label>
+                                <input type="text" class="form-control" name="logradouro" id="logradouro" placeholder="Informe parte do endereço">
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>Parte do nome da cidade</label>
+                                <input type="text" class="form-control" name="cidade" id="cidade" placeholder="Informe parte da cidade">
+                            </div>
+                            <div id="listaClientes" class="col-md-12">
+                            </div>
+                        </div>                        
+                    </div>            
+                    <!-- rodape -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            Cancelar
+                        </button>
+                    </div>   
+                </form>
+            </div>    
+        </div>
+    </div>
+    <!-- fechamento do modal inserção cliente -->
+
+    <!-- Janela de Inserção de brinquedo no evento -->
+    <div class="modal fade" id="janelaDeInsercaoBrinquedoNoEvento">              
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <!-- cabecalho -->
+                <form id="form-brinquedo">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="tituloInsercaoBrinquedo">Inserir Brinquedos no Evento</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar"  id="fecharModal">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>            
+                    <!-- corpo -->
+                    <div class="modal-body" id="corpoModal">
+                        <form id="formListarBrinquedos">      
+                            <h4>Listagem de brinquedos</h4> 
+                            <div>
+                                <button type="button" data-dismiss="modal" id="selecionarBrinquedos" class="btn btn-success">Inserir os selecionados</button>
+                                <div id="listaBrinquedos">
+                                </div>                    
+                            </div> 
+                        </form> 
+                    </div>
+            
+                    <!-- rodape -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            Cancelar
+                        </button>
+                    </div>   
+                </form>
+            </div>    
+        </div>
+    </div>
+    <!-- fechamento do modal de inserção de brinquedo no evento -->
+    <% if (typeof mensagem != 'undefined'){ %>
+        <input type="text" id="resposta_insercao_brinquedo" style="display: none;" value="<%= mensagem %>">
+    <% } %>    
+    <div id="snackbar"></div>
 </div>
 <% include partials/rodape %> 

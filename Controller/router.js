@@ -70,32 +70,34 @@ router.get("/inserirCliente", isLoggedIn, function(req, res){
 
 router.post("/inserirCliente", isLoggedIn, function(req, res){
     var cliente = {
-        nome: req.body.nome,
-        email: req.body.email,
-        cpf: req.body.cpf,
-        telefone: req.body.telefone,
-        telefone_recado: req.body.telefone_recado,
-        logradouro: req.body.logradouro,
-        numero: req.body.numero,
-        complemento: req.body.complemento,
-        observacao_endereco: req.body.observacao_endereco,
-        cidade: req.body.cidade,
-        observacao_cliente: req.body.observacao_cliente
+        nome: req.body.nome_novo_cliente,
+        email: req.body.email_novo_cliente,
+        cpf: req.body.cpf_novo_cliente,
+        telefone: req.body.telefone_novo_cliente,
+        telefone_recado: req.body.telefone_recado_novo_cliente,
+        logradouro: req.body.logradouro_novo_cliente,
+        numero: req.body.numero_novo_cliente,
+        complemento: req.body.complemento_novo_cliente,
+        observacao_endereco: req.body.observacao_endereco_novo_cliente,
+        bairro: req.body.bairro_novo_cliente,
+        cidade: req.body.cidade_novo_cliente,
+        observacao_cliente: req.body.observacao_cliente_novo_cliente
     }
-    let perfil = req.user.perfil;
-    var int = new Interface();
-    async function inserirCliente(){
-        var resposta = await int.inserirCliente(cliente,perfil).then(function(resposta){
-            res.render("inserirCliente.ejs",{resposta, perfil});
-        });                           
-    }
-    inserirCliente();
+    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
     
+    int.inserirCliente(cliente,perfil.perfil).then(function(resposta){
+        if(resposta.status){
+            res.send("Inserido com sucesso!");
+        }else{
+            res.send("Ocorreu um erro na inserção do cliente.")
+            console.log(resposta.resultado);
+        }
+    }); 
 });
 
 router.get("/listarTodosClientes", isLoggedIn, function(req, res){
     var int = new Interface();
-    let perfil = req.user.perfil;
+    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
     int.listarTodosClientes(perfil).then(function(clientes){       
         res.render("listarCliente.ejs",{clientes, perfil});
     });    
@@ -103,14 +105,14 @@ router.get("/listarTodosClientes", isLoggedIn, function(req, res){
 
 router.get("/listarCliente",  isLoggedIn, function(req, res){
     let clientes = undefined;
-    let perfil = req.user.perfil;
+    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
     res.render("listarCliente.ejs",{clientes, perfil});
 });
 
 router.post("/listarCliente", isLoggedIn, function(req, res){
     let nomeCliente = req.body.nome_cliente;
     var int = new Interface();
-    let perfil = req.user.perfil;
+    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
     int.listarCliente(nomeCliente,perfil).then(function(clientes){
         res.render("listarCliente.ejs",{clientes,perfil});
     });    
@@ -118,7 +120,7 @@ router.post("/listarCliente", isLoggedIn, function(req, res){
 
 router.get("/inserirBrinquedo", isLoggedIn, function(req, res){
     let resposta;
-    let perfil = req.user.perfil;
+    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
     res.render("inserirBrinquedo.ejs", {resposta,perfil});
 });
 
@@ -139,31 +141,42 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage});//variável que manipula o post
 
-router.post('/inserirBrinquedo', upload.single('foto'), (req, res, next) => {
+router.post('/inserirBrinquedo', upload.single('foto_insercao_brinquedo'), (req, res, next) => {
     const file = req.file;
+    let foto_brinquedo = '';
     if(!file){//caso algum erro tenha ocorrido
+        /*
         const error = new Error("Please upload a file");
         error.httpStatusCode = 400;
         return next(error);
+        */
+        console.log("não veio foto");
+    }else{
+        foto_brinquedo = "imagens/"+ req.file.originalname;
     }
     //gravação do brinquedo no db
     var brinquedo = {
-        nome_brinquedo: req.body.nome,
-        caracteristicas: req.body.caracteristicas,
-        foto_brinquedo: "imagens/"+ req.file.originalname,
-        valor_brinquedo: req.body.valor,
-        quantidade: req.body.quantidade,
-        observacao: req.body.observacao
+        nome_brinquedo: req.body.nome_insercao_brinquedo,
+        caracteristicas: req.body.caracteristicas_insercao_brinquedo,
+        foto_brinquedo: foto_brinquedo,
+        valor_brinquedo: req.body.valor_insercao_brinquedo,
+        quantidade: req.body.quantidade_insercao_brinquedo,
+        observacao: req.body.observacao_insercao_brinquedo
     }
-    
-    var int = new Interface();
-    let perfil = req.user.perfil;
-    async function inserirBrinquedo(){
-        var resposta = await int.inserirBrinquedo(brinquedo,perfil).then(function(resposta){
-            res.render("inserirBrinquedo.ejs",{resposta, perfil});
-        });                           
-    }
-    inserirBrinquedo();     
+
+    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    int.inserirBrinquedo(brinquedo,perfil.perfil).then(function(resultado){
+        let resposta;
+        if(resultado.status){
+            resposta = "Brinquedo inserido com sucesso!";            
+            //res.send("Brinquedo inserido com sucesso!");
+        }else{
+            console.log(resultado);
+            resposta = "Ocorreu um erro na inserção do brinquedo";
+            //res.send("Ocorreu um erro na inserção do brinquedo");
+        }
+        res.render("inserirBrinquedo", {resposta, perfil});
+    });  
 });
 
 router.post("/editarBrinquedo", upload.single('foto'), (req, res, next) =>{
@@ -182,14 +195,19 @@ router.post("/editarBrinquedo", upload.single('foto'), (req, res, next) =>{
     if(file){//caso algum erro tenha ocorrido
         brinquedo.foto_brinquedo = "imagens/"+ req.file.originalname 
      }
-    var int = new Interface();
-    let perfil = req.user.perfil;
-    async function editarBrinquedo(){
-        var resposta = await int.editarBrinquedo(brinquedo,perfil).then(function(brinquedos){
-            res.render("listarBrinquedos",{brinquedos, perfil});
-        });                           
-    }
-    editarBrinquedo();
+    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+
+    int.editarBrinquedo(brinquedo,perfil.perfil).then(function(brinquedos){
+        if(brinquedos.status){
+            resposta = "Brinquedo editado com sucesso!";            
+            //res.send("Brinquedo inserido com sucesso!");
+        }else{
+            console.log(brinquedos);
+            resposta = "Ocorreu um erro na edição do brinquedo";
+            //res.send("Ocorreu um erro na inserção do brinquedo");
+        }
+        res.render("listarBrinquedos", {brinquedos, perfil});
+    });
 });
 
 
@@ -236,10 +254,15 @@ router.get("/listarBrinquedos", isLoggedIn, function(req, res){
 });
 
 router.get("/listarTodosBrinquedos", isLoggedIn, function(req, res){
-    var int = new Interface();
-    let perfil = req.user.perfil;
-    int.listarTodosBrinquedos(perfil).then(function(brinquedos){       
-        res.render("listarBrinquedos.ejs",{brinquedos, perfil});
+    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    int.listarTodosBrinquedos(perfil.perfil).then(function(resposta){  
+        let brinquedos;
+        if(resposta.status){
+            brinquedos = resposta.resultado;
+            res.render("listarBrinquedos.ejs",{brinquedos, perfil});
+        }else{
+            console.log(resposta.resultado);
+        }             
     });     
 });
 
@@ -250,36 +273,59 @@ router.get("/inserirEvento", isLoggedIn, function(req, res){
     res.render("inserirEvento.ejs",{resposta, perfil});
 });
 
+function formataData(){}
+
 router.post("/inserirEvento", isLoggedIn, function(req, res){
-    let evento = new Evento(req.body.id_cliente, req.body.data, req.body.logradouro, Number(req.body.numero), req.body.complemento, req.body.cidade, Number(req.body.valor_total), Number(req.body.valor_desconto), Number(req.body.valor_sinal), req.body.observacao);
+    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+
+    let evento = new Evento(req.body.id_cliente, req.body.data_evento, req.body.logradouro_evento, 
+        Number(req.body.numero), req.body.complemento, req.body.bairro_evento, req.body.cidade_evento, 
+        Number(req.body.valor_total), Number(req.body.valor_desconto), 
+        Number(req.body.valor_sinal), req.body.observacao);
+    /*
+    console.log(req.body.data);
+    console.log(req.body.hora);
     let interface = new Interface();
-    let perfil = req.user.perfil;    
+    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");  
     let data = stringToDate(req.body.data);
-    console.log(data);
+    //console.log(data);
     data.setHours(Number((req.body.hora).slice(0,2)));/*-(data.getTimezoneOffset())/60)*///para setar a hora, o sistema automaticamente guarda a hora utc, que é 
     // a hora de Brasília +3. Portanto foi subtraído a hora do retorno do método getTimezoneOffset() que mostra o desvio UTC em minutos.
+    /*
     data.setMinutes((req.body.hora).slice(3,5)); 
     evento.data = data;
-    interface.inserirEvento(evento,perfil).then(function(resposta){
-        if(resposta.errno != undefined){
-            res.send("Ocorreu o seguinte erro de inserção do evento no banco de dados: "+resposta);
+    */
+
+    evento.data = evento.data + " " + req.body.hora_evento + ":00";
+    let brinquedos = req.body.listaBrinquedosInseridos.split(",");
+    evento.id_cliente = req.body.idClienteEscolhido;
+    let mensagem = '';
+    int.inserirEvento(evento,perfil.perfil).then(function(resposta){
+        if(!resposta.status){
+            console.log(resposta.resultado);
+            mensagem = "Ocorreu um erro e o evento não foi inserido";
+            res.render("inserirEvento", {mensagem, perfil});
         }else{
-            let idEvento = resposta.insertId;
-            let brinquedos = interface.listarTodosBrinquedos().then(function(brinquedos){
-                brinquedos.data = data;
-                brinquedos.idEvento = idEvento;
-                console.log(brinquedos);        
-                res.render("inserirBrinquedosNoEvento.ejs",{brinquedos, perfil});                              
-            });  
+            let brinquedoEvento = {brinquedos: brinquedos,
+                evento: resposta.resultado.insertId};            
+            int.inserirBrinquedoNoEvento(brinquedoEvento,perfil.perfil).then(function(resposta){
+                if(!resposta.status){
+                    console.log(resposta.resultado);
+                    mensagem = "Ocorreu um erro de inserção do evento";
+                    res.render("inserirEvento", {mensagem, perfil});
+                }else{
+                    mensagem = "Inserido com sucesso";
+                    res.render("inserirEvento", {mensagem, perfil});                           
+                }  
+            });
         }       
     });
-              
 });
 
 router.post("/inserirBrinquedosNoEvento", isLoggedIn, function(req, res){
     
     let int = new Interface();
-    let perfil = req.user.perfil;
+    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
     let brinquedoEvento;
     idsBrinquedos = Object.keys(req.body);    
     console.log(idsBrinquedos);
@@ -296,24 +342,27 @@ router.post("/inserirBrinquedosNoEvento", isLoggedIn, function(req, res){
     idsBrinquedos.splice(posicaoASerRetirada);
     brinquedoEvento = {brinquedos: idsBrinquedos,
                        evento: req.body.id_evento};
-    let resposta = int.inserirBrinquedoNoEvento(brinquedoEvento,perfil).then(function(resposta){
-        if(resposta.errno != undefined){
-            res.send("Ocorreu o seguinte erro de inserção do evento no banco de dados: "+resposta);
+    let resposta = int.inserirBrinquedoNoEvento(brinquedoEvento,perfil.perfil).then(function(resposta){
+        if(!resposta.status){
+            console.log(resposta.resultado);
+            mensagem = "Ocorreu um erro de inserção do evento";
+            res.render("inserirEvento", {mensagem, perfil});
         }else{
-            res.send("Inserido com sucesso!<br><a href='/'>Voltar ao início</a>")                            
-        }  
+            mensagem = "Inserido com sucesso";
+            res.render("inserirEvento", {mensagem, perfil});                           
+        }   
     });
     
 }); 
 
 router.get("/listarEvento", isLoggedIn, function(req, res){
     let evento;
-    let perfil = req.user.perfil;
+    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
     //é necessário puxar a lista dos brinquedos do bd para o caso de edição dos eventos
-    int.listarTodosBrinquedos(perfil).then(function(brinquedos){
+    int.listarTodosBrinquedos(perfil.perfil).then(function(resposta){
+        let brinquedos = resposta.resultado;
         res.render("listarEvento.ejs",{evento, brinquedos, perfil});
-    });
-    
+    });    
 });
 
 
@@ -334,7 +383,7 @@ router.post("/editarCliente", isLoggedIn, function(req, res){
         observacao_cliente: req.body.observacao_cliente
     }
     let int =  new Interface();
-    let perfil = req.user.perfil;
+    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
     int.editarCliente(cliente,perfil).then(function(resposta){
         if(resposta.errno != undefined){
             res.send("Ocorreu o seguinte erro de inserção do evento no banco de dados: "+resposta);
@@ -348,8 +397,8 @@ router.post("/editarCliente", isLoggedIn, function(req, res){
 
 router.post("/excluirCliente", isLoggedIn,  function(req, res){
     let idCliente = req.body.id_cliente_excluir;
-    let perfil = req.user.perfil;
-    int.excluirEventosPorIdCliente(idCliente,perfil).then(function(resposta){
+    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    int.excluirEventosPorIdCliente(idCliente,perfil).then(function(resposta){        
         if(resposta.errno){
             res.send("Ocorreu o seguinte erro na remoção dos eventos: "+ resposta.errno);            
         }else{
@@ -368,7 +417,7 @@ router.post("/excluirCliente", isLoggedIn,  function(req, res){
 router.get("/criarSessaoCliente", isLoggedIn, function(req,res){
     //evento que será utilizado na sessao
     evento = new Evento(null, new Date(), "cliente preencherá", 0, " ", " ", " ", 0, 0, 0, " ");
-    let perfil = req.user.perfil;       
+    let perfil = req.user.perfil;
     int.inserirEvento(evento,perfil).then(function(resposta){
         if(resposta.status){
             let id_evento = resposta.resultado.insertId;
@@ -377,8 +426,14 @@ router.get("/criarSessaoCliente", isLoggedIn, function(req,res){
             sessao.evento = evento;
             sessao.perfil = perfil;
             sessoes.push(sessao);
-            int.listarTodosBrinquedos().then(function(brinquedos){
-                res.render("novoEventoCliente", {id_evento, brinquedos, perfil});
+            int.listarTodosBrinquedos().then(function(resposta){
+                let brinquedos;
+                if(resposta.status){
+                    brinquedos = resposta.resultado;
+                    res.render("novoEventoCliente", {id_evento, brinquedos, perfil});
+                }else{
+                    console.log(resposta.resultado);
+                }                
             });            
         }else{
             res.send("Deu problema no db");
@@ -402,37 +457,32 @@ router.post("/criarSessaoCliente", isLoggedIn, function(req,res){
         evento.observacao = "Nenhuma";
     }
     
-    
+    let mensagem = '';
     let brinquedos;
-    let perfil = req.user.perfil;
-    int.editarEvento(evento,perfil).then(function(resultado){
-        console.log(resultado);
+    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    int.editarEvento(evento,perfil).then(function(resultado){        
         if(!resultado.status){
-            res.send("Não foi possível atualizar o evento");
+            console.log(resposta.resultado);
+            mensagem = "Ocorreu um erro de inserção do evento";
+            res.render("/criarSessaoCliente", {mensagem, perfil});
         }else{
             brinquedos = separarBrinquedos(Object.keys(req.body));
             if(brinquedos.length > 0){
                 brinquedoEvento = {brinquedos: brinquedos,
                     evento: req.body.idEvento};
                 int.inserirBrinquedoNoEvento(brinquedoEvento,perfil).then(function(resposta){
-                    if(resposta.errno != undefined){
-                        res.send("Ocorreu o seguinte erro de inserção do evento no banco de dados: "+resposta);
+                    if(!resposta.status){
+                        console.log(resposta.resultado);
+                        mensagem = "Ocorreu um erro de inserção do evento";
+                        res.render("/criarSessaoCliente", {mensagem, perfil});
                     }else{
-                        res.send("Inserido com sucesso!<br><a href='/'>Voltar ao início</a>");                            
-                    }  
-                });
-            
-                brinquedoEvento = {brinquedos: brinquedos,
-                    evento: req.body.idEvento};
-                int.inserirBrinquedoNoEvento(brinquedoEvento,perfil).then(function(resposta){
-                    if(resposta.errno != undefined){
-                        res.send("Ocorreu o seguinte erro de inserção do evento no banco de dados: "+resposta);
-                    }else{
-                        res.send("Inserido com sucesso!<br><a href='/'>Voltar ao início</a>")                            
-                    }  
+                        mensagem = "Inserido com sucesso";
+                        res.render("/criarSessaoCliente", {mensagem, perfil});                           
+                    }    
                 });
             }
-            res.send("Inserido com sucesso!<br><a href='/'>Voltar ao início</a>");
+            mensagem = "Inserido com sucesso";
+            res.render("/criarSessaoCliente", {mensagem, perfil});
         }
     });
 });
@@ -442,8 +492,8 @@ async function editarBrinquedosNoBanco(req){
     let temBrinquedo = false;
     let body = req.body;
     //primeiro: são excluídos os brinquedos do evento
-    let perfil = req.user.perfil;
-    int.excluirBrinquedosEvento(body.id_evento,perfil).then(function(resposta){
+    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    int.excluirBrinquedosEvento(body.id_evento,perfil.perfil).then(function(resposta){
         console.log(resposta);
         //segundo: são listadas as chaves que começam com "brinquedo" no body
         Object.keys(body).forEach(function(campo){
@@ -457,7 +507,7 @@ async function editarBrinquedosNoBanco(req){
         let brinquedoEvento = {brinquedos: listaBrinquedos,
             evento: body.id_evento};
         if(temBrinquedo){
-            int.inserirBrinquedoNoEvento(brinquedoEvento,perfil).then(function(resposta){
+            int.inserirBrinquedoNoEvento(brinquedoEvento,perfil.perfil).then(function(resposta){
                 console.log(resposta);
             });
         }        
@@ -467,9 +517,11 @@ async function editarBrinquedosNoBanco(req){
 async function editarEventoNoBanco(req){
     //cria o objeto evento
     let body = req.body;
+    console.log(body.data);
+    console.log(body.hora);    
     let evento = {
         id_evento: body.id_evento,
-        data: stringToDate(body.data), 
+        data: body.data + ' ' + body.hora + ":00", 
         logradouro: body.logradouro_edicao,
         numero: body.numero, 
         complemento: body.complemento,
@@ -480,20 +532,24 @@ async function editarEventoNoBanco(req){
         valor_sinal: body.valor_sinal, 
         observacao: body.observacao
     }
+    if(evento.valor_desconto == '') evento.valor_desconto = 0;
+    if(evento.valor_total == '') evento.valor_total = 0;
+    if(evento.valor_sinal == '') evento.valor_sinal = 0;
     //variável utilizada para renderizar a tela após edição com os mesmos parâmetros anteriores
     let filtroEvento = {
         nome_cliente: body.nome_cliente,
         data: body.data
     };
     //seta a hora do evento
-    evento.data.setHours(Number((body.hora).slice(0,2)));/*-(data.getTimezoneOffset())/60)*///para setar a hora, o sistema automaticamente guarda a hora utc, que é 
+    //evento.data.setHours(Number((body.hora).slice(0,2)));/*-(data.getTimezoneOffset())/60)*///para setar a hora, o sistema automaticamente guarda a hora utc, que é 
     // a hora de Brasília +3. Portanto foi subtraído a hora do retorno do método getTimezoneOffset() que mostra o desvio UTC em minutos.
-    evento.data.setMinutes((body.hora).slice(3,5));
-    let perfil = req.user.perfil;
-    return await int.editarEvento(evento,perfil).then(function(resultado){
-        if(!resultado.status){
+    //evento.data.setMinutes((body.hora).slice(3,5));
+    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    return await int.editarEvento(evento,perfil.perfil).then(function(resposta){
+        if(!resposta.status){
+            console.log(resposta.resultado);
             return ({
-                status: false
+                status: false                
             });
         }else{
             return ({
@@ -523,6 +579,7 @@ router.post("/editarEvento", isLoggedIn, function(req,res){
     //dispara função editar evento que fará a lógica e inserção no banco
     editarEvento(req).then(function(resposta){
         if(!resposta.status){
+            console.log(resposta.resultado);
             res.send("Ocorreu o seguinte erro de edição do evento no banco de dados: "+resposta);
         }else{
             res.send("Editado com sucesso!<br><a href='/'>Voltar ao início</a>");                            
@@ -626,6 +683,10 @@ router.post("/:tela", function(req, res){
             }                          
         break;
     }    
+});
+
+router.get("/*", function(req, res){
+    res.redirect("/");
 });
 
 function dadosPrimeiraTela(req, idEvento){

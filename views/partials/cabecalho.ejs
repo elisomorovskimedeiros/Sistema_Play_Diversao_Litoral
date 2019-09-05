@@ -30,17 +30,18 @@
 
         <script src="/js/jquery-3.4.1.js"></script>
         <script src="/js/socket.io.js"></script>
-        <script src="/js/funcoesCliente.js"></script>
-        <script src="/js/funcoesBrinquedos.js"></script>
+        <script src="/js/moment.js"></script>
         <script src="/js/funcoesCadastro.js"></script>
-        <script src="/js/main.js"></script>
+        <script src="/js/escutasSocketIO.js"></script>
+        <script src="/js/escutasJquery.js"></script>
+        <script src="/js/funcoes.js"></script>
         
         
     
 
     </head> 
     <% if (perfil) { %>
-        <body perfil="<%= perfil %>">
+        <body perfil="<%= perfil.perfil %>">
     <% }else{ %>
         <body>
     <% } %>

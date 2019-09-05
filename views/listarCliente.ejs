@@ -73,58 +73,59 @@
                         </button>
                     </div>            
                     <!-- corpo -->
-                    <div class="modal-body" id="corpoModal">
-            
+                    <div class="modal-body" id="corpoModal">            
                         <div class="row">
                             <div class="form-group col-md-12" style="display: none;">                                
-                                <input type="text" class="form-control" name="id_cliente" id="id_cliente">
-                            </div>       
-                                                
+                                <input type="text" class="form-control" name="id_cliente_edicao" id="id_cliente_edicao">
+                            </div>              
                             <div class="form-group col-md-12">
                                 <label for="nome" name="labelDoNome" id="labelDoNome">Nome</label>
-                                <input type="text" class="form-control" name="nome_edicao" id="nome_edicao">
+                                <input type="text" class="form-control" required name="nome_edicao_edicao" id="nome_edicao_edicao">
                             </div>
-                    
                             <div class="form-group col-md-6">
                                 <label for="email">E-mail</label>
-                                <input type="email" class="form-control" name="email" id="email">
+                                <input type="email" class="form-control" required name="email_edicao" id="email_edicao">
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="cpf">CPF</label>
-                                <input type="text" class="form-control" name="cpf" id="cpf">
+                                <input type="text" class="form-control" required name="cpf_edicao" id="cpf_edicao">
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="telefone">Telefone</label>
-                                <input type="text" class="form-control" name="telefone" id="telefone">
+                                <input type="text" class="form-control" required name="telefone_edicao" id="telefone_edicao">
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="telefone">Telefone para recado</label>
-                                <input type="text" class="form-control" name="telefone_recado" id="telefone_recado">
-                            </div>                               
-                                                            
-                                <div class="form-group col-md-8">
-                                    <label for="endereco">Endereço</label>
-                                    <input type="text" class="form-control" placeholder="Rua, Avenida, Praça" name="logradouro_edicao" id="logradouro_edicao">
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="endereco">Número</label>
-                                    <input type="numero" class="form-control" placeholder="Número" name="numero" id="numero">
-                                </div>                                
-                                <div class="form-group col-md-6">
-                                    <input type="text" class="form-control" placeholder="Complemento" name="complemento" id="complemento">
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <input type="text" class="form-control" placeholder="Cidade" name="cidade" id="cidade">
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <input type="text" class="form-control" placeholder="Observacao Endereco" name="observacao_endereco" id="observacao_endereco"> 
-                                </div>                                                               
-                            
+                                <input type="text" class="form-control" name="telefone_recado_edicao" id="telefone_recado_edicao">
+                            </div>                          
+                            <div class="form-group col-md-8">
+                                <label for="endereco">Rua, Avenida, Praça, etc...</label>
+                                <input type="text" class="form-control" required placeholder="Rua, Avenida, Praça" name="logradouro_edicao" id="logradouro_edicao">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="numero">Número</label>
+                                <input type="numero" class="form-control" required placeholder="Número" name="numero_edicao" id="numero_edicao">
+                            </div>                                
+                            <div class="form-group col-md-6">
+                                <label for="complemento">Complemento</label>
+                                <input type="text" class="form-control" placeholder="Complemento" name="complemento_edicao" id="complemento_edicao">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="bairro">Bairro</label>
+                                <input type="text" class="form-control" placeholder="Bairro" name="bairro_edicao" id="bairro_edicao">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="cidade">Cidade</label>
+                                <input type="text" class="form-control" required placeholder="Cidade" name="cidade_edicao" id="cidade_edicao"> 
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="observacao_endereco">Observação do Endereço</label>
+                                <input type="text" class="form-control" placeholder="Observacao do Endereco" name="observacao_endereco_edicao" id="observacao_endereco_edicao"> 
+                            </div>  
                             <div class="form-group col-md-12">
                                 <label for="observacao">Observação sobre o cliente</label>
-                                <input type="text" class="form-control" name="observacao_cliente" id="observacao_cliente">
-                            </div>                   
-                                    
+                                <input type="text" class="form-control" name="observacao_cliente_edicao" id="observacao_cliente_edicao">
+                            </div>                                
                         </div>
                     </div>
             
@@ -133,13 +134,13 @@
                         <button type="button" class="btn btn-default" data-dismiss="modal">
                             Cancelar
                         </button>
-                        <button type="submit" id="btnEnviarEdicaoCliente" class="btn btn-primary">
+                        <button type="button" id="btnEnviarEdicaoCliente" class="btn btn-primary">
                             Concluir Edição
                         </button>
                     </div>
                 </form>
             </div>
-        </div>     
+        </div>    
     </div>
     <!-- Janela de remoção de cliente -->
     <div class="modal fade" id="janelaDeRemocaoCliente">
@@ -154,26 +155,25 @@
                         </button>
                     </div>
                     <!-- corpo -->
-                    <div class="modal-body" id="corpoModal">
+                    <div class="modal-body" id="corpoModalExcluirCliente">
                         <h4>Eventos apagados com esse cliente:</h4>
                         <input type="text" style="display: none;" id="id_cliente_excluir" name="id_cliente_excluir">
-                        <div class="row" id="listaEventos">
-                            
-                        </div>              
+                        <div class="row" id="listaEventos"></div>              
                     </div>            
                     <!-- rodape -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">
                             Cancelar
                         </button>
-                        <button type="submit" id="btnExcluirCliente" class="btn btn-danger">
+                        <button type="button" id="btnExcluirCliente" class="btn btn-danger">
                             Excluir
                         </button>
                     </div>
                 </form>
             </div>
         </div>
-    </div>   
+    </div>    
+    <div id="snackbar"></div>    
 </div> 
 
 <% include partials/rodape %>  

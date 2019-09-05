@@ -7,7 +7,8 @@
         <header class="page-header">
             <input type="text" name="id_evento" value="<%= brinquedos.idEvento %>" style="display: none;">
             <%console.log(brinquedos.idEvento);%>
-            <h1>Listagem de brinquedos disponiveis para <%= brinquedos.data.getDate()+"/"+brinquedos.data.getMonth()+"/"+brinquedos.data.getFullYear() %></h1>
+            <h1>Listagem de brinquedos disponiveis para <%= brinquedos.data.getDate()+"/"+brinquedos.data.getMonth()+"/"+brinquedos.data.getFullYear() %>
+                (Controle pela agenda ainda, o sistema ainda não está fazendo esse controle)</h1>
         </header>
         <div id="listaBrinquedos">
             <button class="btn btn-default">Inserir os selecionados</button>

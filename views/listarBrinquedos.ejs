@@ -31,7 +31,7 @@
                             <input type="number" class="form-control" name="valor_edicao" id="valor_edicao">
                         </div>
                         <div class="form-group">
-                            <label for="quantidade">Quantidade no Estorque</label>
+                            <label for="quantidade">Quantidade no Estoque</label>
                             <input type="number" class="form-control" name="quantidade_edicao" id="quantidade_edicao">
                         </div>
                         <div class="form-group">
@@ -71,7 +71,7 @@
                 </div>
                 <!-- corpo -->
                 <div class="modal-body" id="corpoModal">
-                    <h4>Eventos apagados com esse brinquedo:</h4>
+                    <h4>Eventos que serão afetados com a exclusão desse brinquedo:</h4>
                     <input type="text" style="display: none;" id="id_brinquedo_excluir" name="id_brinquedo_excluir">
                     <div class="row" id="listaEventos">                                
                     </div>              
@@ -114,18 +114,11 @@
         
         <% if(brinquedos){ %>
             
-            <% if(brinquedos.status == false){%>
-                <script>
-                    alert("Ocorreu um erro na edição");                    
-                </script>
-                <%console.log(brinquedos.resultado.sqlMessage);%>
-                <%console.log(brinquedos.resultado.sql);%>        
-            <%}else if(brinquedos.status){%>
-                
-                <script>
-                    alert("Edição Ok!!");
-                </script>
-            <%}else{%>           
+            <% if(brinquedos.status === false){%>
+                <input type="text" id="resposta_insercao_brinquedo" readonly value="Ocorreu um erro na edição do brinquedo!" style="display: none">
+            <%}else if(brinquedos.status === true){%>
+                <input type="text" id="resposta_insercao_brinquedo" readonly value="Brinquedo editado com sucesso!" style="display: none">
+            <%}else{ %>           
             
                 <% brinquedos.forEach(brinquedo=>{ %>
                     
@@ -144,19 +137,17 @@
                         <div>
                             <button class="btn btn-primary" id="btnEditarBrinquedo"  data-toggle="modal" 
                             data-target="#janelaDeEdicaoBrinquedo" 
-                            onclick="preencherModalEdicao('<%= brinquedo.id_brinquedo %>','<%= brinquedo.nome_brinquedo %>', '<%= brinquedo.caracteristicas %>','<%= brinquedo.valor_brinquedo %>','<%= brinquedo.quantidade %>','<%= brinquedo.observacao %>')"
+                            onclick="preencherModalEdicaoBrinquedo('<%= brinquedo.id_brinquedo %>','<%= brinquedo.nome_brinquedo %>', '<%= brinquedo.caracteristicas %>','<%= brinquedo.valor_brinquedo %>','<%= brinquedo.quantidade %>','<%= brinquedo.observacao %>')"
                             value="<%= brinquedo.id_brinquedo %>">Editar</button>&nbsp;&nbsp;
                             <button class="btn btn-danger" id="btn_excluir_brinquedo" data-toggle="modal"
                             data-target="#janelaDeRemocaoBrinquedo" onclick="listarEventosDoBrinquedoExcluido('<%= brinquedo.id_brinquedo %>')">Excluir</button>
                         </div> 
-                    </div>
-                
+                    </div>                
                 <% }); %>
-            <%}%>
-            
+            <% } %>            
         <% } %> 
-    </div>
-    
+    </div>       
+    <div id="snackbar"></div>
     
 </div>
 

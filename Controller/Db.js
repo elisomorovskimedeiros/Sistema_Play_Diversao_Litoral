@@ -48,8 +48,13 @@ class Db{
         //possível o uso da função "await" na função que aguarda o retorno desse método.
         return new Promise(function (resolve, reject) {
             db.connection.query(sql, function (err, results, fields) {
-            if (err) return reject(err);
-            return resolve(results);
+                db.connection.end();
+                if (err) {
+                    return resolve({status: false,
+                                    resultado: err});
+                }
+                return resolve({status: true,
+                                resultado: results});
             });
         });
     }
@@ -60,6 +65,7 @@ class Db{
         var db = this;
         return new Promise(function (resolve, reject) {
             db.connection.query(sql, nomeBrinquedo, function (err, results, fields) {
+                db.connection.end();
             if (err) return reject(err);
             return resolve(results);
             });
@@ -71,6 +77,7 @@ class Db{
         var db = this;
         return new Promise(function (resolve, reject) {
             db.connection.query(sql, function (err, results, fields) {
+                db.connection.end();
             if (err) return reject(err);            
             return resolve(results);
             });
@@ -86,6 +93,7 @@ class Db{
         var db = this;
         return new Promise(function (resolve, reject) {
             db.connection.query(sql, function (err, results, fields) {
+                db.connection.end();
             if (err) return reject(err);
             return resolve(results);
             });
@@ -96,7 +104,8 @@ class Db{
         var db = this;
         let sql = 'SELECT * FROM evento WHERE evento.id_evento LIKE ?';
         return new Promise(function (resolve, reject) {
-            db.connection.query(sql, idEvento, function (err, results, fields) {                
+            db.connection.query(sql, idEvento, function (err, results, fields) {   
+                db.connection.end();             
                 if (err) {
                     return resolve({status: false,
                                     resultado: err});
@@ -111,9 +120,12 @@ class Db{
         let sql = "DELETE FROM cliente WHERE id_cliente = ?";
         var db = this;
         return new Promise(function (resolve, reject) {
-            db.connection.query(sql, idCliente, function (err, results, fields) {                
-            if (err) return reject(err);
-            return resolve(results);
+            db.connection.query(sql, idCliente, function (err, results, fields) {
+                db.connection.end();                
+                if (err) return resolve({status: false,
+                    resultado: err});
+                return resolve({status: true,
+                    resultado: results});
             });
         });
     }
@@ -122,9 +134,12 @@ class Db{
         let sql = "DELETE FROM evento WHERE id_cliente = ?";
         var db = this;
         return new Promise(function (resolve, reject) {
-            db.connection.query(sql, idCliente, function (err, results, fields) {                
-            if (err) return reject(err);
-            return resolve(results);
+            db.connection.query(sql, idCliente, function (err, results, fields) {
+                db.connection.end();                
+                if (err) return resolve({status: false,
+                    resultado: err});
+                return resolve({status: true,
+                    resultado: results});
             });
         });
     }
@@ -133,7 +148,8 @@ class Db{
         let sql = "DELETE FROM evento WHERE id_evento = ?";
         var db = this;
         return new Promise(function (resolve, reject) {
-            db.connection.query(sql, idEvento, function (err, results, fields) {                
+            db.connection.query(sql, idEvento, function (err, results, fields) {
+                db.connection.end();                
                 if (err) return resolve({status: false,
                     resultado: err});
                 return resolve({status: true,
@@ -148,6 +164,7 @@ class Db{
         var db = this;
         return new Promise(function(resolve, reject){
             db.connection.query(sql, idCliente, function(err, results, fields){
+                db.connection.end();
                 if(err) return reject(err);
                 return resolve(results);
             });
@@ -165,6 +182,7 @@ class Db{
         console.log(sql);
         return new Promise(function (resolve, reject) {
             db.connection.query(sql, function (err, results, fields) {
+                db.connection.end();
                 if (err) return reject(err);
                 return resolve(results);
             });
@@ -176,6 +194,7 @@ class Db{
         var db = this;
         return new Promise(function (resolve, reject) {
             db.connection.query(sql, idCliente, function (err, results, fields) {
+                db.connection.end();
                 if (err) return reject(err);
                 return resolve(results);
             });
@@ -187,6 +206,7 @@ class Db{
         let sql = 'SELECT brinquedo.nome_brinquedo, evento_brinquedo.evento FROM brinquedo JOIN evento_brinquedo ON brinquedo.id_brinquedo = evento_brinquedo.brinquedo WHERE evento = ?';
         return new Promise(function (resolve, reject) {
             db.connection.query(sql, idEvento, function (err, results, fields) {
+                db.connection.end();
                 if (err) return reject(err);
                 return resolve(results);
             });
@@ -198,6 +218,7 @@ class Db{
         let sql = 'SELECT brinquedo FROM evento_brinquedo WHERE evento = ?';
         return new Promise(function (resolve, reject) {
             db.connection.query(sql, idEvento, function (err, results, fields) {
+                db.connection.end();
                 if (err) return resolve({status: false,
                     resultado: err});
                 return resolve({status: true,
@@ -216,8 +237,11 @@ class Db{
         'WHERE cliente.nome LIKE ?';
         return new Promise(function (resolve, reject) {
             db.connection.query(sql, nomeCliente, function (err, results, fields) {
-                if (err) return reject(err);
-                return resolve(results);
+                db.connection.end();
+                if (err) return resolve({status: false,
+                    resultado: err});
+                return resolve({status: true,
+                    resultado: results});
             });
         });
     }
@@ -230,8 +254,11 @@ class Db{
         'WHERE evento.data = ?';
         return new Promise(function (resolve, reject) {
             db.connection.query(sql, data, function (err, results, fields) {
-                if (err) return reject(err);
-                return resolve(results);
+                db.connection.end();
+                if (err) return resolve({status: false,
+                    resultado: err});
+                return resolve({status: true,
+                    resultado: results});
             });
         });
     }
@@ -244,8 +271,13 @@ class Db{
             'WHERE evento.data = ?';
         return new Promise(function (resolve, reject) {
             db.connection.query(sql, data, function (err, results, fields) {
-                if (err) return reject(err);
-                return resolve(results);
+                db.connection.end();
+                if (err) {
+                    return resolve({status: false,
+                                    resultado: err});
+                }
+                return resolve({status: true,
+                                resultado: results});
             });
         });
     }
@@ -260,8 +292,13 @@ class Db{
         var db = this;
         return new Promise(function (resolve, reject) {
             db.connection.query(sql, nomeCliente, function (err, results, fields) {
-                if (err) return reject(err);
-                return resolve(results);
+                db.connection.end();
+                if (err) {
+                    return resolve({status: false,
+                                    resultado: err});
+                }
+                return resolve({status: true,
+                                resultado: results});
             });
         });    
     }
@@ -281,9 +318,13 @@ class Db{
         var db = this;
         return new Promise(function (resolve, reject) {
             db.connection.query(sql, nomeCliente, function (err, results, fields) {
-                console.log(results);
-                if (err) return reject(err);
-                return resolve(results);
+                db.connection.end();
+                if (err) {
+                    return resolve({status: false,
+                                    resultado: err});
+                }
+                return resolve({status: true,
+                                resultado: results});
             });
         });    
     }
@@ -304,9 +345,13 @@ class Db{
         console.log(sql);
         return new Promise(function (resolve, reject) {
             db.connection.query(sql, function (err, results, fields) {
-                if (err) return reject(err);
-                console.log(results);                
-                return resolve(results);
+                db.connection.end();
+                if (err) {
+                    return resolve({status: false,
+                                    resultado: err});
+                }
+                return resolve({status: true,
+                                resultado: results});
             });
         });    
     }
@@ -316,6 +361,7 @@ class Db{
         var db = this;
         return new Promise(function (resolve, reject) {
             db.connection.query(sql, brinquedo, function (err, results, fields) {
+                db.connection.end();
             if (err) {
                 return resolve({status: false,
                                 resultado: err});
@@ -332,6 +378,7 @@ class Db{
         console.log(brinquedo);
         return new Promise(function (resolve, reject) {
             db.connection.query(sql, brinquedo, function (err, results, fields) {
+                db.connection.end();
             if (err) {
                 return resolve({status: false,
                                 resultado: err});
@@ -350,6 +397,7 @@ class Db{
         var db = this;        
         return new Promise(function (resolve, reject) {
             db.connection.query(sql, id_brinquedo, function (err, results, fields) {
+                db.connection.end();
             if (err) {
                 return resolve({status: false,
                                 resultado: err});
@@ -365,6 +413,7 @@ class Db{
         var db = this;
         return new Promise(function (resolve, reject) {
             db.connection.query(sql, cliente, function (err, results, fields) {
+                db.connection.end();
             if (err) {
                 return resolve({status: false,
                                 resultado: err});
@@ -394,6 +443,7 @@ class Db{
         var db = this;
         return new Promise(function (resolve, reject) {
             db.connection.query(sql, function (err, results, fields) {
+                db.connection.end();
             if (err) {
                 return resolve({status: false,
                                 resultado: err});
@@ -422,6 +472,7 @@ class Db{
         var db = this;
         return new Promise(function (resolve, reject) {
             db.connection.query(sql, function (err, results, fields) {
+                db.connection.end();
             if (err) {
                 return resolve({status: false,
                                 resultado: err});
@@ -438,6 +489,7 @@ class Db{
         var db = this;
         return new Promise(function (resolve, reject) {
             db.connection.query(sql, evento, function (err, results, fields) {
+                db.connection.end();
             if (err) {
                 return resolve({status: false,
                                 resultado: err});
@@ -461,13 +513,13 @@ class Db{
         var db = this;
         return new Promise(function (resolve, reject) {
             db.connection.query(sql, function (err, results, fields) {
-            if (err) {
-                console.log(err);
-                return resolve(err);
-            }
-            else{
-                return resolve(results);
+                db.connection.end();
+                if (err) {
+                    return resolve({status: false,
+                                    resultado: err});
                 }
+                return resolve({status: true,
+                                resultado: results});
             });
         }); 
     }
@@ -477,11 +529,13 @@ class Db{
         var db = this;
         return new Promise(function (resolve){
             db.connection.query(sql, cliente, function(err, results, fields){
-                if(err){
-                    return resolve(err);
-                }else{
-                    return resolve(results);
+                db.connection.end();
+                if (err) {
+                    return resolve({status: false,
+                                    resultado: err});
                 }
+                return resolve({status: true,
+                                resultado: results});
             });
         });
     }
@@ -491,6 +545,7 @@ class Db{
         var db = this;
         return new Promise(function (resolve){
             db.connection.query(sql, evento, function(err, results, fields){
+                db.connection.end();
                 if (err) {
                     return resolve({status: false,
                                     resultado: err});
@@ -508,6 +563,7 @@ class Db{
         var db = this;
         return new Promise(function(resolve){
             db.connection.query(sql, id_evento, function(err, result, fields){
+                db.connection.end();
                 if(err){
                     return resolve({status: false,
                                     resultado: err
@@ -526,6 +582,7 @@ class Db{
         var db = this;
         return new Promise(function(resolve){
             db.connection.query(sql, id_evento, function(err, result, fields){
+                db.connection.end();
                 if(err){
                     return resolve({status: false,
                                     resultado: err
@@ -546,6 +603,7 @@ class Db{
         var db = this;
         return new Promise(function(resolve){
             db.connection.query(sql, idEvento, function(err, result){
+                db.connection.end();
                 if(err){
                     return resolve({status: false,
                                     resultado: err

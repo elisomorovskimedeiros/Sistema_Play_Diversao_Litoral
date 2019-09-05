@@ -1,59 +1,47 @@
 <% include partials/cabecalho %> 
 
-<div class="container">
+<div class="container" id="tela_insercao_brinquedos">
    		
     <div class="page-header">
         <h1>Inserir novo brinquedo</h1>
     </div>
-
-    <div class="row">
-                      
-            <form method="post" action="/inserirBrinquedo" name="form-brinquedo" enctype="multipart/form-data">
-                
-                    <div class="form-group">
-                        <label for="nome">Nome do brinquedo</label>
-                        <input type="text" class="form-control" name="nome" id="nome">
-                    </div>
-                    <div class="form-group">
-                        <label for="carac">Características</label>
-                        <input type="text" class="form-control" name="caracteristicas" id="caracteristicas">
-                    </div>
-                    <div class="form-group">
-                        <label for="valor">Valor do Aluguel</label>
-                        <input type="number" class="form-control" name="valor" id="valor">
-                    </div>
-                    <div class="form-group">
-                        <label for="quantidade">Quantidade no Estorque</label>
-                        <input type="number" class="form-control" name="quantidade" id="quantidade">
-                    </div>
-                    <div class="form-group">
-                        <label for="obs">Observação</label>
-                        <input type="text" class="form-control" name="observacao" id="observacao">
-                    </div>
-                    <div class="form-group">
-                        <label for="foto">Foto</label>
-                        <input type="file" class="form-control-file" name="foto" id="foto">
-                    </div>
-                    
-                    <input type="submit" class="btn btn-default" value="Cadastrar" script="">
-            </form>
-
-    </div>
-        <div id="resposta">
-            <% if(resposta != undefined){ %>
-                <% if(resposta.status){ %>
-                    Brinquedo inserido com sucesso!
-                <% }else{ %>
-                    Ocorreu o seguinte erro na inserção do brinquedo:
-                    <%= resposta.resultado %>
-                <% } %>
-            <% } %>
-            
+    <form method="post" action="/inserirBrinquedo" name="form-inserir-brinquedo" id="form-inserir-brinquedo" enctype="multipart/form-data">
+        <div class="row">  
+            <div class="form-group col-md-6">
+                <label for="nome_insercao_brinquedo">Nome do brinquedo</label>
+                <input type="text" class="form-control" name="nome_insercao_brinquedo" id="nome_insercao_brinquedo">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="caracteristicas_insercao_brinquedo">Características</label>
+                <input type="text" class="form-control" name="caracteristicas_insercao_brinquedo" id="caracteristicas_insercao_brinquedo">
+            </div>
+            <div class="form-group col-md-3">
+                <label for="valor_insercao_brinquedo">Valor do Aluguel</label>
+                <input type="number" class="form-control" name="valor_insercao_brinquedo" id="valor_insercao_brinquedo">
+            </div>
+            <div class="form-group col-md-3">
+                <label for="quantidade_insercao_brinquedo">Quantidade no Estoque</label>
+                <input type="number" class="form-control" name="quantidade_insercao_brinquedo" id="quantidade_insercao_brinquedo">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="observacao_insercao_brinquedo">Observação</label>
+                <input type="text" class="form-control" name="observacao_insercao_brinquedo" id="observacao_insercao_brinquedo">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="foto_insercao_brinquedo">Foto</label>
+                <input type="file" class="form-control-file" name="foto_insercao_brinquedo" id="foto_insercao_brinquedo">
+            </div>
+            <div class="form-group col-md-3">
+                <label></label>
+                <input type="submit" class="btn btn-primary form-control" value="Cadastrar" script="">
+            </div>            
         </div>
-        
-
+    </form>
+    <% if(resposta != undefined){ %>        
+        <input type="text" id="resposta_insercao_brinquedo" readonly value="<%= resposta %>" style="display: none">
+    <% } else {%>
+        <input type="text" id="resposta_insercao_brinquedo" readonly value="" style="display: none"> 
+    <% } %>  
+    <div id="snackbar"></div>
 </div>
-       
-
-
 <% include partials/rodape %> 

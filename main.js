@@ -6,7 +6,8 @@ const     express = require("express"),
    expressSession = require('express-session'),
             flash = require("connect-flash");
          passport = require("passport"),
-EnvioConfirmacoes = require("./Model/EnvioConfirmacoes");
+EnvioConfirmacoes = require("./Model/EnvioConfirmacoes"),
+           moment = require("moment");
 
 const app = express(),
       int = new Interface();
@@ -97,8 +98,13 @@ var socketio = io.on("connect", function(socketio){
 
 //Envio da lista de brinquedos disponíveis para inserir em evento
     socketio.on("enviarBrinquedosDisponiveis", function(dataEvento, perfil){        
-        int.listarTodosBrinquedos(perfil).then(function(brinquedos){
-            socketio.emit("receberBrinquedosDisponiveis", brinquedos);
+        int.listarTodosBrinquedos(perfil).then(function(resposta){
+            if(resposta.status){
+                let brinquedos = resposta.resultado;
+                socketio.emit("receberBrinquedosDisponiveis", brinquedos);
+            }else{
+                console.log(resposta.resultado);
+            }            
         });
     });
 
@@ -115,31 +121,42 @@ var socketio = io.on("connect", function(socketio){
 // as informações dos brinquedos que pertencem ao evento. Depois é feita a comparação dos id_evento das duas tabelas para distribuir
 // os brinquedos em seus devidos eventos.
     socketio.on("listaEventos", function(filtroDeBuscaEventos, perfil){
-        console.log(perfil);
-
-        var resposta = int.filtrarEvento(filtroDeBuscaEventos, perfil).then(function(eventos){//primeira query
-            int.mostrarBrinquedosNoEvento(filtroDeBuscaEventos, perfil).then(function(brinquedos){//segunda query                 
-                eventos.forEach(evento => {//laços para distribuição dos brinquedos nos eventos e cálculo do valor liquido a ser recebido
-                    evento.brinquedos = [];
-                    brinquedos.forEach(brinquedo => {
-                        if (evento.id_evento == brinquedo.id_evento){
-                            evento.brinquedos.push(brinquedo.nome_brinquedo);
-                        }                          
-                    });
-                    
-                    if(evento.valor_desconto && evento.valor_total && evento.valor_sinal){
-                        evento.valorLiquido = parseFloat(evento.valor_total) - parseFloat(evento.valor_desconto) -  parseFloat(evento.valor_sinal);
-                    }                  
-                });
-                
-                socketio.emit("receberEventos", eventos);// envio para o cliente               
-            });                
+        int.filtrarEvento(filtroDeBuscaEventos, perfil).then(function(resposta){//primeira query            
+            if(resposta.status){
+                let eventos = resposta.resultado;
+                int.mostrarBrinquedosNoEvento(filtroDeBuscaEventos, perfil).then(function(resposta){//segunda query                 
+                    if(resposta.status){
+                        let brinquedos = resposta.resultado;
+                        eventos.forEach(evento => {//laços para distribuição dos brinquedos nos eventos e cálculo do valor liquido a ser recebido
+                            evento.brinquedos = [];
+                            brinquedos.forEach(brinquedo => {
+                                if (evento.id_evento == brinquedo.id_evento){
+                                    evento.brinquedos.push(brinquedo.nome_brinquedo);
+                                }
+                 
+                            });                            
+                            if(evento.valor_desconto && evento.valor_total && evento.valor_sinal){
+                                evento.valorLiquido = parseFloat(evento.valor_total) - parseFloat(evento.valor_desconto) -  parseFloat(evento.valor_sinal);
+                            }                  
+                        });   
+                        socketio.emit("receberEventos", eventos);// envio para o cliente                         
+                    }else{
+                        console.log(resposta.resultado);
+                    }                                 
+                });   
+            }else{
+                console.log(resposta.resultado);
+            }                         
         });       
     });
 
     socketio.on("listarEventosPorIdCliente", function(idCliente, perfil){
-        int.filtrarEventoPorIdCliente(idCliente, perfil).then(function(eventos){
-            socketio.emit("receberEventos",eventos);
+        int.filtrarEventoPorIdCliente(idCliente, perfil).then(function(resposta){
+            if(resposta.status){
+                socketio.emit("receberEventos",resposta);
+            }else{
+                console.log(resposta.resultado);
+            }            
         });
     });
 
@@ -199,7 +216,47 @@ var socketio = io.on("connect", function(socketio){
                 socketio.emit("retorno", "Ocorreu um erro no banco de dados");
             }
         });
-    })
+    });
+
+    socketio.on("editarCliente", function(cliente, perfil){
+        int.editarCliente(cliente, perfil).then(function(resposta){
+            socketio.emit("resultadoEdicaoCliente", resposta.status);
+            if(!resposta.status){
+                
+                console.log(resposta.resultado);
+            }
+        });
+    });
+
+    socketio.on("excluirCliente", function(idCliente, perfil){
+        int.excluirEventosPorIdCliente(idCliente,perfil).then(function(resposta){
+            if(resposta.status){
+                int.excluirCliente(idCliente).then(function(resposta){
+                    socketio.emit("resultadoExclusaoCliente", resposta.status);
+                    if(!resposta.status){
+                        console.log("Ocorreu erro na exclusão do cliente");
+                        console.log(resposta.resultado);
+                    }
+                });          
+            }else{
+                console.log("Ocorreu o seguinte erro na remoção dos eventos:");
+                console.log(resposta.resultado);
+                socketio.emit("resultadoExclusaoCliente", resposta.status);                
+            }           
+        });
+    });
+
+    socketio.on("listaBrinquedosDisponiveis", function(){
+        int.listarTodosBrinquedos(perfil.perfil).then(function(resposta){
+            if(resposta.status){
+                socketio.emit("envioListaBrinquedos", resposta.resultado);
+            }else{
+                console.log(resposta.resultado);
+                socketio.emit("envioListaBrinquedos", [{nome_brinquedo: "Ocorreu um erro na busca dos brinquedos"}]);
+            }
+        })
+    });
+    
 });
 
 

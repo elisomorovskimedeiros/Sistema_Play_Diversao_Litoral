@@ -34,4 +34,8 @@
 http://www.web2feel.com/freeby/scroll-effects/index2.html-->
 
     </head>    
-    <body>
+    <% if (perfil) { %>
+        <body perfil="<%= perfil.perfil %>">
+    <% }else{ %>
+        <body>
+    <% } %>
