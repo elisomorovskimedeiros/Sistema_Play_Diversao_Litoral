@@ -92,15 +92,19 @@ class Db{
         let sql = 'SELECT cliente.id_cliente, cliente.nome, cliente.cpf, cliente.logradouro, cliente.numero, '+
         'cliente.complemento, cliente.observacao_endereco, cliente.bairro, cliente.cidade, '+
         'cliente.telefone, cliente.telefone_recado, cliente.email, cliente.observacao_cliente '+
-            'FROM cliente JOIN evento ON cliente.id_cliente = evento.id_evento '+
+            'FROM cliente JOIN evento ON cliente.id_cliente = evento.id_cliente '+
             'WHERE cliente.nome LIKE ';
         sql += grupoDeBusca;
         var db = this;
         return new Promise(function (resolve, reject) {
             db.connection.query(sql, function (err, results, fields) {
                 db.connection.end();
-            if (err) return reject(err);
-            return resolve(results);
+                if (err) {
+                    return resolve({status: false,
+                                    resultado: err});
+                }
+                return resolve({status: true,
+                                resultado: results});
             });
         });          
     }
@@ -355,7 +359,8 @@ class Db{
         if(moment(data).isValid()){
             dataParaQuery = moment(data).format("YYYY-MM-DD");
         }
-        let itensDeBusca = "('"+nomeCliente+"%') AND evento.data LIKE '"+dataParaQuery+"%';";        
+        let itensDeBusca = "('"+nomeCliente+"%') AND evento.data LIKE '"+dataParaQuery+"%' "+
+            "ORDER BY evento.data ASC;";        
         let sql = 'SELECT evento.*, cliente.nome, cliente.telefone, cliente.telefone_recado ' +
                     'FROM evento ' +
                     'JOIN cliente ON evento.id_cliente = cliente.id_cliente '+

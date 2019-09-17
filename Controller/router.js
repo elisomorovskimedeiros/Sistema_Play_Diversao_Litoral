@@ -113,8 +113,13 @@ router.post("/listarCliente", isLoggedIn, function(req, res){
     let nomeCliente = req.body.nome_cliente;
     var int = new Interface();
     let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
-    int.listarCliente(nomeCliente,perfil).then(function(clientes){
-        res.render("listarCliente.ejs",{clientes,perfil});
+    int.listarCliente(nomeCliente,perfil).then(function(resposta){
+        if(resposta.status){
+            let clientes = resposta.resultado;
+            res.render("listarCliente.ejs",{clientes,perfil});
+        }else{
+            console.log(resposta);
+        }        
     });    
 });
 
@@ -691,13 +696,14 @@ router.get("/primeiraTela/:perfil/:idEvento", function(req, res){
 
 router.post("/cadastro/:tela/:perfil", function(req, res){
     let tela = req.params.tela;
+    let dadosPerfil = require("../Model/perfis/"+req.params.perfil+"/customizacao");
     let perfil = req.params.perfil;
     let idEvento = req.body.idEvento;
     switch(tela){
         case "primeiraTela": res.render("segundaTelaCadastroPlay",{idEvento, perfil});
                              dadosPrimeiraTela(req, idEvento, perfil);
         break;
-        case "segundaTela": res.render("terceiraTelaCadastroPlay",{idEvento, perfil});
+        case "segundaTela": res.render("terceiraTelaCadastroPlay",{idEvento, perfil, dadosPerfil});
                             dadosSegundaTela(req, idEvento, perfil);                           
         break;
         case "terceiraTela": 
@@ -768,6 +774,7 @@ function dadosSegundaTela(req, idEvento, perfil){
             sessao.evento.logradouro = req.body.logradouroFesta;
             sessao.evento.numero = Number(req.body.numeroFesta);
             sessao.evento.complemento = req.body.complementoFesta;
+            sessao.cliente.bairro = req.body.bairro;
             sessao.evento.cidade = req.body.cidadeFesta;
         }else{
             console.log("sessão não encontrada");
@@ -776,10 +783,8 @@ function dadosSegundaTela(req, idEvento, perfil){
 }
 
 function dadosTerceiraTela(req, idEvento, perfil){
-    let data = stringToDate(req.body.data);
-            data.setHours(Number((req.body.hora).slice(0,2)));/*-(data.getTimezoneOffset())/60)*///para setar a hora, o sistema automaticamente guarda a hora utc, que é 
-            // a hora de Brasília +3. Portanto foi subtraído a hora do retorno do método getTimezoneOffset() que mostra o desvio UTC em minutos.
-            data.setMinutes((req.body.hora).slice(3,5)); 
+    let data = moment(req.body.data+" "+req.body.hora).format("YYYY-MM-DD HH:mm");
+        
     let indice;
     sessoes.forEach(function(sessao,i){        
         if(sessao.evento.id_evento == idEvento && sessao.perfil == perfil){

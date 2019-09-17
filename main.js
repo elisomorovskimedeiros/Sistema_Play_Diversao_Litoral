@@ -72,14 +72,24 @@ var io = require("socket.io")(server);
 var socketio = io.on("connect", function(socketio){
 // Envio da consulta por cliente
     socketio.on("listaClientesPorNome", function(nomeCliente, perfil){       
-        int.listarCliente(nomeCliente, perfil).then(function(clientes){
-            socketio.emit("mandarClientes", clientes);
+        int.listarCliente(nomeCliente, perfil).then(function(resposta){
+            if(resposta.status){
+                let clientes = resposta.resultado;
+                socketio.emit("mandarClientes", clientes);
+            }else{
+                console.log(resposta);
+            }           
         });
     });
 
     socketio.on("filtroCliente", function(filtroCliente, perfil){   
-         int.listarCliente(filtroCliente, perfil).then(function(clientes){
-            socketio.emit("mandarClientes", clientes);
+         int.listarCliente(filtroCliente, perfil).then(function(resposta){
+            if(resposta.status){
+                let clientes = resposta.resultado;
+                socketio.emit("mandarClientes", clientes);
+            }else{
+                console.log(resposta);
+            }
         });
     });
 
@@ -169,7 +179,8 @@ var socketio = io.on("connect", function(socketio){
 
     socketio.on("enviarEmailConfirmacao", function(idEvento, perfil){
         let enviarEmail = new Email(perfil);
-        enviarEmail.enviarEmailConfirmacao(idEvento).then(function(resultadoEnvio){
+        //enviarEmail.enviarEmailConfirmacao(idEvento).then(function(resultadoEnvio){
+        enviarEmail.enviarPreenchimentoCadastro(idEvento).then(function(resultadoEnvio){
             if(resultadoEnvio){
                 socketio.emit("retorno", "Mensagem Enviada com sucesso");
             }else{

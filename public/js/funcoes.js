@@ -94,7 +94,7 @@ function preencherJanelaDeInserirEvento(clientes){
                 listaClientes += 'Observação: '+cliente.observacao_cliente+'<br>';
             listaClientes += '<input type="button" id="btnInserirClienteNoEvento" '+
                         'name="btn_inserir_cliente" id_cliente="'+cliente.id_cliente+
-                        '" class="btn btn-default" value="Inserir" data-dismiss="modal" onclick="inserirClienteNoEvento(this)">'
+                        '" class="btn btn-default" value="Inserir" data-dismiss="modal" onclick=\"inserirClienteNoEvento(this)\">'
     });
     document.getElementById("listaClientes").innerHTML = listaClientes;
 }
@@ -137,7 +137,8 @@ function solicitarListaClientes(){
             let filtroDeBuscaEventos = {nomeCliente: cliente.id_cliente}; //filtro de busca é o objeto que contém os itens como nome de cliente e data para buscar eventos no bd
             
             socket.emit(filtroDeBuscaEventos, perfil);       
-            return ('<input type="button" id="btnInserirClienteNoEvento" name="btn_inserir_cliente" id_cliente="'+cliente.id_cliente+'" class="btn btn-default" value="Inserir" onclick="inserirClienteNoEvento(this)">');
+            return ('<input type="button" id="btnInserirClienteNoEvento" name="btn_inserir_cliente" id_cliente="'+cliente.id_cliente+'"'+
+            ' class="btn btn-default" value="Inserir" onclick="inserirClienteNoEvento(this)">');
         }else {                  
             socket.emit("listaClientesPorNome", nomeCliente, perfil);
         }
@@ -218,6 +219,13 @@ function inserirClienteNoEvento(botao){
     //'<input type="text" class="form-control" value=' + botao.getAttribute("id_cliente") + ' id="id_cliente" name="id_cliente" style="display: none;">';
     //na variável dadosDoClienteSelecionado fica o html que contém o nome e o id do cliente selecionado
     console.log(dadosDoClienteSelecionado);
+    /*
+    document.getElementById("logradouro_evento").value = botao.getAttribute("logradouro");
+    document.getElementById("numero").value = botao.getAttribute("numero");
+    document.getElementById("complemento").value = botao.getAttribute("complemento");
+    document.getElementById("bairro_evento").value = botao.getAttribute("bairro");
+    document.getElementById("cidade_evento").value = botao.getAttribute("cidade");
+    */
     document.getElementById("espacoNomeCliente").value = dadosDoClienteSelecionado;
     document.getElementById("listaClientes").innerHTML = '';
     document.getElementById("idClienteEscolhido").value = botao.getAttribute("id_cliente");
