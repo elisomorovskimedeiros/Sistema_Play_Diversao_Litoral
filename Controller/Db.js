@@ -16,32 +16,13 @@ class Db{
         this.connection = mysql.createConnection(this.esquemaConexao);
         this.connection.connect(function(err){
             if(err){
-                console.log("Deu erro!linha 20");
+                console.log("Deu erro!");
                 console.log(err);
             }else{
-                console.log("Conectado com o BD!");
             }
         });
     }
-/*
-    constructor(){
-        this.connection = mysql.createConnection({
-            host     : 'mysql10-farm76.kinghost.net',
-            user     : 'solevento',
-            password : 'Medeiros15',
-            database : 'solevento', //não colocar se for criar um banco através do node
-            multipleStatements: true //cuidado: deve ser falso (padrão) para evitar sql injection - com ele true testar a rota: http://localhost:3000/post/1;DROP%20TABLE%20posts
-        });
-        this.connection.connect(function(err){
-            if(err){
-                console.log("Deu erro!linha 20");
-                console.log(err);
-            }else{
-                console.log("Conectado com o BD!");
-            }
-        });
-    }
-*/
+
     selectTodosBrinquedos(){
         let sql = 'SELECT * FROM brinquedo';            
         var db = this;

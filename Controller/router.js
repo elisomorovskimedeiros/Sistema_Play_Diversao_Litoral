@@ -36,7 +36,6 @@ function stringToDate(dataString){
 
 function isLoggedIn(req, res, next){
     if(req.isAuthenticated()){
-        console.log("Autenticou");
         return next(); //prossegue com a execucao
     }
     res.redirect("/login"); //não prossegue com a execução e redireciona para a página login
@@ -150,11 +149,6 @@ router.post('/inserirBrinquedo', upload.single('foto_insercao_brinquedo'), (req,
     const file = req.file;
     let foto_brinquedo = '';
     if(!file){//caso algum erro tenha ocorrido
-        /*
-        const error = new Error("Please upload a file");
-        error.httpStatusCode = 400;
-        return next(error);
-        */
         console.log("não veio foto");
     }else{
         foto_brinquedo = "imagens/"+ req.file.originalname;
@@ -173,12 +167,10 @@ router.post('/inserirBrinquedo', upload.single('foto_insercao_brinquedo'), (req,
     int.inserirBrinquedo(brinquedo,perfil.perfil).then(function(resultado){
         let resposta;
         if(resultado.status){
-            resposta = "Brinquedo inserido com sucesso!";            
-            //res.send("Brinquedo inserido com sucesso!");
+            resposta = "Brinquedo inserido com sucesso!";
         }else{
             console.log(resultado);
             resposta = "Ocorreu um erro na inserção do brinquedo";
-            //res.send("Ocorreu um erro na inserção do brinquedo");
         }
         res.render("inserirBrinquedo", {resposta, perfil});
     });  
@@ -205,52 +197,12 @@ router.post("/editarBrinquedo", upload.single('foto'), (req, res, next) =>{
     int.editarBrinquedo(brinquedo,perfil.perfil).then(function(brinquedos){
         if(brinquedos.status){
             resposta = "Brinquedo editado com sucesso!";            
-            //res.send("Brinquedo inserido com sucesso!");
         }else{
-            console.log(brinquedos);
             resposta = "Ocorreu um erro na edição do brinquedo";
-            //res.send("Ocorreu um erro na inserção do brinquedo");
         }
         res.render("listarBrinquedos", {brinquedos, perfil});
     });
 });
-
-
-/*
-router.post("/inserirBrinquedo", isLoggedIn, function(req, res){
-    var formidable = require("formidable");
-    var form = formidable.IncomingForm();
-    //no form do arquivo inserirBrinquedo foi utilizada a tag enctype="multipart/form-data" para permitir o envio da foto do produto, 
-    //por isso foi necessário esse callback para realizar o cast do "req" recebido em formato binário para um objeto contendo o arquivo
-    //enviado no objeto "file" e as informações dos campos no objeto "fields".
-    form.parse(req, function(err, fields, files){
-        if (err) throw(err);
-        else{
-            var oldpath = files.foto.path;
-            var newpath = "../public/imagens/"+ files.foto.name;
-            fs.copyFile(oldpath, newpath, function (err) {
-                if (err) throw err;                                       
-            });
-            var brinquedo = {
-                                nome_brinquedo: fields.nome,
-                                caracteristicas: fields.caracteristicas,
-                                foto_brinquedo: "../public/imagens/"+ files.foto.name,
-                                valor_brinquedo: fields.valor,
-                                quantidade: fields.quantidade,
-                                observacao: fields.observacao
-                            }
-            var int = new Interface();
-            async function inserirBrinquedo(){
-                var resposta = await int.inserirBrinquedo(brinquedo).then(function(resposta){
-                    res.render("inserirBrinquedo.ejs",{resposta});
-                });                           
-            }
-            inserirBrinquedo();            
-        }                  
-    });    
-});
-*/
-
 
 router.get("/listarBrinquedos", isLoggedIn, function(req, res){
     let brinquedos;
@@ -291,21 +243,6 @@ router.post("/inserirEvento", isLoggedIn, function(req, res){
 
     evento.data = moment(req.body.data_evento+" "+req.body.hora_evento);
     evento.data = moment(evento.data).format("YYYY-MM-DD HH:mm:ss");
-    console.log(evento.data);
-    /*
-    console.log(req.body.hora);
-    let interface = new Interface();
-    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");  
-    let data = stringToDate(req.body.data);
-    //console.log(data);
-    data.setHours(Number((req.body.hora).slice(0,2)));/*-(data.getTimezoneOffset())/60)*///para setar a hora, o sistema automaticamente guarda a hora utc, que é 
-    // a hora de Brasília +3. Portanto foi subtraído a hora do retorno do método getTimezoneOffset() que mostra o desvio UTC em minutos.
-    /*
-    data.setMinutes((req.body.hora).slice(3,5)); 
-    evento.data = data;
-    */
-
-    //evento.data = evento.data + " " + req.body.hora_evento + ":00";
     let brinquedos = req.body.listaBrinquedosInseridos.split(",");
     evento.id_cliente = req.body.idClienteEscolhido;
     let mensagem = '';
@@ -336,8 +273,7 @@ router.post("/inserirBrinquedosNoEvento", isLoggedIn, function(req, res){
     let int = new Interface();
     let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
     let brinquedoEvento;
-    idsBrinquedos = Object.keys(req.body);    
-    console.log(idsBrinquedos);
+    idsBrinquedos = Object.keys(req.body);  
     //Exemplo do formato do req.body vindo do cliente: [ '4', '5', 'id_evento' ].
     //Preciso extrair apenas os ids dos brinquedos, ou seja, itens 0 e 1.
     let posicaoASerRetirada;
@@ -397,7 +333,6 @@ router.post("/editarCliente", isLoggedIn, function(req, res){
         if(resposta.errno != undefined){
             res.send("Ocorreu o seguinte erro de inserção do evento no banco de dados: "+resposta);
         }else{
-            console.log("editou ok!")
             res.send("Inserido com sucesso!")                            
         }  
     });
@@ -490,8 +425,6 @@ router.post("/criarSessaoCliente", isLoggedIn, async function(req,res){
     
     let mensagem = '';
     let brinquedos;
-    console.log(evento);
-    console.log(evento.id_evento);
 
     int.editarEvento(evento,perfil.perfil).then(function(resposta){        
         if(!resposta.status){
@@ -536,7 +469,6 @@ async function editarBrinquedosNoBanco(req){
         //terceito: é instanciado o objeto evento_brinquedo e enviado ao bd
         let brinquedoEvento = {brinquedos: listaBrinquedos,
             evento: body.id_evento_edicao};
-        console.log(brinquedoEvento);
         if(temBrinquedo){
             int.inserirBrinquedoNoEvento(brinquedoEvento,perfil.perfil).then(function(resposta){
                 if(resposta.status) return true;
@@ -548,7 +480,6 @@ async function editarBrinquedosNoBanco(req){
 
 router.post("/excluirBrinquedo", function(req,res){
     let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
-    console.log(req.body.id_brinquedo_excluir);
     int.excluirBrinquedo(req.body.id_brinquedo_excluir, perfil.perfil).then(function(resposta){        
         let brinquedos = {status: resposta.status};
         if(!resposta.status){
@@ -690,7 +621,6 @@ router.get("/primeiraTela/:perfil/:idEvento", function(req, res){
         perfil: perfil
     }
     sessoes.push(sessao);
-    console.log(sessoes);
     res.render("primeiraTelaCadastroPlay",{idEvento, perfil});
 });
 
@@ -710,11 +640,9 @@ router.post("/cadastro/:tela/:perfil", function(req, res){
             let sessao = dadosTerceiraTela(req, idEvento, perfil);
             if(sessao && sessao.evento){
                 int.inserirCliente(sessao.cliente,sessao.perfil).then(function(resposta){
-                    console.log(resposta);
                     if(resposta.status){
                         sessao.evento.id_cliente = resposta.resultado.insertId;
                         int.editarEvento(sessao.evento,sessao.perfil).then(function(resposta){
-                            console.log(resposta);
                             if(resposta.status){
                                 res.render("quartaTelaCadastroPlay",{perfil});
                                 let enviarEmail = new Email(perfil);
