@@ -234,12 +234,20 @@ $(document).ready(function(){
         inserirBrinquedosNoEvento();
     });
 
-    $("#nome_cliente_tela_evento").keyup(function(){
-        if ($("#nome_cliente_tela_evento").val().length > 2) {
-            filtrarEventos();
-        }else{//caso tenha menos de dois caracteres no input text #nome_cliente_tela_evento, mantenha a div #listaClientes vazia
-            $("#listaClientes").wrapInner("");
-        }      
+    $("#nome_cliente_tela_evento, #dataEvento").on("keyup change paste input", function(){
+        let nomeBuscado = $("#nome_cliente_tela_evento").val();
+        let dataBuscada = $("#dataEvento").val();
+        if (nomeBuscado.length < 3) nomeBuscado = '';
+        if (!dataBuscada) dataBuscada = '';
+        if (dataBuscada.length == 0 && nomeBuscado.length == 0){
+            $("#listaEventos").html("");
+        }else {
+            let criteriosDeBusca = {
+                nomeCliente: nomeBuscado,
+                dataEvento: dataBuscada
+            }
+            socket.emit("listaEventos", criteriosDeBusca, perfil);    
+        }    
     });
 
     //Controle da div que exibe a lista de brinquedos para cada evento na janela de edição
@@ -268,34 +276,62 @@ $(document).ready(function(){
         }, 1000);
     });
 
- //edição dos eventos
-    $('#form-editar-evento').submit(function(){
+
+    //SUBMIT da edição de eventos
+    //usado em: listarEventos.ejs => editar e excluir
+    $('#form-editar-evento').submit(function(){         
+        let dataEvento = $("#dataEvento").val();
+        let nome = $("#nome_cliente_tela_evento").val();
         var dados = $( this ).serialize();
 
         $.ajax({
             type: "POST",
             url: "/editarEvento",
             data: dados,
-            success: function( data )
-            {
+            success: function( data ){
+                console.log("data");
                 $("#fecharModalEditar").trigger("click");
-                if(!data.status){
-                    alert("Ocorreu um erro na edição");
-                    console.log(data.sqlMessage);
-                    console.log(data.sql);
-                }else{
-                    alert("Edição Ok!!");
-                }                    
-                window.location.href = "/listarEvento";//lista todos os brinquedos novamente       
+                emitirAviso(data, "snackbar", 1000);
+                setTimeout(function() {     
+                    $("#dataEvento").val(dataEvento);
+                    $("#nome_cliente_tela_evento").val(nome);
+                    $("#dataEvento").trigger("change");
+                }, 1000);      
             }
         });
+
         return false;
-    });
+    }); 
+    
+    //SUBMIT da edição de eventos
+    //usado em: listarEventos.ejs => editar e excluir
+    $('#form-excluir-evento').submit(function(){
+        let dataEvento = $("#dataEvento").val();
+        let nome = $("#nome_cliente_tela_evento").val();
+        var dados = $( this ).serialize();
+
+        $.ajax({
+            type: "POST",
+            url: document.getElementById("form-excluir-evento").action,
+            data: dados,
+            success: function( data ){
+                $("#fecharModalExcluir").trigger("click");
+                emitirAviso(data, "snackbar", 3000);
+                setTimeout(function() {                    
+                    $("#dataEvento").val(dataEvento);
+                    $("#nome_cliente_tela_evento").val(nome);
+                    $("#dataEvento").trigger("change");
+                }, 1000);               
+            }
+        });
+
+        return false;
+    });     
     
     //listagem de brinquedos na janela de inserção de evento
 
     $("#listarBrinquedos").click(function(){
-        socket.emit("listaBrinquedosDisponiveis", undefined);//retornará em escutasSocketIO => envioListaBrinquedos
+        socket.emit("listaBrinquedosDisponiveis", '');//retornará em escutasSocketIO => envioListaBrinquedos
     });
 
     $("#selecionarBrinquedos").click(function(){
@@ -309,5 +345,15 @@ $(document).ready(function(){
             }           
         }    
         $("#listaBrinquedosInseridos").val(brinquedos);  
+    });
+
+    $("#listarTodosEventos").click(function(){
+        $("#nome_cliente_tela_evento").val('');
+        $("#dataEvento").val('');
+        $("#dataEvento").trigger("change");
+    });
+
+    $("#enviarCadastrosPendentes", "").click(function(){
+        socket.emit("pendenciasCadastro");//recebe resposta por escutasSocketIO => receberEventos
     });
 });

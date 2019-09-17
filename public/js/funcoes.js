@@ -21,7 +21,7 @@ function filtrarClientes(nome, data, logradouro, cidade){
 //recebe lista de clientes => escutaSocketIO => 'mandarClientes'
 //verifica quem pediu e entrega
 function enviarClientesParaPagina(clientes){
-    //verificar que pediu
+    //verificar quem pediu
     let paginaQuePediuLista = document.getElementById("listaClientes").parentElement.attributes.id.value;
     if(paginaQuePediuLista == "formulario_clientes"){        
         preencherJanelaDeListarCliente(clientes);
@@ -120,6 +120,11 @@ function preencherModalEdicaoBrinquedo(id_brinquedo,nome_brinquedo,caracteristic
 //pergunta quais os eventos que serão alterados com a exclusão do brinquedo
 function listarEventosDoBrinquedoExcluido(id_brinquedo){
     socket.emit("meDaOsEventosAi", id_brinquedo, perfil);
+}
+
+function preencharJanelaExclusaoBrinquedo(id_brinquedo){
+    document.getElementById("id_brinquedo_excluir").value = id_brinquedo;
+    socket.emit("meDaOsEventosAi", id_brinquedo, perfil);//a resposta vem no escutasSocketIO => mandarEssesEventos
 }
 
 //função que envia ao servidor a requisição para envio da lista de clientes disponível no bd
@@ -253,33 +258,41 @@ function filtrarEventos(){
     }
 }
 
-function preencherJanelaDeEdicaoDoEvento(id_evento){    
-    listaEventosGlobal.forEach(function(evento){
+function preencherJanelaDeEdicaoDoEvento(id_evento){
+    //limpa os checkbox de seleção dos brinquedos
+    let listaCheckBoxBrinquedos = document.getElementsByClassName("checkbox-lista-brinquedos");
+    for(let i = 0; i < listaCheckBoxBrinquedos.length; i++){
+        listaCheckBoxBrinquedos[i].checked = false;
+    }
+      
+    listaEventosGlobal.forEach(function(evento){        
         if(evento.id_evento == id_evento){
-            let data = evento.data.substring(0,10);
-            let hora = evento.data.substring(11,16);
-            document.getElementById("id_evento").value = evento.id_evento;
+            let hora = moment(evento.data).format("HH:mm");
+            let data = moment(evento.data).format("YYYY-MM-DD");
+            document.getElementById("id_evento_edicao").value = evento.id_evento;
             document.getElementById("logradouro_edicao").value = evento.logradouro;
-            document.getElementById("numero").value = evento.numero;
-            document.getElementById("bairro").value = evento.bairro;
-            document.getElementById("complemento").value = evento.complemento;
-            document.getElementById("cidade").value = evento.cidade;
-            document.getElementById("data").value = data;
-            document.getElementById("hora").value = hora;
-            document.getElementById("valor_total").value = evento.valor_total;
-            document.getElementById("valor_desconto").value = evento.valor_desconto;
-            document.getElementById("valor_sinal").value = evento.valor_sinal;
-            document.getElementById("observacao").value = evento.observacao;
-            document.getElementById("receber_no_ato").value = parseInt(evento.valor_total) - parseInt(evento.valor_sinal) - parseInt(evento.valor_desconto);
-            evento.brinquedos.forEach(function(brinquedo){
-                document.getElementById(brinquedo).checked = true;
-            });           
+            document.getElementById("numero_edicao").value = evento.numero;
+            document.getElementById("bairro_edicao").value = evento.bairro;
+            document.getElementById("complemento_edicao").value = evento.complemento;
+            document.getElementById("cidade_edicao").value = evento.cidade;
+            document.getElementById("data_edicao").value = data;
+            document.getElementById("hora_edicao").value = hora;
+            document.getElementById("valor_total_edicao").value = evento.valor_total;
+            document.getElementById("valor_desconto_edicao").value = evento.valor_desconto;
+            document.getElementById("valor_sinal_edicao").value = evento.valor_sinal;
+            document.getElementById("observacao_edicao").value = evento.observacao;
+            document.getElementById("receber_no_ato_edicao").value = parseInt(evento.valor_total) - parseInt(evento.valor_sinal) - parseInt(evento.valor_desconto);
+            if(evento.brinquedos){
+                evento.brinquedos.forEach(function(brinquedo){
+                    document.getElementById(brinquedo).checked = true;
+                });
+            }                       
         }
     });    
 }
 
-function enviarEmail(){
-    let idEvento = document.getElementById("id_evento").value;
+function enviarEmailConfirmacao(){
+    let idEvento = document.getElementById("id_evento_edicao").value;
     let perfil = document.body.attributes.perfil.value;
-    socket.emit("enviarEmail", idEvento, perfil);
+    socket.emit("enviarEmailConfirmacao", idEvento, perfil);
 }

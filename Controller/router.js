@@ -7,9 +7,9 @@ const express = require("express"),
            Cliente = require("../Model/Cliente"),
 
         //multer = require('../Controller/multer'), //utilizar o sharp para configurar a imagem após o upload  fonte: https://medium.com/collabcode/upload-e-compress%C3%A3o-de-imagens-com-nodejs-68109eed066e    
-        multer  = require('multer'),
-       
-        login = require("../Controller/Login");
+        multer  = require('multer'),       
+        login = require("../Controller/Login"),
+        Email = require("../Model/Email");
 
 //const upload = multer({dest: 'public/imagens/'});
 const int = new Interface();
@@ -273,7 +273,6 @@ router.get("/inserirEvento", isLoggedIn, function(req, res){
     res.render("inserirEvento.ejs",{resposta, perfil});
 });
 
-function formataData(){}
 
 router.post("/inserirEvento", isLoggedIn, function(req, res){
     let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
@@ -282,8 +281,13 @@ router.post("/inserirEvento", isLoggedIn, function(req, res){
         Number(req.body.numero), req.body.complemento, req.body.bairro_evento, req.body.cidade_evento, 
         Number(req.body.valor_total), Number(req.body.valor_desconto), 
         Number(req.body.valor_sinal), req.body.observacao);
+    
+  
+
+    evento.data = moment(req.body.data_evento+" "+req.body.hora_evento);
+    evento.data = moment(evento.data).format("YYYY-MM-DD HH:mm:ss");
+    console.log(evento.data);
     /*
-    console.log(req.body.data);
     console.log(req.body.hora);
     let interface = new Interface();
     let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");  
@@ -296,7 +300,7 @@ router.post("/inserirEvento", isLoggedIn, function(req, res){
     evento.data = data;
     */
 
-    evento.data = evento.data + " " + req.body.hora_evento + ":00";
+    //evento.data = evento.data + " " + req.body.hora_evento + ":00";
     let brinquedos = req.body.listaBrinquedosInseridos.split(",");
     evento.id_cliente = req.body.idClienteEscolhido;
     let mensagem = '';
@@ -417,24 +421,32 @@ router.post("/excluirCliente", isLoggedIn,  function(req, res){
 router.get("/criarSessaoCliente", isLoggedIn, function(req,res){
     //evento que será utilizado na sessao
     evento = new Evento(null, new Date(), "cliente preencherá", 0, " ", " ", " ", 0, 0, 0, " ");
-    let perfil = req.user.perfil;
-    int.inserirEvento(evento,perfil).then(function(resposta){
-        if(resposta.status){
-            let id_evento = resposta.resultado.insertId;
-            let sessao = new Sessao();
-            evento.id_evento = id_evento;
-            sessao.evento = evento;
-            sessao.perfil = perfil;
-            sessoes.push(sessao);
-            int.listarTodosBrinquedos().then(function(resposta){
-                let brinquedos;
-                if(resposta.status){
-                    brinquedos = resposta.resultado;
-                    res.render("novoEventoCliente", {id_evento, brinquedos, perfil});
-                }else{
-                    console.log(resposta.resultado);
-                }                
+    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    int.inserirEvento(evento,perfil.perfil).then(function(resposta){
+        if(resposta.status){            
+            evento.id_evento = resposta.resultado.insertId;
+            sessaoBD = {
+                evento: evento.id_evento,
+                perfil: perfil.perfil,
+                horaCriacao: moment().format("YYYY-MM-DD HH:mm:ss")
+            }
+            int.inserirSessao(sessaoBD, perfil.perfil).then(function(resposta){
+                if(!resposta.status) 
+                    console.log("Ocorreu erro no bd na hora de inserir uma sessão" + resposta.resultado);
+                else{
+                    sessaoBD.id_sessao = resposta.resultado.insertId;
+                    int.listarTodosBrinquedos().then(function(resposta){
+                        let brinquedos;
+                        if(resposta.status){
+                            brinquedos = resposta.resultado;
+                            res.render("novoEventoCliente", {sessaoBD, brinquedos, perfil});
+                        }else{
+                            console.log(resposta.resultado);
+                        }                
+                    }); 
+                }
             });            
+                       
         }else{
             res.send("Deu problema no db");
             console.log(resposta.resultado);
@@ -443,8 +455,22 @@ router.get("/criarSessaoCliente", isLoggedIn, function(req,res){
 });
 
 //rota na qual o atendente insere os brinquedos pedidos para o evento e os valores correspondentes
-router.post("/criarSessaoCliente", isLoggedIn, function(req,res){
-    let evento = sessoes[acharSessao(req.body.idEvento)].evento; //SEMPRE PROCURE O EVENTO EM SUA SESSAO    
+router.post("/criarSessaoCliente", isLoggedIn, async function(req,res){
+    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    /*
+    let sessao = await int.acharSessao(req.body.idEvento, perfil.perfil).then(function(resposta){
+        if(resposta){
+            return resposta;
+        }else{
+            return undefined;
+        }
+    });
+    
+    let evento = sessao.evento[0]; //SEMPRE PROCURE O EVENTO EM SUA SESSAO
+    */
+    let evento = {};
+    if(Number(req.body.valorTotal))
+        evento.id_evento = Number(req.body.idEvento);    
     if(Number(req.body.valorTotal))
         evento.valor_total = Number(req.body.valorTotal);
     if(Number(req.body.valorSinal))
@@ -459,9 +485,11 @@ router.post("/criarSessaoCliente", isLoggedIn, function(req,res){
     
     let mensagem = '';
     let brinquedos;
-    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
-    int.editarEvento(evento,perfil).then(function(resultado){        
-        if(!resultado.status){
+    console.log(evento);
+    console.log(evento.id_evento);
+
+    int.editarEvento(evento,perfil.perfil).then(function(resposta){        
+        if(!resposta.status){
             console.log(resposta.resultado);
             mensagem = "Ocorreu um erro de inserção do evento";
             res.render("/criarSessaoCliente", {mensagem, perfil});
@@ -470,19 +498,17 @@ router.post("/criarSessaoCliente", isLoggedIn, function(req,res){
             if(brinquedos.length > 0){
                 brinquedoEvento = {brinquedos: brinquedos,
                     evento: req.body.idEvento};
-                int.inserirBrinquedoNoEvento(brinquedoEvento,perfil).then(function(resposta){
+                int.inserirBrinquedoNoEvento(brinquedoEvento,perfil.perfil).then(function(resposta){
                     if(!resposta.status){
                         console.log(resposta.resultado);
                         mensagem = "Ocorreu um erro de inserção do evento";
-                        res.render("/criarSessaoCliente", {mensagem, perfil});
+                        res.render("index", {mensagem, perfil});
                     }else{
                         mensagem = "Inserido com sucesso";
-                        res.render("/criarSessaoCliente", {mensagem, perfil});                           
+                        res.render("index", {mensagem, perfil});                           
                     }    
                 });
             }
-            mensagem = "Inserido com sucesso";
-            res.render("/criarSessaoCliente", {mensagem, perfil});
         }
     });
 });
@@ -493,8 +519,7 @@ async function editarBrinquedosNoBanco(req){
     let body = req.body;
     //primeiro: são excluídos os brinquedos do evento
     let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
-    int.excluirBrinquedosEvento(body.id_evento,perfil.perfil).then(function(resposta){
-        console.log(resposta);
+    int.excluirBrinquedosEvento(body.id_evento_edicao,perfil.perfil).then(function(resposta){
         //segundo: são listadas as chaves que começam com "brinquedo" no body
         Object.keys(body).forEach(function(campo){
             if(campo.substring(0,9) == "brinquedo"){
@@ -505,32 +530,47 @@ async function editarBrinquedosNoBanco(req){
         });
         //terceito: é instanciado o objeto evento_brinquedo e enviado ao bd
         let brinquedoEvento = {brinquedos: listaBrinquedos,
-            evento: body.id_evento};
+            evento: body.id_evento_edicao};
+        console.log(brinquedoEvento);
         if(temBrinquedo){
             int.inserirBrinquedoNoEvento(brinquedoEvento,perfil.perfil).then(function(resposta){
-                console.log(resposta);
+                if(resposta.status) return true;
+                else return false;
             });
         }        
     });
 }
 
+router.post("/excluirBrinquedo", function(req,res){
+    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    console.log(req.body.id_brinquedo_excluir);
+    int.excluirBrinquedo(req.body.id_brinquedo_excluir, perfil.perfil).then(function(resposta){        
+        let brinquedos = {status: resposta.status};
+        if(!resposta.status){
+            console.log(resposta.resultado);
+        }
+        res.render("listarBrinquedos.ejs", {brinquedos, perfil});
+    });
+});
+
 async function editarEventoNoBanco(req){
     //cria o objeto evento
     let body = req.body;
-    console.log(body.data);
-    console.log(body.hora);    
+    let data = moment(req.body.data_edicao+" "+req.body.hora_edicao);
+    data = moment(data).format("YYYY-MM-DD HH:mm:ss");
+  
     let evento = {
-        id_evento: body.id_evento,
-        data: body.data + ' ' + body.hora + ":00", 
+        id_evento: body.id_evento_edicao,
+        data: data,
         logradouro: body.logradouro_edicao,
-        numero: body.numero, 
-        complemento: body.complemento,
-        bairro: body.bairro, 
-        cidade: body.cidade, 
-        valor_total: body.valor_total, 
-        valor_desconto: body.valor_desconto, 
-        valor_sinal: body.valor_sinal, 
-        observacao: body.observacao
+        numero: body.numero_edicao, 
+        complemento: body.complemento_edicao,
+        bairro: body.bairro_edicao, 
+        cidade: body.cidade_edicao, 
+        valor_total: body.valor_total_edicao, 
+        valor_desconto: body.valor_desconto_edicao, 
+        valor_sinal: body.valor_sinal_edicao, 
+        observacao: body.observacao_edicao
     }
     if(evento.valor_desconto == '') evento.valor_desconto = 0;
     if(evento.valor_total == '') evento.valor_total = 0;
@@ -559,32 +599,18 @@ async function editarEventoNoBanco(req){
     }); 
 }
 
-async function editarEvento(req){
-    //função que fará o tratamento da tabela eventos no bd
-    let respostaEvento = await editarEventoNoBanco(req).then(function(respostaEvento){
-        return respostaEvento;
-    });
-    //função que fará o tratamento da tabela evento_brinquedo no bd
-    let respostaBrinquedos = await editarBrinquedosNoBanco(req).then(function(respostaBrinquedos){
-        return respostaBrinquedos;
-    });
-    return await respostaEvento;
-}
-
 
 router.post("/editarEvento", isLoggedIn, function(req,res){
-    
-    let listaBrinquedos = [];
-
-    //dispara função editar evento que fará a lógica e inserção no banco
-    editarEvento(req).then(function(resposta){
-        if(!resposta.status){
-            console.log(resposta.resultado);
-            res.send("Ocorreu o seguinte erro de edição do evento no banco de dados: "+resposta);
-        }else{
-            res.send("Editado com sucesso!<br><a href='/'>Voltar ao início</a>");                            
-        } 
-    }); 
+    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    editarEventoNoBanco(req).then(function(respostaEvento){
+        if (respostaEvento.status){
+            //função que fará o tratamento da tabela evento_brinquedo no bd
+            editarBrinquedosNoBanco(req).then(function(respostaBrinquedos){
+                if(respostaBrinquedos) res.send("Ocorreu um erro na edição do evento");
+                else res.send("Evento editado com sucesso!");   
+            });
+        }else res.send("Evento editado com sucesso!");   
+    });
 });
 
 function separarBrinquedos(idsBrinquedos){
@@ -605,11 +631,19 @@ function separarBrinquedos(idsBrinquedos){
 }
 
 //rota que o cliente usa para se cadastrar
-router.get("/cadastroPlay/:idEvento", function(req, res){
+router.get("/cadastroPlay/:perfil/:idEvento", async function(req, res){
     let idEvento = req.params.idEvento;
-    if(idEvento){ //teste para verificar se veio um id de evento
-        if (acharSessao(idEvento) === -1 || acharSessao(idEvento) == undefined){ //caso não haja nenhuma sessão com aquele id de evento                     
-            res.send("Esse cadastro expirou ou não existe");
+    let perfil = req.params.perfil;
+    let sessao = await int.acharSessao(idEvento, perfil).then(function(resposta){
+        if(resposta){
+            return resposta;
+        }else{
+            return undefined;
+        }
+    });
+    if(sessao && sessao.evento){ //teste para verificar se veio um id de evento
+        if (sessao.length < 1 || sessao.evento.length < 1){ //caso não haja nenhuma sessão com aquele id de evento                     
+            res.render("cadastroVencido",{perfil});
         }else{
             int.filtrarEventoPorIdEvento(req.params.idEvento).then(function(resposta){
                 if(resposta.status){
@@ -621,54 +655,74 @@ router.get("/cadastroPlay/:idEvento", function(req, res){
             });
         }   
     }else{
-        res.send("Faltou informar o Evento");
+        res.render("cadastroVencido",{perfil});
     }    
 });
 
 router.post("/removerEvento/:idEvento", function(req, res){
+    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
     let idEvento = req.params.idEvento;
     int.excluirBrinquedosEvento(idEvento).then(function(resposta){        
         if(resposta.status){
             int.excluirEvento(idEvento).then(function(resposta){                
                 if(!resposta.status){
-                    res.send("Ocorreu o seguinte erro de remoção do evento no banco de dados: "+resposta);
+                    //res.render("listarEvento", {mensagem: false, perfil});
+                    res.send("Ocorreu um erro na exclusão do evento.");
                 }else{
-                    res.send("Removido com sucesso!<br><a href='/'>Voltar ao início</a>");                            
+                    //res.render("listarEvento", {mensagem: true, perfil}); 
+                    res.send("Evento excluído!");                  
                 } 
             });
         }
     });
 });
 
-router.get("/primeiraTela/:idEvento", function(req, res){
+router.get("/primeiraTela/:perfil/:idEvento", function(req, res){
     let idEvento = req.params.idEvento;
-    res.render("primeiraTelaCadastroPlay",{idEvento});
+    let perfil = req.params.perfil;
+    let sessao = {
+        evento: {id_evento: idEvento},
+        perfil: perfil
+    }
+    sessoes.push(sessao);
+    console.log(sessoes);
+    res.render("primeiraTelaCadastroPlay",{idEvento, perfil});
 });
 
-router.post("/:tela", function(req, res){
+router.post("/cadastro/:tela/:perfil", function(req, res){
     let tela = req.params.tela;
+    let perfil = req.params.perfil;
     let idEvento = req.body.idEvento;
     switch(tela){
-        case "primeiraTela": res.render("segundaTelaCadastroPlay",{idEvento});
-                             dadosPrimeiraTela(req, idEvento);
+        case "primeiraTela": res.render("segundaTelaCadastroPlay",{idEvento, perfil});
+                             dadosPrimeiraTela(req, idEvento, perfil);
         break;
-        case "segundaTela": res.render("terceiraTelaCadastroPlay",{idEvento});
-                            dadosSegundaTela(req, idEvento);                           
+        case "segundaTela": res.render("terceiraTelaCadastroPlay",{idEvento, perfil});
+                            dadosSegundaTela(req, idEvento, perfil);                           
         break;
         case "terceiraTela": 
-            dadosTerceiraTela(req, idEvento);
-            let sessao = sessoes[acharSessao(idEvento)];
-            if(sessao){
+            let sessao = dadosTerceiraTela(req, idEvento, perfil);
+            if(sessao && sessao.evento){
                 int.inserirCliente(sessao.cliente,sessao.perfil).then(function(resposta){
-                    console.log("linha 405");
                     console.log(resposta);
                     if(resposta.status){
                         sessao.evento.id_cliente = resposta.resultado.insertId;
                         int.editarEvento(sessao.evento,sessao.perfil).then(function(resposta){
-                            console.log("linha 410");
                             console.log(resposta);
                             if(resposta.status){
-                                res.render("quartaTelaCadastroPlay");
+                                res.render("quartaTelaCadastroPlay",{perfil});
+                                let enviarEmail = new Email(perfil);
+                                enviarEmail.enviarPreenchimentoCadastro(idEvento);
+                                let i;
+                                sessoes.forEach(function(sessao, indice){
+                                    if(sessao.evento.id_evento == idEvento && sessao.perfil == perfil){
+                                        i = indice; 
+                                    }
+                                });
+                                delete sessoes[i];
+                                int.deleteSessao(sessao.evento.id_evento, sessao.perfil).then(function(resposta){
+                                    if(!resposta.status) console.log(resposta);
+                                });
                             }else{
                                 res.render("telaErroCadastro");
                             }
@@ -679,7 +733,6 @@ router.post("/:tela", function(req, res){
                 });   
             }else{
                 res.send("Ocorreu um erro ao cadastrar seus dados");
-                console.log(sessao);
             }                          
         break;
     }    
@@ -689,49 +742,54 @@ router.get("/*", function(req, res){
     res.redirect("/");
 });
 
-function dadosPrimeiraTela(req, idEvento){
-    let sessao = sessoes[acharSessao(idEvento)];  
-    cliente = new Cliente(req.body.nome,req.body.cpf,null,null,null,null,null,null,
+function dadosPrimeiraTela(req, idEvento, perfil){
+    let cliente = new Cliente(req.body.nome,req.body.cpf,null,null,null,null,null,null,
         req.body.telefone,req.body.telefoneAltarnativo,null,req.body.email,null);
-    sessao.cliente = cliente;
-}
-
-function dadosSegundaTela(req, idEvento){ 
-    let sessao = sessoes[acharSessao(idEvento)]; 
-    if(sessao){
-        sessao.cliente.logradouro = req.body.logradouro;
-        sessao.cliente.numero = req.body.numero;
-        sessao.cliente.complemento = req.body.complemento;
-        sessao.cliente.bairro = req.body.bairro;
-        sessao.cliente.cidade = req.body.cidade;
-    
-        sessao.evento.logradouro = req.body.logradouroFesta;
-        sessao.evento.numero = Number(req.body.numeroFesta);
-        sessao.evento.complemento = req.body.complementoFesta;
-        sessao.evento.cidade = req.body.cidadeFesta;
-    }     
-}
-
-function dadosTerceiraTela(req, idEvento){    
-    let sessao = sessoes[acharSessao(idEvento)];
-    let data = stringToDate(req.body.data);
-    data.setHours(Number((req.body.hora).slice(0,2)));/*-(data.getTimezoneOffset())/60)*///para setar a hora, o sistema automaticamente guarda a hora utc, que é 
-    // a hora de Brasília +3. Portanto foi subtraído a hora do retorno do método getTimezoneOffset() que mostra o desvio UTC em minutos.
-    data.setMinutes((req.body.hora).slice(3,5)); 
-    if(sessao){
-        sessao.evento.data = data;
-    }
-}
-
-function acharSessao(idEvento){
-    let retorno = -1;
-    sessoes.forEach(function(sessao, indice){ //laço que procura dentro da lista de sessoes, se existe uma com aquele id de evento
-        if (sessao.evento.id_evento == idEvento){
-            retorno = indice;
+    sessoes.forEach(function(sessao){
+        if(sessao.evento.id_evento == idEvento && sessao.perfil == perfil){
+            sessao.cliente = cliente;
+        }else{
+            console.log("sessão não encontrada");
         }
     });
-    return retorno;
+    
+    
 }
+
+function dadosSegundaTela(req, idEvento, perfil){ 
+    sessoes.forEach(function(sessao){
+        if(sessao.evento.id_evento == idEvento && sessao.perfil == perfil){
+            sessao.cliente.logradouro = req.body.logradouro;
+            sessao.cliente.numero = req.body.numero;
+            sessao.cliente.complemento = req.body.complemento;
+            sessao.cliente.bairro = req.body.bairro;
+            sessao.cliente.cidade = req.body.cidade;
+        
+            sessao.evento.logradouro = req.body.logradouroFesta;
+            sessao.evento.numero = Number(req.body.numeroFesta);
+            sessao.evento.complemento = req.body.complementoFesta;
+            sessao.evento.cidade = req.body.cidadeFesta;
+        }else{
+            console.log("sessão não encontrada");
+        }
+    });  
+}
+
+function dadosTerceiraTela(req, idEvento, perfil){
+    let data = stringToDate(req.body.data);
+            data.setHours(Number((req.body.hora).slice(0,2)));/*-(data.getTimezoneOffset())/60)*///para setar a hora, o sistema automaticamente guarda a hora utc, que é 
+            // a hora de Brasília +3. Portanto foi subtraído a hora do retorno do método getTimezoneOffset() que mostra o desvio UTC em minutos.
+            data.setMinutes((req.body.hora).slice(3,5)); 
+    let indice;
+    sessoes.forEach(function(sessao,i){        
+        if(sessao.evento.id_evento == idEvento && sessao.perfil == perfil){
+            sessao.evento.data = data;
+            indice = i;
+        }
+    });
+    return sessoes[indice];    
+}
+
 
 module.exports = router;
 

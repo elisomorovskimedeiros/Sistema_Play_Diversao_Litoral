@@ -6,7 +6,7 @@ const     express = require("express"),
    expressSession = require('express-session'),
             flash = require("connect-flash");
          passport = require("passport"),
-EnvioConfirmacoes = require("./Model/EnvioConfirmacoes"),
+            Email = require("./Model/Email"),
            moment = require("moment");
 
 const app = express(),
@@ -110,8 +110,12 @@ var socketio = io.on("connect", function(socketio){
 
 //Envia a lista de eventos que tem o brinquedo a ser excluído
     socketio.on("meDaOsEventosAi", function(id_brinquedo, perfil){
-        int.listarEventoPorIdBrinquedo(id_brinquedo, perfil).then(function(listaEventos){
-            socketio.emit("receberEventos", listaEventos);
+        int.listarEventoClientePorIdBrinquedo(id_brinquedo, perfil).then(function(resposta){
+            if(resposta.status){
+                socketio.emit("mandarEssesEventos", resposta.resultado);
+            }else{
+                console.log(resposta.resultado);
+            }            
         });
     });
 
@@ -121,8 +125,8 @@ var socketio = io.on("connect", function(socketio){
 // as informações dos brinquedos que pertencem ao evento. Depois é feita a comparação dos id_evento das duas tabelas para distribuir
 // os brinquedos em seus devidos eventos.
     socketio.on("listaEventos", function(filtroDeBuscaEventos, perfil){
-        int.filtrarEvento(filtroDeBuscaEventos, perfil).then(function(resposta){//primeira query            
-            if(resposta.status){
+        int.filtrarEvento(filtroDeBuscaEventos, perfil).then(function(resposta){//primeira query
+            if(resposta != undefined && resposta.status){
                 let eventos = resposta.resultado;
                 int.mostrarBrinquedosNoEvento(filtroDeBuscaEventos, perfil).then(function(resposta){//segunda query                 
                     if(resposta.status){
@@ -132,13 +136,12 @@ var socketio = io.on("connect", function(socketio){
                             brinquedos.forEach(brinquedo => {
                                 if (evento.id_evento == brinquedo.id_evento){
                                     evento.brinquedos.push(brinquedo.nome_brinquedo);
-                                }
-                 
+                                }                 
                             });                            
                             if(evento.valor_desconto && evento.valor_total && evento.valor_sinal){
                                 evento.valorLiquido = parseFloat(evento.valor_total) - parseFloat(evento.valor_desconto) -  parseFloat(evento.valor_sinal);
                             }                  
-                        });   
+                        });  
                         socketio.emit("receberEventos", eventos);// envio para o cliente                         
                     }else{
                         console.log(resposta.resultado);
@@ -150,72 +153,29 @@ var socketio = io.on("connect", function(socketio){
         });       
     });
 
+    socketio.on("listarPendiciasCadastro", function(){
+        console.log("sessao");
+    });
+
     socketio.on("listarEventosPorIdCliente", function(idCliente, perfil){
         int.filtrarEventoPorIdCliente(idCliente, perfil).then(function(resposta){
             if(resposta.status){
-                socketio.emit("receberEventos",resposta);
+                socketio.emit("receberEventos",resposta.resultado);
             }else{
-                console.log(resposta.resultado);
+                console.log(resposta);
             }            
         });
     });
 
-    socketio.on("enviarEmail", function(idEvento, perfil){
-        console.log(perfil);
-        int.filtrarEventoPorIdEvento(idEvento, perfil).then(function(resposta){
-            if(resposta.status){
-                let evento = resposta.resultado[0];
-                console.log("evento");
-                console.log(resposta);
-                int.listarClientePorIdEvento(idEvento, perfil).then(function(resposta){
-                    if(resposta.status){                        
-                        let cliente = resposta.resultado[0];
-                        int.listarBrinquedosPorIdEvento(idEvento, perfil).then(function(resposta){
-                            if(resposta.status){
-                                let listaBrinquedos = 'Irá no dia ';
-                                if( resposta.resultado.lengh > 0){
-                                    resposta.resultado.forEach(function(brinquedo, indice){                                    
-                                        listaBrinquedos += brinquedo.nome_brinquedo+", "
-                                    });
-                                }else listaBrinquedos = undefined;                                
-                                let data = evento.data.getDate()+"/"+(Number(evento.data.getMonth())+1)+"/"+evento.data.getFullYear();
-                                let enderecoEvento = evento.logradouro+", "+evento.numero;
-                                let valorFinal = evento.valor_total - evento.valor_desconto - evento.valor_sinal;
-                                let mensagem = "Parabéns "+ cliente.nome+", sua festa já esta agendada!!\n Dia "+data+
-                                " estaremos no endereço, "+enderecoEvento+", para realizar a montagem dos brinquedos.\n";                                
-                                if(listaBrinquedos){
-                                    mensagem += listaBrinquedos;
-                                }
-                                mensagem += "\nApós o término da montagem você tira todas as suas "+
-                                "dúvidas e acerta o valor de R$"+valorFinal+",00 com o montador.\n"+
-                                "Atenciosamente,\n"+
-                                "Equipe Play Diversão";
-                                console.log(cliente.email);
-                                email = new EnvioConfirmacoes(cliente.email,mensagem);
-                                let retornoEmail = email.enviar();
-                                retornoEmail.then(function(retorno){
-                                    if(retorno.status){
-                                        socketio.emit("retorno", "Mensagem Enviada com sucesso");                
-                                    }
-                                    else{
-                                        socketio.emit("retorno", "Ocorreu um erro no envio do email\n"+ retorno.detalhes);
-                                    }
-                                });
-                            }else{
-                                console.log(resposta.resultado);
-                                socketio.emit("retorno", "Ocorreu um erro no banco de dados");
-                            }
-                        });                     
-                    }else{
-                        console.log(resposta.resultado);
-                        socketio.emit("retorno", "Ocorreu um erro no banco de dados");
-                    }
-                });
+    socketio.on("enviarEmailConfirmacao", function(idEvento, perfil){
+        let enviarEmail = new Email(perfil);
+        enviarEmail.enviarEmailConfirmacao(idEvento).then(function(resultadoEnvio){
+            if(resultadoEnvio){
+                socketio.emit("retorno", "Mensagem Enviada com sucesso");
             }else{
-                console.log(resposta.resultado);
-                socketio.emit("retorno", "Ocorreu um erro no banco de dados");
-            }
-        });
+                socketio.emit("retorno", "Ocorreu um erro no envio do email");
+            } 
+        });              
     });
 
     socketio.on("editarCliente", function(cliente, perfil){
@@ -255,6 +215,33 @@ var socketio = io.on("connect", function(socketio){
                 socketio.emit("envioListaBrinquedos", [{nome_brinquedo: "Ocorreu um erro na busca dos brinquedos"}]);
             }
         })
+    });
+//ENVIO DOS EVENTOS CUJO CADASTRO AINDA NÃO FOI PREENCHIDO
+    socketio.on("pendenciasCadastro", function(){
+        int.selectSessoes(perfil.perfil).then(function(resposta){
+            if(resposta.status){
+                let eventos = [];
+                let sessoes = resposta.resultado;
+                if(sessoes.length == 0) socketio.emit("receberEventos", "eventos");
+                sessoes.forEach(function(sessao, indice){
+                    int.filtrarEventoPorIdEvento(sessao.evento, perfil.perfil).then(function(resposta){
+                        if(resposta.status){
+                            if(resposta.resultado.length == 0){
+                                int.deleteSessao(sessao.evento, perfil.perfil);
+                            }
+                            eventos.push(resposta.resultado[0]);
+                        }else{
+                            console.log(resposta.resultado);
+                        }
+                        if(indice == sessoes.length - 1){
+                            socketio.emit("receberEventos", eventos);
+                        }
+                    });
+                });
+            }else{
+                console.log(resposta.resultado);
+            }
+        });
     });
     
 });

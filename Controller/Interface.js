@@ -29,15 +29,9 @@ class Interface{
 
     async listarCliente(cliente,perfil){
         let db = new Db(perfil);
-        if(cliente.data){
-            return await db.selectPorDataEvento(cliente).then(function(clientes){
-                return clientes;
-            });
-        }else{
-            return await db.selectUmCliente(cliente).then(function(clientes){
-                return clientes;
-            });
-        }       
+        return await db.selectUmCliente(cliente).then(function(clientes){
+            return clientes;
+        });      
     }
 
     async excluirCliente(idCliente,perfil){
@@ -112,6 +106,10 @@ class Interface{
 
     async mostrarBrinquedosNoEvento(filtroDeBuscaEventos,perfil){
         let db = new Db(perfil);
+        return await db.selectBrinquedosNoEventoPorNomeClienteEData(filtroDeBuscaEventos.nomeCliente, filtroDeBuscaEventos.dataEvento).then(function(resposta){
+            return resposta;
+        });
+        /*
         if (filtroDeBuscaEventos.nomeCliente && filtroDeBuscaEventos.dataEvento){
             return await db.selectBrinquedosNoEventoPorNomeClienteEData(filtroDeBuscaEventos.nomeCliente, filtroDeBuscaEventos.dataEvento).then(function(resposta){
                 return resposta;
@@ -124,7 +122,13 @@ class Interface{
             return await db.selectBrinquedosNoEventoPorData(filtroDeBuscaEventos.dataEvento).then(function(resposta){
                 return resposta;
             });
-        }
+        }else if (!filtroDeBuscaEventos.dataEvento && !filtroDeBuscaEventos.nomeCliente){
+            return await db.selectBrinquedosNoEventoPorData(filtroDeBuscaEventos.dataEvento).then(function(resposta){
+                return resposta;
+            });
+        }else{
+            return [];
+        }*/
     }
 
     async verIdsBrinquedosPorIdEvento(idEvento,perfil){
@@ -136,11 +140,15 @@ class Interface{
 
     async filtrarEvento(filtroDeBuscaEventos,perfil){
         let db = new Db(perfil);
+        return await db.selectEventosPorClienteEData(filtroDeBuscaEventos.nomeCliente, filtroDeBuscaEventos.dataEvento).then(function(resposta){
+            return resposta;
+        });
+        /*
         if (filtroDeBuscaEventos.nomeCliente && filtroDeBuscaEventos.dataEvento){
             return await db.selectEventosPorClienteEData(filtroDeBuscaEventos.nomeCliente, filtroDeBuscaEventos.dataEvento).then(function(resposta){
                 return resposta;
             });
-        }else if (filtroDeBuscaEventos.nomeCliente){            
+        }else if (filtroDeBuscaEventos.nomeCliente){                      
             return await db.selectEventosPorNomeCliente(filtroDeBuscaEventos.nomeCliente).then(async function(eventos){              
                 return eventos;               
             });
@@ -148,7 +156,13 @@ class Interface{
             return await db.selectEventosPorData(filtroDeBuscaEventos.dataEvento).then(function(resposta){
                 return resposta;
             });
-        }
+        }else if (!filtroDeBuscaEventos.dataEvento && !filtroDeBuscaEventos.nomeCliente){
+            return await db.selectTodosEventos().then(function(resposta){
+                return resposta;
+            });
+        }else{
+            return [];
+        }*/
     }
 
     async filtrarEventoPorIdCliente(idCliente,perfil){
@@ -189,6 +203,20 @@ class Interface{
         return await db.excluirBrinquedosEvento(id_evento);
     }
 
+    async excluirBrinquedo(id_brinquedo,perfil){
+        let db = new Db(perfil);
+        return await db.excluirBrinquedosEventoPorIdBrinquedo(id_brinquedo).then(async function(resposta){
+
+            if(resposta.status){
+                return await db.excluirBrinquedo(id_brinquedo).then(function(resposta){
+                    return resposta;
+                });
+            }else{
+                return resposta;
+            }           
+        });
+    }
+
     async excluirEvento(idEvento,perfil){
         let db = new Db(perfil);
         return await db.excluirEvento(idEvento);
@@ -198,18 +226,77 @@ class Interface{
         let db = new Db(perfil);
         return await db.selectClientePorIdEvento(idEvento);
     }
+
+    async inserirSessao(sessao, perfil){
+        let db = new Db(perfil);
+        return await db.inserirSessao(sessao);
+    }
+
+    async selectSessoes(perfil){
+        let db = new Db(perfil);
+        return await db.selectSessoes();
+    }
+
+    async deleteSessao(evento, perfil){
+        let db = new Db(perfil);
+        return await db.deleteSessao(evento);
+    }
+
+    async acharSessao(idEvento, perfil){
+        let db = new Db(perfil);
+        return await db.selectSessao(idEvento,perfil).then(function(resposta){
+            let sessao;
+            if(resposta.status && resposta.resultado.length > 0){
+                sessao = resposta.resultado[0];
+                return db.selectUmEvento(sessao.evento, perfil).then(function(resposta){
+                    if(resposta.status){
+                        sessao.evento = resposta.resultado;
+                        return sessao;
+                    }else{
+                        return false;
+                    }
+                });
+            }else{
+                return false;
+            }
+        });
+    } 
+    
+    async listarEventoClientePorIdBrinquedo(idBrinquedo, perfil){
+        let db = new Db(perfil);
+        return await db.listarEventoClientePorIdBrinquedo(idBrinquedo);
+    }
+
+    async pegarEventoClienteEBrinquedosPorIdEvento(idEvento, perfil){
+        let int = this;
+        let evento;
+        return await int.filtrarEventoPorIdEvento(idEvento, perfil).then(function(resposta){
+            if(resposta.status){
+                evento = resposta.resultado[0];
+                return int.listarClientePorIdEvento(idEvento, perfil).then(function(resposta){
+                    if(resposta.status){                        
+                        evento.cliente = resposta.resultado[0];
+                        return int.listarBrinquedosPorIdEvento(idEvento, perfil).then(function(resposta){
+                            if(resposta.status){
+                                evento.brinquedos = resposta.resultado;
+                                return evento;
+                            }else{
+                                console.log(resposta);
+                                return false;
+                            }
+                        });
+                    }else{
+                        console.log(resposta);
+                        return false;
+                    }
+                });
+            }else{
+                console.log(resposta);
+                return false;
+            }
+        });                
+    }   
 }
 
 module.exports = Interface;
 
-/*
-let retorno = new Promise(function(resolve, reject){
-                    eventos.forEach(async function(evento) {
-                        await db.mostrarBrinquedosNoEvento(evento.id_evento).then(function(brinquedos){
-                            evento.brinquedos = brinquedos;
-                            console.log(evento.brinquedos);
-                        });
-                    });
-                    return resolve(eventos);                    
-                });
-*/

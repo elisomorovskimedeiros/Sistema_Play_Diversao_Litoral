@@ -36,83 +36,78 @@ listaDeEventos = socket.on("receberEventos", function(eventos){
     let paiDaListaDeEventos = document.getElementById("listaEventos").parentElement.attributes.id.value;
     let listaDeEventos = '';
     listaEventosGlobal = eventos;
-    //console.log(eventos[0].data.getHours());
-    console.log(eventos[0].data); 
-    eventos.forEach( evento => {
-        //evento.data.setHours(evento.data.getHours());
-        let brinquedos = '';
-        //if para o caso da lista de brinquedos vir vazia
-        if(evento.brinquedos != undefined && evento.brinquedos.length > 0){
-            let tamanho = evento.brinquedos.length;
-            evento.brinquedos.forEach(function(brinquedo, indice){
-                brinquedos += brinquedo;
-                if(indice == tamanho-1){
-                    brinquedos += '.';
-                }else{
-                    brinquedos += ', '
-                }                 
-            });                        
-        }
-       //montagem da lista de eventos a ser exibida na listagem de eventos
-        //let data = new Date(evento.data);
-        //let dataParaExibir = (Number(data.getDate())) + '/' + (Number(data.getMonth())+1) + '/' + data.getFullYear();   
-        //let horaParaExibir = Number(data.getHours())+":"+Number(data.getMinutes()); 
-        let data = evento.data.substring(0,10);
-        let hora = evento.data.substring(11,13);
-        let minutos = evento.data.substring(14,16);  
-         
-        listaDeEventos += '<div id="cliente_individual" style="margin-top: 30px; margin-left: auto; margin-right: auto; width: max-content;">' +
-                          'Data do Evento: ' + data + '   | Hora do Evento: ' + hora+':'+minutos + '<br>' +
-                          'Nome do Cliente: ' + evento.nome + '   Telefone: ' + evento.telefone + '   Telefone para recado: ' + evento.telefone_recado + '<br>' +
-                          'Endereço do Evento: ' + evento.logradouro +'&nbsp;&nbsp;' + evento.numero + ',&nbsp;&nbsp;';
-                          if(evento.complemento)
-                              listaDeEventos += evento.complemento+', &nbsp;&nbsp;';                    
-                          if(evento.observacao_endereco)
-                              listaDeEventos += evento.observacao_endereco;
-                          listaDeEventos += '<br>Cidade: '+ evento.cidade + '<br>' +
-                          'Brinquedos: <br>' + brinquedos + '<br>' +
-                          'Valor a receber no ato da montagem: ' + evento.valorLiquido + '<br>';
-                          //botões para exclusão do evento não são exibidos durante as exclusão de cliente
-                          if(paiDaListaDeEventos != "corpoModalExcluirCliente"){
-                            listaDeEventos += '<button class="btn btn-default" id="btnEditarEvento"  data-toggle="modal" '+ 
-                            'data-target="#janelaDeEdicaoEvento" value="'+evento.id_evento+'" onclick="preencherJanelaDeEdicaoDoEvento('+evento.id_evento+')">Editar</button>&nbsp;&nbsp;'+
-                            '<button class="btn btn-default" id="btn_excluir_evento" data-toggle="modal"'+
-                            'data-target="#janelaDeRemocaoEvento" onclick="setarIdAExcluir('+ evento.id_evento +')">Excluir</button>';
-                          }
-                          
-    });
-
+    if(eventos.length > 0 && eventos[0]){
+        eventos.forEach( evento => {
+            let brinquedos = '';
+            //if para o caso da lista de brinquedos vir vazia
+            if(evento){
+                if(evento.brinquedos != undefined && evento.brinquedos.length > 0){
+                    let tamanho = evento.brinquedos.length;
+                    evento.brinquedos.forEach(function(brinquedo, indice){
+                        brinquedos += brinquedo;
+                        if(indice == tamanho-1){
+                            brinquedos += '.';
+                        }else{
+                            brinquedos += ', '
+                        }              
+                    });                        
+                }
+            }           
+           //montagem da lista de eventos a ser exibida na listagem de eventos
+            //let data = new Date(evento.data);
+            //let dataParaExibir = (Number(data.getDate())) + '/' + (Number(data.getMonth())+1) + '/' + data.getFullYear();   
+            //let horaParaExibir = Number(data.getHours())+":"+Number(data.getMinutes()); 
+            
+            let valorLiquido = evento.valor_total - evento.valor_sinal - evento.valor_desconto;
+            listaDeEventos += '<div id="cliente_individual" style="margin-top: 30px; margin-left: auto; margin-right: auto; width: max-content;">' +
+                              'Id do Evento: ' + evento.id_evento + '<br>' +
+                              'Data do Evento: ' + moment(evento.data).format("DD/MM/YYYY") + '   | Hora do Evento: ' +moment(evento.data).format("HH:mm")+  '<br>' +
+                              'Nome do Cliente: ' + evento.nome + '   Telefone: ' + evento.telefone + '   Telefone para recado: ' + evento.telefone_recado + '<br>' +
+                              'Endereço do Evento: ' + evento.logradouro +'&nbsp;&nbsp;' + evento.numero + ',&nbsp;&nbsp;';
+                              if(evento.complemento)
+                                  listaDeEventos += evento.complemento+', &nbsp;&nbsp;';                    
+                              if(evento.observacao_endereco)
+                                  listaDeEventos += evento.observacao_endereco;
+                              listaDeEventos += '<br>Cidade: '+ evento.cidade + '<br>' +
+                              'Brinquedos: <br>' + brinquedos + '<br>' +
+                              'Valor a receber no ato da montagem: ' + valorLiquido + '<br>';
+                              //botões para exclusão do evento não são exibidos durante as exclusão de cliente
+                              if(paiDaListaDeEventos != "corpoModalExcluirCliente" && paiDaListaDeEventos != "corpoModalExcluirBrinquedo"){
+                                listaDeEventos += '<button class="btn btn-default" id="btnEditarEvento"  data-toggle="modal" '+ 
+                                'data-target="#janelaDeEdicaoEvento" value="'+evento.id_evento+'" onclick="preencherJanelaDeEdicaoDoEvento('+evento.id_evento+')">Editar</button>&nbsp;&nbsp;'+
+                                '<button class="btn btn-default" id="btn_excluir_evento" data-toggle="modal"'+
+                                'data-target="#janelaDeRemocaoEvento" onclick="setarIdAExcluir('+ evento.id_evento +')">Excluir</button>';
+                              }
+                              
+        });
+    }  
     document.getElementById('listaEventos').innerHTML = listaDeEventos;
 });
 
 //#################FUNÇÕES DE BRINQUEDOS ########################### 
 //recebe a lista de eventos alterados com a exclusão do brinquedo
-socket.on("mandarEssesEventos", function(listaEventos){
-    let lista = listaEventos.resultado;
-    console.log(moment(lista[0].data).format("dd/MM/yyyy HH:mm"));
-
-      
+socket.on("mandarEssesEventos", function(resultado){
     let eventos = "";
-    lista.forEach(function(evento){
-        let data = new Date(evento.data);
-        let dataParaExibir = (Number(data.getDate())) + '/' + (Number(data.getMonth())+1) + '/' + data.getFullYear();   
-        let horaParaExibir = Number(data.getHours())+":"+Number(data.getMinutes()); 
-        eventos += '<div id="cliente_individual" style="margin-top: 30px; margin-left: auto; margin-right: auto; width: max-content;">' +
-                      'Data do Evento: ' + dataParaExibir + '   | Hora do Evento: ' + horaParaExibir + '<br>' +
-                      'Nome do Cliente: ' + evento.nome + '   Telefone: ' + evento.telefone + '   Telefone para recado: ' + evento.telefone_recado + '<br>' +
-                      'Endereço do Evento: ' + evento.logradouro +'&nbsp;&nbsp;' + evento.numero + ',&nbsp;&nbsp;';
-                      if(evento.complemento)
-                          eventos += evento.complemento+', &nbsp;&nbsp;';                    
-                      if(evento.observacao_endereco)
-                          eventos += evento.observacao_endereco;
-                      eventos += '<br>Cidade: '+ evento.cidade + '<br>' +
-                      'Brinquedos: <br>' + evento.brinquedos + '<br>'
-                      'Valor a receber no ato da montagem: ' + evento.valorLiquido;
-    });
-    $("#listaBrinquedos").wrapInner(eventos);   
-
-
-    
+    if(resultado.length){
+        document.getElementById("tituloModalExcluirBrinquedos").innerHTML = "Eventos que serão afetados com a exclusão desse brinquedo:";
+        resultado.forEach(function(evento){
+            let data = new Date(evento.data);
+            let dataParaExibir = moment(evento.data).format("DD/MM/YYYY");
+            let horaParaExibir = moment(evento.data).format("HH:mm");
+            //let dataParaExibir = (Number(data.getDate())) + '/' + (Number(data.getMonth())+1) + '/' + data.getFullYear();   
+            //let horaParaExibir = Number(data.getHours())+":"+Number(data.getMinutes()); 
+            eventos += '<div id="cliente_individual" style="margin-top: 30px; margin-left: auto; margin-right: auto; width: max-content;">' +
+                          'Numero do evento: '+evento.id_evento+' Data do Evento: ' + dataParaExibir + '   | Hora do Evento: ' + horaParaExibir + '<br>' +
+                          'Nome do Cliente: ' + evento.nome + '   Telefone: ' + evento.telefone + '<br>' +
+                          'Endereço do Evento: ' + evento.logradouro +'&nbsp;&nbsp;' + evento.numero + ',&nbsp;&nbsp;';
+                          if(evento.complemento)
+                              eventos += evento.complemento+', &nbsp;&nbsp;';                    
+                          if(evento.observacao_endereco)
+                              eventos += evento.observacao_endereco;
+                          eventos += '<br>Cidade: '+ evento.cidade + '<br>';
+        });
+    }    
+    $("#listaEventos").wrapInner(eventos);   
 });
 
 //função que recebe a consulta da lista de brinquedos no bd, conforme o filtro solicitado
@@ -130,7 +125,7 @@ socket.on("mandarEssesEventos", function(listaEventos){
                 'Id do Brinquedo: '+ brinquedo.id_brinquedo +'<br>' +
                 'Nome: '+ brinquedo.nome_brinquedo +' <br>' +
                 'Características: '+ brinquedo.caracteristicas +'<br>' +
-                'Valor da locação: '+ brinquedo.valor_brinquedo + '<br>' +
+                'Valor da locação: R$'+ brinquedo.valor_brinquedo + ',00<br>' +
                 'Quantidade em Estoque: ' + brinquedo.quantidade + '<br>';
                 if(brinquedo.observacao)
                     listaBrinquedos += 'Observação: ' + brinquedo.observacao + '<br>';
@@ -145,7 +140,7 @@ socket.on("mandarEssesEventos", function(listaEventos){
                         brinquedo.quantidade+'\',\''+
                         brinquedo.observacao+'\')" value="'+brinquedo.id_brinquedo+'">Editar</button>&nbsp;&nbsp;'+
                     '<button class="btn btn-danger" id="btn_excluir_brinquedo" data-toggle="modal"'+
-                    'data-target="#janelaDeRemocaoBrinquedo" onclick="removerBrinquedo('+ brinquedo.id_brinquedo +')">Excluir</button>'+
+                    'data-target="#janelaDeRemocaoBrinquedo" onclick="preencharJanelaExclusaoBrinquedo('+ brinquedo.id_brinquedo +')">Excluir</button>'+
                 '</div>'+
             '</div>';
         }); 

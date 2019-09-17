@@ -70,8 +70,8 @@
                     </button>
                 </div>
                 <!-- corpo -->
-                <div class="modal-body" id="corpoModal">
-                    <h4>Eventos que serão afetados com a exclusão desse brinquedo:</h4>
+                <div class="modal-body" id="corpoModalExcluirBrinquedo">
+                    <h4 id="tituloModalExcluirBrinquedos"></h4>
                     <input type="text" style="display: none;" id="id_brinquedo_excluir" name="id_brinquedo_excluir">
                     <div class="row" id="listaEventos">                                
                     </div>              
@@ -112,13 +112,8 @@
     
     <div id="listaBrinquedos" class="row">
         
-        <% if(brinquedos){ %>
-            
-            <% if(brinquedos.status === false){%>
-                <input type="text" id="resposta_insercao_brinquedo" readonly value="Ocorreu um erro na edição do brinquedo!" style="display: none">
-            <%}else if(brinquedos.status === true){%>
-                <input type="text" id="resposta_insercao_brinquedo" readonly value="Brinquedo editado com sucesso!" style="display: none">
-            <%}else{ %>           
+        <% if(typeof brinquedos != 'undefined' && brinquedos){ %>
+            <% if(brinquedos.length){ %>                       
             
                 <% brinquedos.forEach(brinquedo=>{ %>
                     
@@ -139,16 +134,21 @@
                             data-target="#janelaDeEdicaoBrinquedo" 
                             onclick="preencherModalEdicaoBrinquedo('<%= brinquedo.id_brinquedo %>','<%= brinquedo.nome_brinquedo %>', '<%= brinquedo.caracteristicas %>','<%= brinquedo.valor_brinquedo %>','<%= brinquedo.quantidade %>','<%= brinquedo.observacao %>')"
                             value="<%= brinquedo.id_brinquedo %>">Editar</button>&nbsp;&nbsp;
-                            <button class="btn btn-danger" id="btn_excluir_brinquedo" data-toggle="modal"
+                            <button class="btn btn-danger" id="btn_excluir_brinquedo" onclick="preencharJanelaExclusaoBrinquedo('<%=brinquedo.id_brinquedo%>')" data-toggle="modal"
                             data-target="#janelaDeRemocaoBrinquedo" onclick="listarEventosDoBrinquedoExcluido('<%= brinquedo.id_brinquedo %>')">Excluir</button>
                         </div> 
                     </div>                
                 <% }); %>
-            <% } %>            
+            <% } %>
+            <% if(brinquedos.status === false){%>
+                <input type="text" id="resposta_insercao_brinquedo" readonly value="Ocorreu um erro na edição dos brinquedos!" style="display: none">
+            <%}else if(brinquedos.status === true){%>
+                <input type="text" id="resposta_insercao_brinquedo" readonly value="Brinquedos editados com sucesso!" style="display: none">
+            <%} %>                   
         <% } %> 
     </div>       
     <div id="snackbar"></div>
-    
+           
 </div>
 
 <% include partials/rodape %>  

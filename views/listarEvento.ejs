@@ -12,17 +12,19 @@
             <div class="form-group col-md-6">
                 <label>Selecine a data do evento</label>
                 <input type="date" class="form-control" name="data" id="dataEvento" placeholder="Informe a data do Evento" onchange="filtrarEventos()">
+            </div>            
+            <div class="form-group col-md-6">
+                <button id="listarTodosEventos" class="btn btn-primary form-control">Listar Todos os Eventos</button>
             </div>
-            <!--            
-            <div class="form-group col-md-12">
-                <a class="btn btn-primary form-control" href="/listarTodosEventos">Listar Todos os Eventos</a>
-            </div>  -->      
+            <div class="form-group col-md-6">
+                <button id="enviarCadastrosPendentes" class="btn btn-primary form-control">Listar Eventos que o Pendentes de Cadastro</button>
+            </div>      
         </div>
     </form>
     <div id="listaEventos"></div>
     
-    <% if(evento != undefined){ %>
-        <% clientes.forEach(cliente=>{ %>
+    <% if(typeof evento != 'undefined' && evento != undefined){ %>
+        <% evento.forEach(cliente=>{ %>
             <div style="margin-top: 30px; margin-left: auto; margin-right: auto; width: max-content;">
                 Id do Evento: <%= evento.id_evento %><br>
                 Nome do cliente: <%= evento.cliente.nome %><br>               
@@ -49,7 +51,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <!-- cabecalho -->
-                <form method="post" action="/editarEvento" name="form-editar-evento" id="form-evento">
+                <form method="post" action="/editarEvento" name="form-editar-evento" id="form-editar-evento">
                     <div class="modal-header">
                         <h4 class="modal-title">Edição do Evento</h4>
                         <button type="button" class="close" data-dismiss="modal" id="fecharModalEditar">
@@ -59,19 +61,28 @@
             
                     <!-- corpo -->
                     <div class="modal-body" id="corpoModal">
-            
+                        <button type="button" id="abrirModalInsercaoClienteNoEvento" 
+                            class="btn btn-primary">
+                            Trocar cliente
+                        </button>
+                        <div id="listaClientes"></div>
+                    
+                        <div class="form-group">
+                            <label for="nome_cliente">Nome do Cliente</label>
+                            <input type="text" class="form-control" readonly name="nome_cliente" id="espacoNomeCliente" required>
+                        </div>
                         <div class="row">
                             <div class="form-group col-md-12" style="display: none;">                                
-                                <input type="text" class="form-control" name="id_evento" id="id_evento">
+                                <input type="text" class="form-control" name="id_evento_edicao" id="id_evento_edicao">
                             </div>
                             <div class="col-md-12 row">
                                 <div class="col-md-4 form-group">
                                     <label for="data">Data</label>
-                                    <input type="date" class="form-control" name="data" id="data">
+                                    <input type="date" class="form-control" name="data_edicao" id="data_edicao">
                                 </div>
                                 <div class="col-md-4 form-group">
                                     <label for="hora">Hora</label>
-                                    <input type="time" class="form-control" name="hora" id="hora">
+                                    <input type="time" class="form-control" name="hora_edicao" id="hora_edicao">
                                 </div>                                
                             </div>
                             <hr>                        
@@ -81,39 +92,39 @@
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="endereco">Número</label>
-                                <input type="numero" class="form-control" placeholder="Número" name="numero" id="numero">
+                                <input type="numero" class="form-control" placeholder="Número" name="numero_edicao" id="numero_edicao">
                             </div>                                
                             <div class="form-group col-md-6">
                                 <label for="complemento">Complemento</label>
-                                <input type="text" class="form-control" placeholder="exe.: ap. 5" name="complemento" id="complemento">
+                                <input type="text" class="form-control" placeholder="exe.: ap. 5" name="complemento_edicao" id="complemento_edicao">
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="bairro">Bairro</label>
-                                <input type="text" class="form-control" placeholder="Bairro" name="bairro" id="bairro">
+                                <input type="text" class="form-control" placeholder="Bairro" name="bairro_edicao" id="bairro_edicao">
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="cidade">Cidade</label>
-                                <input type="text" class="form-control" placeholder="Cidade" name="cidade" id="cidade">
+                                <input type="text" class="form-control" placeholder="Cidade" name="cidade_edicao" id="cidade_edicao">
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="valor_total">Valor Total</label>
-                                <input type="number" class="form-control" name="valor_total" id="valor_total">
+                                <input type="number" class="form-control" name="valor_total_edicao" id="valor_total_edicao">
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="valor_desconto">Valor do Desconto</label>
-                                <input type="number" class="form-control" name="valor_desconto" id="valor_desconto">
+                                <input type="number" class="form-control" name="valor_desconto_edicao" id="valor_desconto_edicao">
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="valor_sinal">Valor do Sinal</label>
-                                <input type="number" class="form-control" name="valor_sinal" id="valor_sinal">
+                                <input type="number" class="form-control" name="valor_sinal_edicao" id="valor_sinal_edicao">
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="receber_no_ato">Receber no Ato</label>
-                                <input type="number" class="form-control" readonly name="receber_no_ato" id="receber_no_ato">
+                                <input type="number" class="form-control" readonly name="receber_no_ato_edicao" id="receber_no_ato_edicao">
                             </div> 
                             <div class="form-group col-md-12">
                                 <label for="observacao">Observação sobre o evento</label>
-                                <input type="text" class="form-control" name="observacao" id="observacao">
+                                <input type="text" class="form-control" name="observacao_edicao" id="observacao_edicao">
                             </div>
                             <div class="form-group col-md-3">
                                 <button type="button" id="exibirListaBrinquedos" class="btn btn-primary form-control">Escolher Brinquedos</button>
@@ -121,12 +132,12 @@
                             
                             <div id="listaBrinquedos" class="col-md-12 naoMostrar" style="width: max-content;">
                                 <div class="row">
-                                    <% if(brinquedos != undefined){ %>       
+                                    <% if(typeof brinquedos != 'undefined' && brinquedos != undefined){ %>       
                                         <% brinquedos.forEach(brinquedo=>{ %>
                                             <div class="col-md-3 form-group" style="margin-top: 30px; margin-left: 15px; height: max-content;">
-                                                Selecionar: <input type="checkbox" class="form-control-checkbox" name="brinquedo<%=brinquedo.id_brinquedo%>" id="<%=brinquedo.nome_brinquedo%>"> 
+                                                Selecionar: <input type="checkbox" class="form-control-checkbox checkbox-lista-brinquedos" name="brinquedo<%=brinquedo.id_brinquedo%>" id="<%=brinquedo.nome_brinquedo%>"> 
                                                 <div style="width: 200px;">
-                                                    <img src= <%= brinquedo.foto_brinquedo %> width="200px" >
+                                                    <img src= '<%= brinquedo.foto_brinquedo %>' width="200px" >
                                                 </div>
                                                 Id do Brinquedo: <%= brinquedo.id_brinquedo %><br>
                                                 Nome: <%= brinquedo.nome_brinquedo %><br>
@@ -141,7 +152,7 @@
             
                     <!-- rodape -->
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-success" onclick="enviarEmail()">
+                        <button type="button" class="btn btn-outline-success" onclick="enviarEmailConfirmacao()">
                             Enviar Confirmação
                         </button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">
@@ -165,7 +176,7 @@
                 <form method="post" action="/removerEvento" name="form-excluir-evento" id="form-excluir-evento">
                     <div class="modal-header">
                         <h4 class="modal-title">Tem certeza que quer excluir esse evento?</h4>
-                        <button type="button" class="close" data-dismiss="modal" id="fecharModalEditar">
+                        <button type="button" class="close" data-dismiss="modal" id="fecharModalExcluir">
                             <span>&times;</span>
                         </button>
                     </div>
@@ -180,8 +191,19 @@
                         </button>
                     </div>
                 </form>
-            </div>
+            </div>                
         </div>     
     </div>
+
+    <!-- respostas de queryes no bd -->
+    <% if (typeof mensagem != 'undefined'){ %>
+        <% console.log(mensagem); %>
+        <% if (mensagem == true){ %>                        
+            <input type="text" id="resposta_insercao_brinquedo" style="display: none;" value="Eventos editados">
+        <% } else {%>  
+            <input type="text" id="resposta_insercao_brinquedo" style="display: none;" value="Houve erro no sistema">
+        <% } %>
+    <% } %>
+    <div id="snackbar"></div>
 
 <% include partials/rodape %>

@@ -27,6 +27,10 @@
                     <strong><a href="/criarSessaoCliente">Mandar link para o cadastro</a></strong>                  
                 </div>
             </div>
+            <% if (typeof mensagem != 'undefined'){ %>
+                <input type="text" id="resposta_insercao_brinquedo" style="display: none;" value="<%= mensagem %>">
+            <% } %> 
+            <div id="snackbar"></div>
         </div>
 
 <% include partials/rodape %>   

@@ -8,8 +8,8 @@
                 </h1>
             </div>
             <div class="centralizar col-md-12">
-                <input type="url" id="texto" class="form-control" readonly size="50" value="http://www.solevento.net.br:21045/cadastroPlay/<%= id_evento %>">
-                <input type="text" id="idEvento" name="idEvento" style="display:none;" value="<%=id_evento%>">
+                <input type="url" id="texto" class="form-control" readonly size="50" value="http://www.solevento.net.br:21045/cadastroPlay/<%= sessaoBD.perfil %>/<%= sessaoBD.evento %>">
+                <input type="text" id="idEvento" name="idEvento" style="display:none;" value="<%= sessaoBD.evento %>">
             </div>
             <div class="centralizar col-md-12">
                 <button id="botaoDeCopia" class="btn btn-primary form-control" type="button">Copiar</button>
