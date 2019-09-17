@@ -179,8 +179,7 @@ var socketio = io.on("connect", function(socketio){
 
     socketio.on("enviarEmailConfirmacao", function(idEvento, perfil){
         let enviarEmail = new Email(perfil);
-        //enviarEmail.enviarEmailConfirmacao(idEvento).then(function(resultadoEnvio){
-        enviarEmail.enviarPreenchimentoCadastro(idEvento).then(function(resultadoEnvio){
+        enviarEmail.enviarEmailConfirmacao(idEvento).then(function(resultadoEnvio){
             if(resultadoEnvio){
                 socketio.emit("retorno", "Mensagem Enviada com sucesso");
             }else{
