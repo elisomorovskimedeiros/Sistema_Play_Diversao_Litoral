@@ -163,9 +163,6 @@ var socketio = io.on("connect", function(socketio){
         });       
     });
 
-    socketio.on("listarPendiciasCadastro", function(){
-        console.log("sessao");
-    });
 
     socketio.on("listarEventosPorIdCliente", function(idCliente, perfil){
         int.filtrarEventoPorIdCliente(idCliente, perfil).then(function(resposta){
@@ -227,27 +224,27 @@ var socketio = io.on("connect", function(socketio){
         })
     });
 //ENVIO DOS EVENTOS CUJO CADASTRO AINDA NÃO FOI PREENCHIDO
-    socketio.on("pendenciasCadastro", function(){
-        int.selectSessoes(perfil.perfil).then(function(resposta){
+    socketio.on("pendenciasCadastro", function(perfil){
+        int.selectSessoes(perfil).then(async function(resposta){
             if(resposta.status){
                 let eventos = [];
                 let sessoes = resposta.resultado;
-                if(sessoes.length == 0) socketio.emit("receberEventos", "eventos");
-                sessoes.forEach(function(sessao, indice){
-                    int.filtrarEventoPorIdEvento(sessao.evento, perfil.perfil).then(function(resposta){
+                if(sessoes.length == 0) socketio.emit("receberEventos", eventos);
+                await sessoes.forEach(async function(sessao, indice){
+                    int.filtrarEventoPorIdEvento(sessao.evento, perfil).then(async function(resposta){
                         if(resposta.status){
                             if(resposta.resultado.length == 0){
-                                int.deleteSessao(sessao.evento, perfil.perfil);
+                                await int.deleteSessao(sessao.evento, perfil);
                             }
                             eventos.push(resposta.resultado[0]);
+                            if(sessoes.length - 1){
+                                socketio.emit("receberEventos", eventos);
+                            }
                         }else{
                             console.log(resposta.resultado);
-                        }
-                        if(indice == sessoes.length - 1){
-                            socketio.emit("receberEventos", eventos);
-                        }
+                        }                       
                     });
-                });
+                });                
             }else{
                 console.log(resposta.resultado);
             }

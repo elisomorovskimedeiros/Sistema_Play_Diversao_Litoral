@@ -375,7 +375,7 @@ router.get("/criarSessaoCliente", isLoggedIn, function(req,res){
                     console.log("Ocorreu erro no bd na hora de inserir uma sessão" + resposta.resultado);
                 else{
                     sessaoBD.id_sessao = resposta.resultado.insertId;
-                    int.listarTodosBrinquedos().then(function(resposta){
+                    int.listarTodosBrinquedos(perfil.perfil).then(function(resposta){
                         let brinquedos;
                         if(resposta.status){
                             brinquedos = resposta.resultado;
@@ -598,12 +598,13 @@ router.get("/cadastroPlay/:perfil/:idEvento", async function(req, res){
 router.post("/removerEvento/:idEvento", function(req, res){
     let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
     let idEvento = req.params.idEvento;
-    int.excluirBrinquedosEvento(idEvento).then(function(resposta){        
+    int.excluirBrinquedosEvento(idEvento, perfil.perfil).then(function(resposta){        
         if(resposta.status){
-            int.excluirEvento(idEvento).then(function(resposta){                
+            int.excluirEvento(idEvento, perfil.perfil).then(function(resposta){                
                 if(!resposta.status){
                     //res.render("listarEvento", {mensagem: false, perfil});
                     res.send("Ocorreu um erro na exclusão do evento.");
+                    console.log(resposta);
                 }else{
                     //res.render("listarEvento", {mensagem: true, perfil}); 
                     res.send("Evento excluído!");                  

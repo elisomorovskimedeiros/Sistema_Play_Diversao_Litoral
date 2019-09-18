@@ -354,6 +354,6 @@ $(document).ready(function(){
     });
 
     $("#enviarCadastrosPendentes", "").click(function(){
-        socket.emit("pendenciasCadastro");//recebe resposta por escutasSocketIO => receberEventos
+        socket.emit("pendenciasCadastro", perfil);//recebe resposta por escutasSocketIO => receberEventos
     });
 });
