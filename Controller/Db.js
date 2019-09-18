@@ -678,7 +678,7 @@ class Db{
         return new Promise(function(resolve){
             db.connection.query(sql, function(err, result){
                 db.connection.end();
-                if(err){
+                if(err){                    
                     return resolve({status: false,
                                     resultado: err
                                     });
