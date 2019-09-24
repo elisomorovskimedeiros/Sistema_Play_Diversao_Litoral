@@ -95,7 +95,6 @@ router.post("/inserirCliente", isLoggedIn, function(req, res){
 });
 
 router.get("/listarTodosClientes", isLoggedIn, function(req, res){
-    var int = new Interface();
     let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
     int.listarTodosClientes(perfil).then(function(clientes){       
         res.render("listarCliente.ejs",{clientes, perfil});
@@ -110,7 +109,6 @@ router.get("/listarCliente",  isLoggedIn, function(req, res){
 
 router.post("/listarCliente", isLoggedIn, function(req, res){
     let nomeCliente = req.body.nome_cliente;
-    var int = new Interface();
     let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
     int.listarCliente(nomeCliente,perfil).then(function(resposta){
         if(resposta.status){
@@ -269,8 +267,6 @@ router.post("/inserirEvento", isLoggedIn, function(req, res){
 });
 
 router.post("/inserirBrinquedosNoEvento", isLoggedIn, function(req, res){
-    
-    let int = new Interface();
     let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
     let brinquedoEvento;
     idsBrinquedos = Object.keys(req.body);  
@@ -327,7 +323,6 @@ router.post("/editarCliente", isLoggedIn, function(req, res){
         cidade: req.body.cidade,
         observacao_cliente: req.body.observacao_cliente
     }
-    let int =  new Interface();
     let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
     int.editarCliente(cliente,perfil).then(function(resposta){
         if(resposta.errno != undefined){
@@ -346,7 +341,7 @@ router.post("/excluirCliente", isLoggedIn,  function(req, res){
         if(resposta.errno){
             res.send("Ocorreu o seguinte erro na remoção dos eventos: "+ resposta.errno);            
         }else{
-            int.excluirCliente(idCliente).then(function(resposta){
+            int.excluirCliente(idCliente,perfil.perfil).then(function(resposta){
                 if(resposta.errno){
                     res.send("Ocorreu o seguinte erro na remoção do usuário: "+ resposta.errno);
                 }else{
@@ -581,12 +576,12 @@ router.get("/cadastroPlay/:perfil/:idEvento", async function(req, res){
         if (sessao.length < 1 || sessao.evento.length < 1){ //caso não haja nenhuma sessão com aquele id de evento                     
             res.render("cadastroVencido",{perfil});
         }else{
-            int.filtrarEventoPorIdEvento(req.params.idEvento).then(function(resposta){
+            int.filtrarEventoPorIdEvento(req.params.idEvento,perfil).then(function(resposta){
                 if(resposta.status){
                     res.render("cadastro_play",{idEvento,perfil});
                 }else{
                     res.send("Houve erro no banco de dados");
-                    console.log(resposta.resultado);
+                    console.log(resposta);
                 }
             });
         }   

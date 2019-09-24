@@ -9,9 +9,9 @@ class Db{
     constructor(perfil){
         if(perfil){
             this.esquemaConexao = require("../Model/perfis/"+perfil+"/conexaoDb");
-        }else{
+        }/*else{
             this.esquemaConexao = require("../Model/perfis/play_litoral/conexaoDb");
-        }
+        }*/
         
         this.connection = mysql.createConnection(this.esquemaConexao);
         this.connection.connect(function(err){
