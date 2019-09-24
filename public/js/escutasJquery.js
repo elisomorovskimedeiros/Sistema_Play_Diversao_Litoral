@@ -331,7 +331,7 @@ $(document).ready(function(){
     //listagem de brinquedos na janela de inserção de evento
 
     $("#listarBrinquedos").click(function(){
-        socket.emit("listaBrinquedosDisponiveis", '');//retornará em escutasSocketIO => envioListaBrinquedos
+        socket.emit("listaBrinquedosDisponiveis", perfil);//retornará em escutasSocketIO => envioListaBrinquedos
     });
 
     $("#selecionarBrinquedos").click(function(){

@@ -213,15 +213,15 @@ var socketio = io.on("connect", function(socketio){
         });
     });
 
-    socketio.on("listaBrinquedosDisponiveis", function(){
-        int.listarTodosBrinquedos(perfil.perfil).then(function(resposta){
+    socketio.on("listaBrinquedosDisponiveis", function(perfil){
+        int.listarTodosBrinquedos(perfil).then(function(resposta){
             if(resposta.status){
                 socketio.emit("envioListaBrinquedos", resposta.resultado);
             }else{
                 console.log(resposta.resultado);
                 socketio.emit("envioListaBrinquedos", [{nome_brinquedo: "Ocorreu um erro na busca dos brinquedos"}]);
             }
-        })
+        });
     });
 //ENVIO DOS EVENTOS CUJO CADASTRO AINDA NÃO FOI PREENCHIDO
     socketio.on("pendenciasCadastro", function(perfil){

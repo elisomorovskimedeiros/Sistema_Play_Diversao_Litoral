@@ -66,16 +66,29 @@ class Db{
         });          
     }
 
-    selectUmCliente(cliente){
+    selectUmCliente(cliente){        
         let grupoDeBusca = "'%" + cliente.nome + 
-                    "%' AND cliente.logradouro like '%" + cliente.logradouro +
-                    "%' AND cliente.cidade like '%" + cliente.cidade + "%'"+ " AND evento.data LIKE '"+cliente.data+"%'";           
+            "%' AND cliente.logradouro like '%" + cliente.logradouro +
+            "%' AND cliente.cidade like '%" + cliente.cidade + "%'";
         let sql = 'SELECT cliente.id_cliente, cliente.nome, cliente.cpf, cliente.logradouro, cliente.numero, '+
-        'cliente.complemento, cliente.observacao_endereco, cliente.bairro, cliente.cidade, '+
-        'cliente.telefone, cliente.telefone_recado, cliente.email, cliente.observacao_cliente '+
-            'FROM cliente JOIN evento ON cliente.id_cliente = evento.id_cliente '+
-            'WHERE cliente.nome LIKE ';
+                'cliente.complemento, cliente.observacao_endereco, cliente.bairro, cliente.cidade, '+
+                'cliente.telefone, cliente.telefone_recado, cliente.email, cliente.observacao_cliente '+
+                    'FROM cliente WHERE cliente.nome LIKE ';
+        if(cliente.data){
+            if(cliente.data.length > 0){
+                grupoDeBusca = "'%" + cliente.nome + 
+                "%' AND cliente.logradouro like '%" + cliente.logradouro +
+                "%' AND cliente.cidade like '%" + cliente.cidade + "%'"+ " AND evento.data LIKE '"+cliente.data+"%'";           
+                sql = 'SELECT cliente.id_cliente, cliente.nome, cliente.cpf, cliente.logradouro, cliente.numero, '+
+                    'cliente.complemento, cliente.observacao_endereco, cliente.bairro, cliente.cidade, '+
+                    'cliente.telefone, cliente.telefone_recado, cliente.email, cliente.observacao_cliente '+
+                        'FROM cliente JOIN evento ON cliente.id_cliente = evento.id_cliente '+
+                        'WHERE cliente.nome LIKE ';
+            }
+        }
+        
         sql += grupoDeBusca;
+        console.log(sql);
         var db = this;
         return new Promise(function (resolve, reject) {
             db.connection.query(sql, function (err, results, fields) {

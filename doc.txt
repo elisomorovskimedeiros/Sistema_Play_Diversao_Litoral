@@ -1,0 +1,24 @@
+##INSERIR CLIENTE##
+ - inserirCliente.ejs - botão submit - post /inserirCliente
+ - router.js - router.post("inserirCliente") - int.inserirCliente(cliente, perfil);
+ - Interface.js - db.inserirCliente(cliente);
+ - Db.js - INSERT INTO cliente SET cliente;
+
+##LISTAR CLIENTE##
+  - escutasJquery.js - $("#data, #nome, #logradouro, #cidade").on("keyup change paste input", function(){ filtrarClientes(nome, data, logradouro, cidade); });  
+  - funcoes.js - socket.emit("filtroCliente", filtroCliente, perfil);
+  - main.js - socketio.on("filtroCliente", function(filtroCliente, perfil) - int.listarCliente(filtroCliente, perfil).then(function(resposta)
+  - Interface.js - async listarCliente(cliente,perfil) - async listarCliente(cliente,perfil)
+  - Db.js - selectUmCliente(cliente) - 'SELECT cliente.id_cliente, cliente.nome, cliente.cpf, cliente.logradouro, cliente.numero, '+
+        'cliente.complemento, cliente.observacao_endereco, cliente.bairro, cliente.cidade, '+
+        'cliente.telefone, cliente.telefone_recado, cliente.email, cliente.observacao_cliente '+
+            'FROM cliente JOIN evento ON cliente.id_cliente = evento.id_cliente '+
+            'WHERE cliente.nome LIKE ' '%" + cliente.nome + 
+                    "%' AND cliente.logradouro like '%" + cliente.logradouro +
+                    "%' AND cliente.cidade like '%" + cliente.cidade + "%'"+ " AND evento.data LIKE '"+cliente.data+"%'" -->> se tiver data, caso não -->
+
+    SELECT cliente.id_cliente, cliente.nome, cliente.cpf, cliente.logradouro, cliente.numero, cliente.complemento, cliente.observacao_endereco, cliente.bairro, cliente.cidade, cliente.telefone, cliente.telefone_recado, cliente.email, cliente.observacao_cliente FROM cliente WHERE cliente.nome LIKE '%%' AND cliente.logradouro like '%%' AND cliente.cidade like '%%'
+
+  - main.js - socketio.emit("mandarClientes", clientes);
+  - escutasSocketIO.js - enviarClientesParaPagina(clientes);  
+  - funcoes.js - function enviarClientesParaPagina(clientes) - preencherJanelaDeListarCliente(clientes); - document.getElementById("listaClientes").innerHTML = listaClientes;
