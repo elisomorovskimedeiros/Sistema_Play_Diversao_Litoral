@@ -88,7 +88,6 @@ class Db{
         }
         
         sql += grupoDeBusca;
-        console.log(sql);
         var db = this;
         return new Promise(function (resolve, reject) {
             db.connection.query(sql, function (err, results, fields) {
