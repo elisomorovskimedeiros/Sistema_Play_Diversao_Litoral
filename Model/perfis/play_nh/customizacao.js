@@ -1,5 +1,5 @@
 const customizacao = {
-    tituloIndex: "Sistema Play Diversão Novo Hamburgo",
+    tituloIndex: 'Play Diversão NH',
     perfil: "play_nh",
     email: "contato.playdiversao@gmail.com",
     senhaEmail: "d09m04a11",

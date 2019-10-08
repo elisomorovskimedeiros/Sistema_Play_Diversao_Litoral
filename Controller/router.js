@@ -57,8 +57,8 @@ router.get("/logout", function(req, res){
 
 router.get("/", isLoggedIn, function(req, res){
     let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
-    let tituloIndex = perfil.tituloIndex;
-    res.render("index",{perfil});
+    let usuario = req.user.nome;
+    res.render("index_v2",{perfil, usuario});
 });
 
 router.get("/inserirCliente", isLoggedIn, function(req, res){

@@ -1,0 +1,317 @@
+<% include partials/cabecalho %>
+    <div id="tudo" class="wrapper">
+        <!-- Sidebar Holder -->
+        <nav id="sidebar" class="">
+            <div class="sidebar-header">
+                <h3>Painel de Controle</h3>
+            </div>
+
+                <!-- OPÇÕES DE EVENTOS -->
+            <div class="caixa-de-controle">
+                <div class="d-flex justify-content-between">
+                    <span>
+                        <i class="fa fa-birthday-cake fa-2x"></i>
+                        &nbsp;&nbsp;Eventos
+                    </span> 
+                    <span id="exibirOpcoesEvento" class="botaoControle botaoControleExibicao">
+                        <i class="fa fa-chevron-down fa-2x "></i>
+                        <div class="nomeBotao escondida">Exibir opções</div>
+                        &nbsp;&nbsp;&nbsp;
+                    </span>                    
+                </div>                
+                <div id="opcoesEvento" class="caixaOpcoes" style="display:none;">
+                    <div class="afastar-em-cima">
+                        <div class="d-flex justify-content-around">
+                            <span class="d-flex align-self-end">
+                                Opções
+                            </span>
+                            <span id="adicionarEvento" class="botaoControle">
+                                <i class="fa fa-plus fa-2x"></i>
+                                <div class="nomeBotao escondida">Adicionar Evento</div>
+                            </span>                            
+                        </div>
+                        <div class="form-group">
+                            <input id="procurarEvento" type="text" placeholder="Busca rápida" class="form-control">
+                        </div>
+                        <div class="row" id="buscaPorDatas">
+                            <div class="col-sm-12">
+                                Busca por datas:
+                            </div>
+                            <div class="col-sm-10 row">
+                                <div class="col-sm-4 d-flex align-self-center">
+                                    De:
+                                </div>
+                                <div class="col-sm-8 form-group" style="padding-left:0px;">
+                                    <input id="de" type="date" class="form-control">
+                                </div>
+                                <div class="col-sm-4 d-flex align-self-center">
+                                    Até:
+                                </div>
+                                <div class="col-sm-8" style="padding-left:0px;">
+                                    <input id="ate" type="date" class="form-control">
+                                </div>
+                            </div>
+                            <div id="iniciarBuscaPorData" class="col-sm-2 d-flex align-self-center botaoControle">
+                                <i class="fa fa-chevron-right fa-2x"></i>
+                                <i class="fa fa-chevron-right fa-2x"></i>
+                            </div>
+                        </div>
+                        <div class="afastar-em-cima centralizar">
+                            <button class="btn btn-primary">
+                                Mais Opções 
+                                <i class="fa fa-chevron-right"></i>
+                                <i class="fa fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>                        
+                </div>
+            </div>
+            <!-- FIM DAS OPÇÕES DE EVENTOS -->
+
+            <!-- OPÇÕES DE CLIENTES -->
+            <div class="caixa-de-controle">
+                <div class="d-flex justify-content-between">
+                    <span>
+                        <i class="fa fa-user-circle fa-2x"></i>
+                        &nbsp;&nbsp;Clientes
+                    </span> 
+                    <span id="exibirOpcoesCliente" class="botaoControle botaoControleExibicao">
+                        <i class="fa fa-chevron-down fa-2x "></i>
+                        <div class="nomeBotao escondida">Exibir opções</div>
+                        &nbsp;&nbsp;&nbsp;
+                    </span>                    
+                </div>                
+                <div id="opcoesCliente" class="caixaOpcoes" style="display:none;">
+                    <div class="afastar-em-cima">
+                        <div class="d-flex justify-content-around">
+                            <span class="d-flex align-self-end">
+                                Informe algo:
+                            </span>
+                            <span id="adicionarCliente" class="botaoControle">
+                                <i class="fa fa-plus fa-2x"></i>
+                                <div class="nomeBotao escondida">Adicionar Cliente</div>
+                            </span>
+                        </div>
+                        <div class="form-group">
+                            <input id="procurarCliente" placeholder="Busca Rápida" type="text" class="form-control">
+                        </div>       
+                    </div>                        
+                </div>
+            </div>
+            <!-- FIM DAS OPÇÕES DE CLIENTES -->
+
+            <!-- OPÇÕES DE BRINQUEDOS -->
+            <div class="caixa-de-controle">
+                <div class="d-flex justify-content-between">
+                    <span>
+                        <i class="fa fa-bicycle fa-2x"></i>
+                        &nbsp;Brinquedos
+                    </span> 
+                    <span id="exibirOpcoesBrinquedos" class="botaoControle botaoControleExibicao">
+                        <i class="fa fa-chevron-down fa-2x "></i>
+                        <div class="nomeBotao escondida">Exibir opções</div>
+                        &nbsp;&nbsp;&nbsp;
+                    </span>                    
+                </div>                
+                <div id="opcoesBrinquedos" class="caixaOpcoes" style="display:none;">
+                    <div class="afastar-em-cima">
+                        <div class="d-flex justify-content-around">
+                            <button class="btn btn-primary">Listar Brinquedos</button>
+                            <span id="adicionarBrinquedo" class="botaoControle">
+                                <i class="fa fa-plus fa-2x"></i>
+                                <div class="nomeBotao escondida">Adicionar Brinquedo</div>
+                            </span>                            
+                        </div>       
+                    </div>                        
+                </div>
+            </div>
+            <!-- FIM DAS OPÇÕES DE BRINQUEDOS -->       
+        </nav>
+
+        <!-- CONTEÚDO DA PÁGINA -->
+        <div id="content">
+            <!-- CABEÇALHO DO CONTEÚDO --> 
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+
+                    <button type="button" id="sidebarCollapse" class="navbar-btn btn btn-dark">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <button class="btn btn-dark d-inline-block d-lg-none ml-auto collapsed" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <svg class="svg-inline--fa fa-align-justify fa-w-14" aria-hidden="true" data-prefix="fas" data-icon="align-justify" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M0 84V44c0-8.837 7.163-16 16-16h416c8.837 0 16 7.163 16 16v40c0 8.837-7.163 16-16 16H16c-8.837 0-16-7.163-16-16zm16 144h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 256h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0-128h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"></path></svg><!-- <i class="fas fa-align-justify"></i> -->
+                    </button>
+
+                    <div class="navbar-collapse collapse" id="navbarSupportedContent" style="">
+                        <ul class="nav navbar-nav ml-auto">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#">Page</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Page</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Page</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Page</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <!-- FIM DO CABEÇALHO DO CONTEÚDO -->         
+            <!-- EVENTOS -->
+            <div id="conteudoEventos">
+                <div id="filtroAvancadoEventos">
+                </div>
+                <div class="listagemFiltros row">
+                    <!-- CÉLULA INDIVIDUAL COM CADA EVENTO LISTADO -->
+                    <div class="peleCelulaEvento col-md-4">
+                        <div class="celulaEvento">
+                            <table cellpadding="4">
+                                <tr>
+                                    <td colspan="4">Id:&nbsp;<span class="idListaEventos campoListaEventos">sdfsa</span>
+                                    Data:&nbsp;<span class="dataListaEventos campoListaEventos">sadfdsa</span></td> 
+                                </tr>
+                                <tr>
+                                    <td>Cliente:&nbsp;</td><td><div class="nomeClienteListaEventos campoListaEventos">asfasfsadfdsafdsafdsafdsafsafsadfdsafadsfdsafadsfdasfdsafdasfddsfasdfdsafdasfsa</div></td>
+                                </tr>
+                                <tr>
+                                    <td>Endereço:&nbsp;</td><td><div class="enderecoListaEventos campoListaEventos"></div></td>
+                                </tr>
+                                <tr>
+                                    <td>Brinquedos:&nbsp;</td><td><div style="width: max-content; height: max-content;" class="brinquedosListaEventos campoListaEventos">
+                                        <textarea readonly rows="1"></textarea>
+                                    </div></td>
+                                </tr>
+                            </table>
+                        </div>                        
+                    </div>                   
+                    <!-- FIM DA CÉLULA DO EVENTO -->
+                    <!-- CÉLULA INDIVIDUAL COM CADA EVENTO LISTADO -->
+                    <div class="peleCelulaEvento col-md-4">
+                            <div class="celulaEvento">
+                                <table cellpadding="4">
+                                    <tr>
+                                        <td colspan="4">Id:&nbsp;<span class="idListaEventos campoListaEventos">sdfsa</span>
+                                        Data:&nbsp;<span class="dataListaEventos campoListaEventos">sadfdsa</span></td> 
+                                    </tr>
+                                    <tr>
+                                        <td>Cliente:&nbsp;</td><td><div class="nomeClienteListaEventos campoListaEventos">asfasfsadfdsafdsafdsafdsafsafsadfdsafadsfdsafadsfdasfdsafdasfddsfasdfdsafdasfsa</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Endereço:&nbsp;</td><td><div class="enderecoListaEventos campoListaEventos"></div></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Brinquedos:&nbsp;</td><td><div style="width: max-content; height: max-content;" class="brinquedosListaEventos campoListaEventos">
+                                            <textarea readonly rows="1"></textarea>
+                                        </div></td>
+                                    </tr>
+                                </table>
+                            </div>                        
+                        </div>                   
+                        <!-- FIM DA CÉLULA DO EVENTO -->
+                        <!-- CÉLULA INDIVIDUAL COM CADA EVENTO LISTADO -->
+                        <div class="peleCelulaEvento col-md-4">
+                            <div class="celulaEvento">
+                                <table cellpadding="4">
+                                    <tr>
+                                        <td colspan="4">Id:&nbsp;<span class="idListaEventos campoListaEventos">sdfsa</span>
+                                        Data:&nbsp;<span class="dataListaEventos campoListaEventos">sadfdsa</span></td> 
+                                    </tr>
+                                    <tr>
+                                        <td>Cliente:&nbsp;</td><td><div class="nomeClienteListaEventos campoListaEventos">asfasfsadfdsafdsafdsafdsafsafsadfdsafadsfdsafadsfdasfdsafdasfddsfasdfdsafdasfsa</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Endereço:&nbsp;</td><td><div class="enderecoListaEventos campoListaEventos"></div></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Brinquedos:&nbsp;</td><td><div style="width: max-content; height: max-content;" class="brinquedosListaEventos campoListaEventos">
+                                            <textarea readonly rows="1"></textarea>
+                                        </div></td>
+                                    </tr>
+                                </table>
+                            </div>                        
+                        </div>
+                        <!-- CÉLULA INDIVIDUAL COM CADA EVENTO LISTADO -->
+                    <div class="peleCelulaEvento col-md-4">
+                            <div class="celulaEvento">
+                                <table cellpadding="4">
+                                    <tr>
+                                        <td colspan="4">Id:&nbsp;<span class="idListaEventos campoListaEventos">sdfsa</span>
+                                        Data:&nbsp;<span class="dataListaEventos campoListaEventos">sadfdsa</span></td> 
+                                    </tr>
+                                    <tr>
+                                        <td>Cliente:&nbsp;</td><td><div class="nomeClienteListaEventos campoListaEventos">asfasfsadfdsafdsafdsafdsafsafsadfdsafadsfdsafadsfdasfdsafdasfddsfasdfdsafdasfsa</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Endereço:&nbsp;</td><td><div class="enderecoListaEventos campoListaEventos"></div></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Brinquedos:&nbsp;</td><td><div style="width: max-content; height: max-content;" class="brinquedosListaEventos campoListaEventos">
+                                            <textarea readonly rows="1"></textarea>
+                                        </div></td>
+                                    </tr>
+                                </table>
+                            </div>                        
+                        </div>                   
+                        <!-- FIM DA CÉLULA DO EVENTO -->
+                        <!-- CÉLULA INDIVIDUAL COM CADA EVENTO LISTADO -->
+                        <div class="peleCelulaEvento col-md-4">
+                                <div class="celulaEvento">
+                                    <table cellpadding="4">
+                                        <tr>
+                                            <td colspan="4">Id:&nbsp;<span class="idListaEventos campoListaEventos">sdfsa</span>
+                                            Data:&nbsp;<span class="dataListaEventos campoListaEventos">sadfdsa</span></td> 
+                                        </tr>
+                                        <tr>
+                                            <td>Cliente:&nbsp;</td><td><div class="nomeClienteListaEventos campoListaEventos">asfasfsadfdsafdsafdsafdsafsafsadfdsafadsfdsafadsfdasfdsafdasfddsfasdfdsafdasfsa</div></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Endereço:&nbsp;</td><td><div class="enderecoListaEventos campoListaEventos"></div></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Brinquedos:&nbsp;</td><td><div style="width: max-content; height: max-content;" class="brinquedosListaEventos campoListaEventos">
+                                                <textarea readonly rows="1"></textarea>
+                                            </div></td>
+                                        </tr>
+                                    </table>
+                                </div>                        
+                            </div>                   
+                            <!-- FIM DA CÉLULA DO EVENTO -->
+                            <!-- CÉLULA INDIVIDUAL COM CADA EVENTO LISTADO -->
+                            <div class="peleCelulaEvento col-md-4">
+                                <div class="celulaEvento">
+                                    <table cellpadding="4">
+                                        <tr>
+                                            <td colspan="4">Id:&nbsp;<span class="idListaEventos campoListaEventos">sdfsa</span>
+                                            Data:&nbsp;<span class="dataListaEventos campoListaEventos">sadfdsa</span></td> 
+                                        </tr>
+                                        <tr>
+                                            <td>Cliente:&nbsp;</td><td><div class="nomeClienteListaEventos campoListaEventos">asfasfsadfdsafdsafdsafdsafsafsadfdsafadsfdsafadsfdasfdsafdasfddsfasdfdsafdasfsa</div></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Endereço:&nbsp;</td><td><div class="enderecoListaEventos campoListaEventos"></div></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Brinquedos:&nbsp;</td><td><div style="width: max-content; height: max-content;" class="brinquedosListaEventos campoListaEventos">
+                                                <textarea readonly rows="1"></textarea>
+                                            </div></td>
+                                        </tr>
+                                    </table>
+                                </div>                        
+                            </div>                     
+                        <!-- FIM DA CÉLULA DO EVENTO -->
+                    
+
+                                
+                    
+                </div>
+            </div>
+            <!-- FIM EVENTOS -->
+        </div>
+        <!-- FIM DO CONTEÚDO DA PÁGINA -->
+    </div>
+    <% include partials/rodape %>
