@@ -251,7 +251,22 @@ var socketio = io.on("connect", function(socketio){
         });
     });
     
+    //################### EVENTOS V2 #######################
+
+    socketio.on("proximos_eventos", function(perfil){
+        int.select_proximos_eventos(perfil).then(function(resposta){
+            if(resposta.status){
+                socketio.emit("receber_eventos", resposta.resultado);
+            }else{
+                socketio.emit("receber_eventos", {erro: "Ocorreu um erro no filtro de eventos"});
+            }
+        });
+    });
 });
+
+
+
+
 
 
 

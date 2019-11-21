@@ -756,6 +756,56 @@ class Db{
             });
         });
     }
+
+    //########### MÉTODOS V2 ###########
+    select_proximos_eventos(){
+        /*let sql = "SELECT evento.*, cliente.*, brinquedo.nome_brinquedo from evento JOIN cliente " +
+        "ON evento.id_cliente = cliente.id_cliente " +
+        "JOIN evento_brinquedo " + 
+        "ON evento.id_evento = evento_brinquedo.evento " +
+        "JOIN brinquedo " +
+        "ON evento_brinquedo.brinquedo = brinquedo.id_brinquedo " +
+        "WHERE evento.data BETWEEN CURDATE() AND CURDATE() + INTERVAL 15 DAY ORDER BY evento.data ASC;"*/
+        let sql = "select id_evento, data_evento, logradouro_evento, numero_evento, complemento_evento, " +
+        "observacao_endereco_evento, cidade_evento, valor_total, valor_desconto, valor_sinal, observacao_evento,  " +
+        "bairro_evento, abrigo, id_cliente, nome_cliente, telefone, telefone_recado, email, " +
+        "group_concat(brinquedo) as brinquedos from  " +
+        "(select evento.id_evento as id_evento, brinquedo.nome_brinquedo as brinquedo,  " +
+        "evento.data as data_evento, evento.logradouro as logradouro_evento,  " +
+        "evento.numero as numero_evento, evento.complemento as complemento_evento,  " +
+        "evento.observacao as observacao_endereco_evento, evento.cidade as cidade_evento,  " +
+        "evento.valor_total as valor_total, evento.valor_desconto as valor_desconto,  " +
+        "evento.valor_sinal as valor_sinal, evento.observacao_evento as observacao_evento,  " +
+        "evento.bairro as bairro_evento, evento.possui_local_abrigado as abrigo,  " +
+        "cliente.id_cliente as id_cliente, cliente.nome as nome_cliente, cliente.telefone as telefone, " +
+        "cliente.telefone_recado as telefone_recado, cliente.email as email  " +
+        "from " +
+        "cliente join evento on cliente.id_cliente = evento.id_cliente " +
+        "join evento_brinquedo " +
+        "on evento.id_evento = evento_brinquedo.evento  " +
+        "join brinquedo " +
+        "on evento_brinquedo.brinquedo = brinquedo.id_brinquedo " +
+        "where evento.data BETWEEN CURDATE() AND CURDATE() + INTERVAL 15 DAY ORDER BY evento.data ASC) " +
+        "as tab group by id_evento order by data_evento asc; ";
+        
+        var db = this;
+        return new Promise(function(resolve){
+            db.connection.query(sql, function(err, result){
+                db.connection.end();
+                if(err){
+                    return resolve({
+                        status: false,
+                        resultado: err
+                    });
+                }else{
+                    return resolve({
+                        status: true,
+                        resultado: result
+                    });
+                } 
+            });
+        })
+    }    
 }
 
 module.exports = Db;

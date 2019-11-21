@@ -668,6 +668,11 @@ router.post("/cadastro/:tela/:perfil", function(req, res){
     }    
 });
 
+router.get("/teste", isLoggedIn, function(req, res){
+    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    res.render("teste",{perfil});
+});
+
 router.get("/*", function(req, res){
     res.redirect("/");
 });

@@ -296,6 +296,15 @@ class Interface{
             }
         });                
     }   
+
+    //########## MÉTODOS V2 ###########
+    async select_proximos_eventos(perfil){
+        let db = new Db(perfil);
+        return await db.select_proximos_eventos().then(function(resposta){
+            return resposta;
+        });
+    } 
+
 }
 
 module.exports = Interface;

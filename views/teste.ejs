@@ -1,0 +1,50 @@
+<% include partials/cabecalho %>
+<button data-toggle="modal" data-target="#janelaDeInsercaoClienteNoEvento">clique</button>
+
+    <!-- Janela de Inserção de cliente -->
+    <div class="modal fade" id="janelaDeInsercaoClienteNoEvento">              
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <!-- cabecalho -->
+                    <form id="form-cliente">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="tituloInsercaoCliente">Informe o cliente</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Fechar"  id="fecharModalCliente">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>            
+                        <!-- corpo -->
+                        <div class="modal-body" id="corpoModal">
+                            <div class="row" id="insercaoClienteNoEvento">
+                                <div class="col-md-6 form-group">
+                                    <label>Parte do nome do cliente</label>
+                                    <input type="text" class="form-control" name="nome" id="nome" placeholder="Informe o nome do cliente">
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label>Data de um evento do cliente</label>
+                                    <input type="date" class="form-control" name="data" id="data" placeholder="Informe a data da festa" onchange="filtrarClientes()">
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label>Parte do endereço do cliente</label>
+                                    <input type="text" class="form-control" name="logradouro" id="logradouro" placeholder="Informe parte do endereço">
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label>Parte do nome da cidade</label>
+                                    <input type="text" class="form-control" name="cidade" id="cidade" placeholder="Informe parte da cidade">
+                                </div>
+                                <div id="listaClientes" class="col-md-12">
+                                </div>
+                            </div>                        
+                        </div>            
+                        <!-- rodape -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                Cancelar
+                            </button>
+                        </div>   
+                    </form>
+                </div>    
+            </div>
+        </div>
+        <!-- fechamento do modal inserção cliente -->
+<% include partials/rodape %>

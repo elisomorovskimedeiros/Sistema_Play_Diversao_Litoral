@@ -143,19 +143,16 @@
                         <svg class="svg-inline--fa fa-align-justify fa-w-14" aria-hidden="true" data-prefix="fas" data-icon="align-justify" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M0 84V44c0-8.837 7.163-16 16-16h416c8.837 0 16 7.163 16 16v40c0 8.837-7.163 16-16 16H16c-8.837 0-16-7.163-16-16zm16 144h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 256h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0-128h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"></path></svg><!-- <i class="fas fa-align-justify"></i> -->
                     </button>
 
-                    <div class="navbar-collapse collapse" id="navbarSupportedContent" style="">
+                    <div id="info_exibicao" class="" style="width: 70%;text-align: center"></div>
+
+                    <div class="navbar-collapse collapse" id="navbarSupportedContent">
                         <ul class="nav navbar-nav ml-auto">
+                            
                             <li class="nav-item active">
-                                <a class="nav-link" href="#">Page</a>
+                                <a class="nav-link" href="#">Mais filtros</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Page</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Page</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Page</a>
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#">Link de Cadastro</a>
                             </li>
                         </ul>
                     </div>
@@ -163,13 +160,15 @@
             </nav>
             <!-- FIM DO CABEÇALHO DO CONTEÚDO -->         
             <!-- EVENTOS -->
+
             <div id="conteudoEventos">
                 <div id="filtroAvancadoEventos">
                 </div>
-                <div class="listagemFiltros row">
+                <div id="listagemFiltros" class="row">
+                    <!--LOCAL ONDE SERÃO EXIBIDOS OS RESULTADOS DOS FILTROS-->
                     <!-- CÉLULA INDIVIDUAL COM CADA EVENTO LISTADO -->
-                    <div class="peleCelulaEvento col-md-4">
-                        <div class="celulaEvento">
+                    <div id="peleCelulaEvento" class="col-md-4 invisible margin-bottom-15px float">
+                        <div class="celulaEvento" data-toggle="modal" data-target="#janelaDestaqueEvento">
                             <table cellpadding="4">
                                 <tr>
                                     <td colspan="4">Id:&nbsp;<span class="idListaEventos campoListaEventos">sdfsa</span>
@@ -182,136 +181,143 @@
                                     <td>Endereço:&nbsp;</td><td><div class="enderecoListaEventos campoListaEventos"></div></td>
                                 </tr>
                                 <tr>
-                                    <td>Brinquedos:&nbsp;</td><td><div style="width: max-content; height: max-content;" class="brinquedosListaEventos campoListaEventos">
-                                        <textarea readonly rows="1"></textarea>
+                                    <td>Brinquedos:&nbsp;</td><td><div style="width: max-content; height: max-content;" class="campoListaEventos">
+                                        <textarea class="brinquedosListaEventos" readonly></textarea>
                                     </div></td>
                                 </tr>
                             </table>
                         </div>                        
                     </div>                   
                     <!-- FIM DA CÉLULA DO EVENTO -->
-                    <!-- CÉLULA INDIVIDUAL COM CADA EVENTO LISTADO -->
-                    <div class="peleCelulaEvento col-md-4">
-                            <div class="celulaEvento">
-                                <table cellpadding="4">
-                                    <tr>
-                                        <td colspan="4">Id:&nbsp;<span class="idListaEventos campoListaEventos">sdfsa</span>
-                                        Data:&nbsp;<span class="dataListaEventos campoListaEventos">sadfdsa</span></td> 
-                                    </tr>
-                                    <tr>
-                                        <td>Cliente:&nbsp;</td><td><div class="nomeClienteListaEventos campoListaEventos">asfasfsadfdsafdsafdsafdsafsafsadfdsafadsfdsafadsfdasfdsafdasfddsfasdfdsafdasfsa</div></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Endereço:&nbsp;</td><td><div class="enderecoListaEventos campoListaEventos"></div></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Brinquedos:&nbsp;</td><td><div style="width: max-content; height: max-content;" class="brinquedosListaEventos campoListaEventos">
-                                            <textarea readonly rows="1"></textarea>
-                                        </div></td>
-                                    </tr>
-                                </table>
-                            </div>                        
-                        </div>                   
-                        <!-- FIM DA CÉLULA DO EVENTO -->
-                        <!-- CÉLULA INDIVIDUAL COM CADA EVENTO LISTADO -->
-                        <div class="peleCelulaEvento col-md-4">
-                            <div class="celulaEvento">
-                                <table cellpadding="4">
-                                    <tr>
-                                        <td colspan="4">Id:&nbsp;<span class="idListaEventos campoListaEventos">sdfsa</span>
-                                        Data:&nbsp;<span class="dataListaEventos campoListaEventos">sadfdsa</span></td> 
-                                    </tr>
-                                    <tr>
-                                        <td>Cliente:&nbsp;</td><td><div class="nomeClienteListaEventos campoListaEventos">asfasfsadfdsafdsafdsafdsafsafsadfdsafadsfdsafadsfdasfdsafdasfddsfasdfdsafdasfsa</div></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Endereço:&nbsp;</td><td><div class="enderecoListaEventos campoListaEventos"></div></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Brinquedos:&nbsp;</td><td><div style="width: max-content; height: max-content;" class="brinquedosListaEventos campoListaEventos">
-                                            <textarea readonly rows="1"></textarea>
-                                        </div></td>
-                                    </tr>
-                                </table>
-                            </div>                        
-                        </div>
-                        <!-- CÉLULA INDIVIDUAL COM CADA EVENTO LISTADO -->
-                    <div class="peleCelulaEvento col-md-4">
-                            <div class="celulaEvento">
-                                <table cellpadding="4">
-                                    <tr>
-                                        <td colspan="4">Id:&nbsp;<span class="idListaEventos campoListaEventos">sdfsa</span>
-                                        Data:&nbsp;<span class="dataListaEventos campoListaEventos">sadfdsa</span></td> 
-                                    </tr>
-                                    <tr>
-                                        <td>Cliente:&nbsp;</td><td><div class="nomeClienteListaEventos campoListaEventos">asfasfsadfdsafdsafdsafdsafsafsadfdsafadsfdsafadsfdasfdsafdasfddsfasdfdsafdasfsa</div></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Endereço:&nbsp;</td><td><div class="enderecoListaEventos campoListaEventos"></div></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Brinquedos:&nbsp;</td><td><div style="width: max-content; height: max-content;" class="brinquedosListaEventos campoListaEventos">
-                                            <textarea readonly rows="1"></textarea>
-                                        </div></td>
-                                    </tr>
-                                </table>
-                            </div>                        
-                        </div>                   
-                        <!-- FIM DA CÉLULA DO EVENTO -->
-                        <!-- CÉLULA INDIVIDUAL COM CADA EVENTO LISTADO -->
-                        <div class="peleCelulaEvento col-md-4">
-                                <div class="celulaEvento">
-                                    <table cellpadding="4">
-                                        <tr>
-                                            <td colspan="4">Id:&nbsp;<span class="idListaEventos campoListaEventos">sdfsa</span>
-                                            Data:&nbsp;<span class="dataListaEventos campoListaEventos">sadfdsa</span></td> 
-                                        </tr>
-                                        <tr>
-                                            <td>Cliente:&nbsp;</td><td><div class="nomeClienteListaEventos campoListaEventos">asfasfsadfdsafdsafdsafdsafsafsadfdsafadsfdsafadsfdasfdsafdasfddsfasdfdsafdasfsa</div></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Endereço:&nbsp;</td><td><div class="enderecoListaEventos campoListaEventos"></div></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Brinquedos:&nbsp;</td><td><div style="width: max-content; height: max-content;" class="brinquedosListaEventos campoListaEventos">
-                                                <textarea readonly rows="1"></textarea>
-                                            </div></td>
-                                        </tr>
-                                    </table>
-                                </div>                        
-                            </div>                   
-                            <!-- FIM DA CÉLULA DO EVENTO -->
-                            <!-- CÉLULA INDIVIDUAL COM CADA EVENTO LISTADO -->
-                            <div class="peleCelulaEvento col-md-4">
-                                <div class="celulaEvento">
-                                    <table cellpadding="4">
-                                        <tr>
-                                            <td colspan="4">Id:&nbsp;<span class="idListaEventos campoListaEventos">sdfsa</span>
-                                            Data:&nbsp;<span class="dataListaEventos campoListaEventos">sadfdsa</span></td> 
-                                        </tr>
-                                        <tr>
-                                            <td>Cliente:&nbsp;</td><td><div class="nomeClienteListaEventos campoListaEventos">asfasfsadfdsafdsafdsafdsafsafsadfdsafadsfdsafadsfdasfdsafdasfddsfasdfdsafdasfsa</div></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Endereço:&nbsp;</td><td><div class="enderecoListaEventos campoListaEventos"></div></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Brinquedos:&nbsp;</td><td><div style="width: max-content; height: max-content;" class="brinquedosListaEventos campoListaEventos">
-                                                <textarea readonly rows="1"></textarea>
-                                            </div></td>
-                                        </tr>
-                                    </table>
-                                </div>                        
-                            </div>                     
-                        <!-- FIM DA CÉLULA DO EVENTO -->
-                    
-
-                                
-                    
                 </div>
             </div>
+
+
+
+
             <!-- FIM EVENTOS -->
         </div>
         <!-- FIM DO CONTEÚDO DA PÁGINA -->
     </div>
+
+            <!--MODAL PARA COLOCAR EVENTO EM DESTAQUE -->
+            
+            <div class="modal fade" id="janelaDestaqueEvento">              
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <!-- cabecalho -->
+                            <form name="form-destaque-evento" id="form-destaque-evento">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="titulo_modal_destaque_evento"></h4>
+                                    <button type="button" class="close" data-dismiss="modal" id="fecharModalDestaque">
+                                        <span>&times;</span>
+                                    </button>
+                                </div>
+                        
+                                <!-- corpo -->
+                                <div class="modal-body" id="corpoModal">
+                                    <div class="d-flex justify-content-around form-group">
+                                        <button type="button" id="botao_editar_evento" class="btn btn-outline-primary">Editar Evento</button>                                        
+                                        <button type="button" id="botao_confirmar_evento" class="btn btn-outline-success">Enviar Confirmação</button>
+                                        <button type="button" id="botao_excluir_evento" class="btn btn-outline-danger">Excluír Evento</button>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="form-group col-md-10">
+                                            <label for="cliente">Cliente</label>
+                                            <input type="text" readonly class="form-control" id="nome_cliente_destaque_evento">
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <label for="botao_trocar_cliente">&nbsp;</label>
+                                            <button type="button" id="botao_trocar_cliente" class="btn btn-outline-secondary form-control invisible">Trocar</button>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="telefone">Telefone</label>
+                                            <input type="text" readonly class="form-control" id="telefone_destaque_evento">
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="telefone_alternativo">Telefone alternativo</label>
+                                            <input type="text" readonly class="form-control" id="telefone_alternativo_destaque_evento">
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="email">Email</label>
+                                            <input type="text" readonly class="form-control" id="email_destaque_evento">
+                                        </div>
+                                        <div class="col-md-12 row">
+                                            <div class="col-md-4 form-group">
+                                                <label for="data">Data</label>
+                                                <input type="date" readonly class="form-control" id="data_destaque_evento">
+                                            </div>
+                                            <div class="col-md-4 form-group">
+                                                <label for="hora">Hora</label>
+                                                <input type="time" readonly class="form-control" id="hora_edicao">
+                                            </div>                                
+                                        </div>
+                                        <hr>                        
+                                        <div class="form-group col-md-8">
+                                            <label for="endereco">Endereço</label>
+                                            <input type="text" readonly class="form-control" placeholder="Rua, Avenida, Praça" name="logradouro_edicao" id="logradouro_edicao">
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="endereco">Número</label>
+                                            <input type="numero" readonly class="form-control" placeholder="Número" name="numero_edicao" id="numero_edicao">
+                                        </div>                                
+                                        <div class="form-group col-md-6">
+                                            <label for="complemento">Complemento</label>
+                                            <input type="text" readonly class="form-control" placeholder="exe.: ap. 5" name="complemento_edicao" id="complemento_edicao">
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="bairro">Bairro</label>
+                                            <input type="text" readonly class="form-control" placeholder="Bairro" name="bairro_edicao" id="bairro_edicao">
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="cidade">Cidade</label>
+                                            <input type="text" readonly class="form-control" placeholder="Cidade" name="cidade_edicao" id="cidade_edicao">
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="valor_total">Valor Total</label>
+                                            <input type="number" readonly class="form-control" name="valor_total_edicao" id="valor_total_edicao">
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="valor_desconto">Valor do Desconto</label>
+                                            <input type="number" readonly class="form-control" name="valor_desconto_edicao" id="valor_desconto_edicao">
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="valor_sinal">Valor do Sinal</label>
+                                            <input type="number" readonly class="form-control" name="valor_sinal_edicao" id="valor_sinal_edicao">
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="receber_no_ato">Receber no Ato</label>
+                                            <input type="number" readonly class="form-control" readonly name="receber_no_ato_edicao" id="receber_no_ato_edicao">
+                                        </div> 
+                                        <div class="form-group col-md-12">
+                                            <label for="observacao">Observação sobre o evento</label>
+                                            <input type="text" readonly class="form-control" name="observacao_edicao" id="observacao_edicao">
+                                        </div>
+                                        <div class="form-group col-md-10">
+                                            <label for="lista_brinquedos">Lista de Brinquedos</label>
+                                            <textarea type="text" readonly class="form-control" id="lista_brinquedos"></textarea>
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <label for="lista_brinquedos">&nbsp;</label>
+                                            <button type="button" id="btn_editar_brinquedos_evento" style="height: 72%;" class="btn btn-primary form-control">Trocar Brinquedos</button>
+                                        </div>                                                      
+                                    </div>
+                                
+                                </div>
+                        
+                                <!-- rodape -->
+                                <div class="modal-footer invisible">                                    
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                                        Cancelar
+                                    </button>
+                                    <button type="submit" id="btnEnviarEdicaoEvento" class="btn btn-primary">
+                                        Concluir Edição
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>     
+                </div>            
+                <!--FIM DO MODAL DE DESTAQUE DE EVENTO-->
     <% include partials/rodape %>
