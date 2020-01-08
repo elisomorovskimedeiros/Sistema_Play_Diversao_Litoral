@@ -45,7 +45,6 @@ let login = function(passport){
                 
                 salt = salt+''+password;
                 var encPassword = crypto.createHash('sha1').update(salt).digest('hex');
-                        
                 var dbPassword  = usuario.password;
                 if(!(dbPassword == encPassword)){
                     return done(null, false, req.flash('message','Usuário ou senha inválidos.'));

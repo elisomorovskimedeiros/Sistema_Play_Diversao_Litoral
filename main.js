@@ -81,7 +81,15 @@ var socketio = io.on("connect", function(socketio){
             }           
         });
     });
-
+    /*
+    Recebo:
+    filtroCliente = {
+        nome : nome, 
+        data : data,
+        logradouro : logradouro,
+        cidade : cidade
+    }
+    */
     socketio.on("filtroCliente", function(filtroCliente, perfil){   
          int.listarCliente(filtroCliente, perfil).then(function(resposta){
             if(resposta.status){
@@ -138,7 +146,8 @@ var socketio = io.on("connect", function(socketio){
         int.filtrarEvento(filtroDeBuscaEventos, perfil).then(function(resposta){//primeira query
             if(resposta != undefined && resposta.status){
                 let eventos = resposta.resultado;
-                int.mostrarBrinquedosNoEvento(filtroDeBuscaEventos, perfil).then(function(resposta){//segunda query                 
+                int.mostrarBrinquedosNoEvento(filtroDeBuscaEventos, perfil).then(function(resposta){//segunda query 
+                    console.log(resposta);                
                     if(resposta.status){
                         let brinquedos = resposta.resultado;
                         eventos.forEach(evento => {//laços para distribuição dos brinquedos nos eventos e cálculo do valor liquido a ser recebido
@@ -258,9 +267,68 @@ var socketio = io.on("connect", function(socketio){
             if(resposta.status){
                 socketio.emit("receber_eventos", resposta.resultado);
             }else{
+                console.log(resposta);
                 socketio.emit("receber_eventos", {erro: "Ocorreu um erro no filtro de eventos"});
             }
         });
+    });
+
+    socketio.on("brinquedos_no_evento", function(id_evento, perfil){
+        int.listarBrinquedosPorIdEvento(id_evento, perfil).then(function(resposta){
+            if(resposta.status){                
+                socketio.emit("lista_brinquedos_do_evento", resposta.resultado);
+            }else{
+                socketio.emit("lista_brinquedos_do_evento", {erro: "Ocorreu um erro no filtro de eventos"});
+            }
+        });
+    });
+
+    socketio.on("enviar_brinquedos_vagos", function(perfil, data){
+        int.select_qtd_de_brinquedos(perfil, data).then(function(resposta){
+            if(resposta.status){
+                let lista_brinquedos_disponiveis = [];
+                resposta.resultado.forEach(function(brinquedo){
+                    if((!brinquedo.qtd_alugada) || (brinquedo.quantidade > brinquedo.qtd_alugada)){
+                        lista_brinquedos_disponiveis.push(brinquedo);
+                    }
+                    /*
+                    if(brinquedo.qtd_alugada > brinquedo.qtd_alugada){
+                        lista_brinquedos_disponiveis.push(brinquedo);
+                    }*/
+                });
+                socketio.emit("receber_brinquedos_vagos", {status: true,
+                                                           resultado: lista_brinquedos_disponiveis});
+            }else{
+                socketio.emit("receber_brinquedos_vagos", {status: false,
+                                                           resultado: "Não foi possível carregar a lista de brinquedos vagos"});
+                console.log("Ocorreu um erro");
+                console.log(resposta);
+            }
+        });
+    }); 
+    
+    socketio.on("editar_evento", function(dados_recebidos, perfil){
+        console.log(dados_recebidos);
+        int.excluir_brinquedos_de_determinado_evento(perfil, dados_recebidos.brinquedos_retirados, dados_recebidos.evento.id_evento).then(function(resposta){
+            console.log(resposta);
+        });
+/*
+        int.editarEvento(dados_recebidos.evento, perfil).then(function(resposta){
+            if(resposta){
+                int.
+            }else{
+                console.log(resposta);
+                socketio.emit("resultado_edicao_evento", "Ocorreu erro na edição do evento");
+            }
+        });
+        socketio.emit("resultado_edicao_evento", "Mensagem de teste");
+        /*
+        int.inserirBrinquedoNoEvento(perfil, brinquedos_inseridos).then(function(resposta){
+            if(resposta.status){
+                socketio.emit("resposta_edicao_evento")
+            }
+        });
+        */
     });
 });
 

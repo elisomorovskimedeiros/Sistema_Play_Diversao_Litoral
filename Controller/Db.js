@@ -570,7 +570,8 @@ class Db{
     }
 
     selectBrinquedosPorIdEvento(id_evento){
-        let sql = "SELECT brinquedo.nome_brinquedo FROM brinquedo JOIN evento_brinquedo "+
+        let sql = "SELECT brinquedo.id_brinquedo, brinquedo.nome_brinquedo, brinquedo.foto_brinquedo, "+
+            "brinquedo.quantidade FROM brinquedo JOIN evento_brinquedo "+
             "ON evento_brinquedo.brinquedo = brinquedo.id_brinquedo "+
             "WHERE evento_brinquedo.evento = ?";
         var db = this;
@@ -759,16 +760,10 @@ class Db{
 
     //########### MÉTODOS V2 ###########
     select_proximos_eventos(){
-        /*let sql = "SELECT evento.*, cliente.*, brinquedo.nome_brinquedo from evento JOIN cliente " +
-        "ON evento.id_cliente = cliente.id_cliente " +
-        "JOIN evento_brinquedo " + 
-        "ON evento.id_evento = evento_brinquedo.evento " +
-        "JOIN brinquedo " +
-        "ON evento_brinquedo.brinquedo = brinquedo.id_brinquedo " +
-        "WHERE evento.data BETWEEN CURDATE() AND CURDATE() + INTERVAL 15 DAY ORDER BY evento.data ASC;"*/
         let sql = "select id_evento, data_evento, logradouro_evento, numero_evento, complemento_evento, " +
         "observacao_endereco_evento, cidade_evento, valor_total, valor_desconto, valor_sinal, observacao_evento,  " +
-        "bairro_evento, abrigo, id_cliente, nome_cliente, telefone, telefone_recado, email, " +
+        "bairro_evento, abrigo, id_cliente, nome_cliente, telefone, telefone_recado, email, logradouro_cliente, " +
+        "numero_cliente, complemento_endereco_cliente, observacao_endereco_cliente, bairro_cliente, cidade_cliente, "+
         "group_concat(brinquedo) as brinquedos from  " +
         "(select evento.id_evento as id_evento, brinquedo.nome_brinquedo as brinquedo,  " +
         "evento.data as data_evento, evento.logradouro as logradouro_evento,  " +
@@ -778,12 +773,15 @@ class Db{
         "evento.valor_sinal as valor_sinal, evento.observacao_evento as observacao_evento,  " +
         "evento.bairro as bairro_evento, evento.possui_local_abrigado as abrigo,  " +
         "cliente.id_cliente as id_cliente, cliente.nome as nome_cliente, cliente.telefone as telefone, " +
-        "cliente.telefone_recado as telefone_recado, cliente.email as email  " +
+        "cliente.telefone_recado as telefone_recado, cliente.email as email,  " +
+        "cliente.logradouro as logradouro_cliente, cliente.numero as numero_cliente, " + 
+        "cliente.complemento as complemento_endereco_cliente, cliente.observacao_endereco as observacao_endereco_cliente, " + 
+        "cliente.bairro as bairro_cliente, cliente.cidade as cidade_cliente " + 
         "from " +
         "cliente join evento on cliente.id_cliente = evento.id_cliente " +
-        "join evento_brinquedo " +
+        "left join evento_brinquedo " + //o left join foi colocado pois os eventos podem estar ainda sem brinquedos inseridos
         "on evento.id_evento = evento_brinquedo.evento  " +
-        "join brinquedo " +
+        "left join brinquedo " +
         "on evento_brinquedo.brinquedo = brinquedo.id_brinquedo " +
         "where evento.data BETWEEN CURDATE() AND CURDATE() + INTERVAL 15 DAY ORDER BY evento.data ASC) " +
         "as tab group by id_evento order by data_evento asc; ";
@@ -804,8 +802,66 @@ class Db{
                     });
                 } 
             });
-        })
-    }    
+        });
+    }
+    
+    select_qtd_de_brinquedos(data){
+        data = String(moment(data).format("YYYY-MM-DD"))+"%";
+        let sql = "select brinquedo.*, qtd_alugada.* from brinquedo left join "+
+        "(select count(*) as qtd_alugada, id_brinquedo_alugado "+
+            "from (select evento_brinquedo.brinquedo as id_brinquedo_alugado, evento.id_evento as id_evento "+
+                "from evento join evento_brinquedo on evento.id_evento = evento_brinquedo.evento "+
+                "where evento.data like ?) "+
+            "as consulta group by id_brinquedo_alugado) "+
+        "as qtd_alugada "+
+        "on brinquedo.id_brinquedo = qtd_alugada.id_brinquedo_alugado";
+        /*
+        let sql = "select grupo.*, brinquedo.nome_brinquedo, brinquedo.foto_brinquedo, brinquedo.quantidade from "+
+            "(select count(*) as qtd_alugada, id_brinquedo "+
+                "from (select evento_brinquedo.brinquedo as id_brinquedo, evento.id_evento as id_evento "+
+                    "from evento join evento_brinquedo "+
+                "on evento.id_evento = evento_brinquedo.evento where evento.data like ?) as consulta "+
+            "group by id_brinquedo) as grupo join brinquedo "+
+        "on brinquedo.id_brinquedo = grupo.id_brinquedo";*/
+        var db = this;
+        return new Promise(function(resolve){
+            db.connection.query(sql, data, function(err, result){
+                db.connection.end();
+                if(err){
+                    return resolve({
+                        status: false,
+                        resultado: err
+                    });
+                }else{
+                    return resolve({
+                        status: true,
+                        resultado: result
+                    });
+                } 
+            });
+        });
+    }
+
+    excluir_brinquedos_de_determinado_evento(brinquedos, evento){
+        let sql = '';
+        return new Promise(function(resolve){
+            if(brinquedos.length > 0){
+                let lista_brinquedos = "(";
+                brinquedos.forEach(function(brinquedo, indice){
+                    if(indice < brinquedos.length - 1){
+                        lista_brinquedos += "brinquedo = "+String(brinquedo) + " OR "; 
+                    }else{
+                        lista_brinquedos += "brinquedo = "+String(brinquedo) + ")";
+                    }
+                });
+                sql = "DELETE FROM evento_brinquedo WHERE evento = "+evento+" AND " + lista_brinquedos;
+            }
+    
+            return resolve({sql});
+        });
+        
+        
+    }
 }
 
 module.exports = Db;

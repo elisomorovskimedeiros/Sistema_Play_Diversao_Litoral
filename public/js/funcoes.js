@@ -6,17 +6,6 @@ var clientesGlobal; //utilizada na edição de clientes
 //usado em:
 //listarCliente.ejs, inserirEvento.ejs
 
-//envia os dados para filtro no db e caso não exista nenhum campo com mais de 3
-//caracteres ela apaga os dados da div listaClientes
-function filtrarClientes(nome, data, logradouro, cidade){
-    filtroCliente = {
-        nome : nome, 
-        data : data,
-        logradouro : logradouro,
-        cidade : cidade
-    }
-    socket.emit("filtroCliente", filtroCliente, perfil);//resposta vem no escutasSocketIO => mandarClientes              
-}
 
 //recebe lista de clientes => escutaSocketIO => 'mandarClientes'
 //verifica quem pediu e entrega

@@ -41,6 +41,8 @@
         <script src="/css/bootstrap/js/bootstrap.min.js" ></script>
         <script src="/js/moment.js"></script>
         <script src="/js/socket.io.js"></script>
+        <script src="/js/variaveis_globais.js"></script>
+        <script src="/js/funcoes_v2.js"></script>
         <script src="/js/escutasSocketIO_v2.js"></script>
         <script src="/js/escutasJquery_v2.js"></script>
         
@@ -71,10 +73,17 @@
           
         <div class="collapse navbar-collapse" id="opcoesCabecalho">
             <ul class="navbar-nav ml-auto">
+                <!--
                 <li class="nav-item active">
                     <% if (typeof usuario != 'undefined' && usuario) { %>
                         <span class="nav-link"><%= usuario %></span>
                     <% } %>     
+                </li>
+                -->
+                <li class="nav-item active">
+                    <a class="nav-link" href="/teste_v2">
+                        DiverTech_V2 Em Desenvolvimento
+                    </a>
                 </li>
                 <li class="nav-item active">
                     <a class="nav-link" href="/">
