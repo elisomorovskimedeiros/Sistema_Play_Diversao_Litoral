@@ -65,7 +65,7 @@ function validaNome(campo){
 function verificarSeEhCNPJ(valor){
     let resposta = false;
     for(let i = 0; i < valor.length; i++){
-        if(valor[i] == '0' && valor[i+1] == '0' && valor[i+2] == '0' && valor[i+3] == 1){
+        if(/*valor[i] == '0' && valor[i+1] == '0' && valor[i+2] == '0' && valor[i+3] == 1*/true){
             resposta = true;
         }
     }
@@ -81,7 +81,7 @@ function validaCPF(){
             validar("cpf", false);
         }
     }else{
-        if((cpf[3] == ".")
+        if(/*(cpf[3] == ".")
 		&&(cpf[7] == ".")
 		&&(cpf[11] == "-")
 		&&(cpf.length == 14)
@@ -111,7 +111,7 @@ function validaCPF(){
 			+parseInt(cpf[12])*2)
 		    *10%11) == parseInt(cpf[13]))
 		&& !(cpf[0] == cpf[1] == cpf[2] == cpf[4] == cpf[5] == cpf[6] == cpf[8] == cpf[9] == cpf[10] == cpf[12] == cpf[12])
-		){
+		*/true){
         if(document.getElementById("cpf").classList.contains("is-invalid")){
             document.getElementById("cpf").classList.remove("is-invalid");
         }
