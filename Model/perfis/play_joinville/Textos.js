@@ -53,10 +53,10 @@ class Textos{
                             }
                             mensagem += "Valor Total: R$"+valorFinal+ 
                             "\n Endereço do Evento:"+evento.logradouro+", "+evento.numero+ "\n"+
-                            "Qualquer dúvida entre em contato pelo telefone 995058704\n\n"+
+                            "Qualquer dúvida entre em contato pelo telefone (47)9.9723.8663\n\n"+
                             "Att, Amilcar Medeiros - Play Diversão Locações.\n"+
                             "CNPJ: 23.198.315/0001-90\n"+
-                            "tel.: (47) 997238663 [TIM]\n"+
+                            "tel.: (47) 9.9723.8663 [TIM]\n"+
                             "Endereço:\n"+
                             "Rua José Cabral, 240\n"+
                             "Araquari - SC";         
