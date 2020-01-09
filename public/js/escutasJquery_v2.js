@@ -2,7 +2,7 @@ $(document).ready(function(){
     perfil = $("body").attr("perfil");
 
     //solicita consulta inicial no bd
-    if(window.location.pathname === "/"){
+    if(window.location.pathname === "/teste_v2"){
         socket.emit("proximos_eventos", perfil);
     };
 

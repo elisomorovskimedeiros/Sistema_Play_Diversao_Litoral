@@ -8,7 +8,6 @@ socket.on("receber_eventos", function(resposta){
         ultimo_filtro_eventos = resposta;
         $("#info_exibicao").html("Eventos até dia " + moment().add(15, "days").format("DD/MM/YYYY"));
         ultimo_filtro_eventos.forEach(function(evento, indice){
-            
             let item = $("#peleCelulaEvento").clone().removeClass("invisible").removeClass("float").appendTo("#listagemFiltros").removeClass("invisible");
             let celulaEvento = item.find(".celulaEvento")[0];
             $(celulaEvento).attr("id", indice);

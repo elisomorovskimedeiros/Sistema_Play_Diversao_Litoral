@@ -844,6 +844,7 @@ class Db{
 
     excluir_brinquedos_de_determinado_evento(brinquedos, evento){
         let sql = '';
+        var db = this;
         return new Promise(function(resolve){
             if(brinquedos.length > 0){
                 let lista_brinquedos = "(";
@@ -855,9 +856,21 @@ class Db{
                     }
                 });
                 sql = "DELETE FROM evento_brinquedo WHERE evento = "+evento+" AND " + lista_brinquedos;
+                db.connection.query(sql, function(err, result){
+                    db.connection.end();
+                    if(err){
+                        return resolve({
+                            status: false,
+                            resultado: err
+                        });
+                    }else{
+                        return resolve({
+                            status: true,
+                            resultado: result
+                        });
+                    } 
+                });
             }
-    
-            return resolve({sql});
         });
         
         
