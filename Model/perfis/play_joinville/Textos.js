@@ -58,8 +58,8 @@ class Textos{
                             "CNPJ: 23.198.315/0001-90\n"+
                             "tel.: (47) 997238663 [TIM]\n"+
                             "Endereço:\n"+
-                            "Rua Rio Amazonas, 109, loja 1\n"+
-                            "Novo Hamburgo - RS";         
+                            "Rua José Cabral, 240\n"+
+                            "Araquari - SC";         
             
             return mensagem;
         }else{return false};

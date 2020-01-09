@@ -9,8 +9,8 @@ const customizacao = {
     nomeProprietario: 'Amilcar Somorovski Medeiros',
     nomeEmpresa: 'Play Diversão Locações',
     telefone: '(47) 9.9723.8663',
-    endereco: 'Rua Rio Amazonas, 109, loja 1',
-    cidade: 'Joinville - RS'
+    endereco: 'Rua José Cabral, 240',
+    cidade: 'Araquari - SC'
 }
 
 module.exports = customizacao;
