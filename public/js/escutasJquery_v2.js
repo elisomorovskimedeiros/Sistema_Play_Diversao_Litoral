@@ -4,6 +4,7 @@ $(document).ready(function(){
     //solicita consulta inicial no bd
     if(window.location.pathname === "/teste_v2"){
         socket.emit("proximos_eventos", perfil);
+        nome_do_ultimo_filtro_utilizado = "proximos_eventos";
     };
 
     //exibe e esconde divs de opções no sidebar
@@ -103,7 +104,7 @@ $(document).ready(function(){
 
     $("#btnEnviarEdicaoEvento").click(function(){
         //capturando os novos brinquedos inseridos no evento
-        let checkbox_brinquedos_disponiveis = $(".container_listagem_de_brinquedos").find(".checkbox_brinquedo");
+        let checkbox_brinquedos_disponiveis = $(".container_troca_dos_brinquedos").find(".checkbox_brinquedo");
         let brinquedos_inseridos = [];
         for(let i = 0; i < checkbox_brinquedos_disponiveis.length; i++){
             if($(checkbox_brinquedos_disponiveis[i]).prop("checked")){
@@ -123,7 +124,7 @@ $(document).ready(function(){
         //capturando os itens do formulário  
         let evento = {};
         evento.id_evento = evento_em_destaque.id_evento;
-        evento.id_evento = cliente_em_destaque.id_cliente;              
+        evento.id_cliente = cliente_em_destaque.id_cliente;              
         evento.data = moment($("#data_destaque_evento").val()).format("YYYY-MM-DD") + " ";//hora sempre deve ser tratada em formato de string
         evento.data += moment($("#data_destaque_evento").val()).format("HH:mm");
         evento.logradouro = $("#logradouro_destaque_evento").val();
@@ -216,9 +217,14 @@ $(document).ready(function(){
         $("body").addClass("modal-open");
     });
 
+    //seleção do novo cliente para o evento
     $("body").on("click", ".celula_cliente", function(div_clicada){
         let posicao_array_clientes = $(div_clicada.currentTarget).find(".campo_id").attr("indice");
         cliente_em_destaque = ultimo_filtro_clientes[posicao_array_clientes];
+        $("#nome_cliente_destaque_evento").val(cliente_em_destaque.nome);
+        $("#telefone_destaque_evento").val(cliente_em_destaque.telefone);
+        $("#telefone_alternativo_destaque_evento").val(cliente_em_destaque.telefone_recado);
+        $("#email_destaque_evento").val(cliente_em_destaque.email);
         $("#janela_troca_cliente_no_evento").modal("hide");
         $("#nome_cliente_destaque_evento").val(cliente_em_destaque.nome);
         ultimo_filtro_clientes = {};
@@ -248,4 +254,8 @@ $(document).ready(function(){
         $("#bairro_destaque_evento").val(evento_em_destaque.bairro_evento);
         $("#cidade_destaque_evento").val(evento_em_destaque.cidade_evento);
     });
+
+    $("#botao_confirmar_evento").click(function(){
+        enviarEmailConfirmacao();
+    });    
 });

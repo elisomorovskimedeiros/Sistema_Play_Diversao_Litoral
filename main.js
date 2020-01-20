@@ -311,6 +311,29 @@ var socketio = io.on("connect", function(socketio){
         console.log(dados_recebidos);
         int.excluir_brinquedos_de_determinado_evento(perfil, dados_recebidos.brinquedos_retirados, dados_recebidos.evento.id_evento).then(function(resposta){
             console.log(resposta);
+            if(resposta.status){
+                let brinquedos_inseridos = {brinquedos: dados_recebidos.brinquedos_inseridos,
+                                            evento: dados_recebidos.evento.id_evento};
+                int.inserirBrinquedoNoEvento(brinquedos_inseridos, perfil).then(function(resposta){
+                    if(resposta.status){
+                        int.editarEvento(dados_recebidos.evento, perfil).then(function(resposta){
+                            if(!resposta.status){
+                                console.log("ocorreu um erro na edição do evento");
+                                console.log(resposta);                                
+                            }
+                            socketio.emit("resposta_edicao_evento",resposta);
+                        });
+                    }else{
+                        console.log("ocorreu um erro na inserção dos brinquedos no evento");
+                        console.log(resposta);
+                        socketio.emit("resposta_edicao_evento",resposta);
+                    }
+                });
+            }else{
+                console.log("ocorreu um erro na exclusão dos brinquedos no evento");
+                console.log(resposta);
+                socketio.emit("resposta_edicao_evento",resposta);
+            }
         });
 /*
         int.editarEvento(dados_recebidos.evento, perfil).then(function(resposta){

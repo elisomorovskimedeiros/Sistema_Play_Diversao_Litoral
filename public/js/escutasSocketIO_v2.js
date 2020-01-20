@@ -5,6 +5,7 @@ socket.on("receber_eventos", function(resposta){
     if(resposta.erro){
         $("#listagemFiltros").html(resposta.erro);
     }else{
+        $("#listagemFiltros").html("");
         ultimo_filtro_eventos = resposta;
         $("#info_exibicao").html("Eventos até dia " + moment().add(15, "days").format("DD/MM/YYYY"));
         ultimo_filtro_eventos.forEach(function(evento, indice){
@@ -73,10 +74,20 @@ socket.on("mandarClientes", function(clientes){
 });
 
 
-socket.on("resultado_edicao_evento", function(resposta){
-    emitirAviso(resposta, "snackbar", 3000);
+socket.on("resposta_edicao_evento", function(resposta){
+    if(resposta.status){
+        emitirAviso("Evento editado com sucesso", "snackbar", 3000);
+    }else{
+        emitirAviso("Ocorreu um erro na edição do evento", "snackbar", 3000);
+    }    
     $("#janelaDestaqueEvento").modal("hide");
-    $("body").removeClass("cursor_progresso");    
+    $("body").removeClass("cursor_progresso");
+    refazer_ultimo_filtro();    
+});
+//retorno do envio de confirmação via email
+socket.on("retorno", function(mensagem){
+    alert(mensagem);
+    $("body").removeClass("cursor_progresso");  
 });
 
 

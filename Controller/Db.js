@@ -525,15 +525,21 @@ class Db{
     
         var db = this;
         return new Promise(function (resolve, reject) {
-            db.connection.query(sql, function (err, results, fields) {
-                db.connection.end();
-                if (err) {
-                    return resolve({status: false,
-                                    resultado: err});
-                }
-                return resolve({status: true,
-                                resultado: results});
-            });
+            if(brinquedosEvento.brinquedos.length > 0){
+                db.connection.query(sql, function (err, results, fields) {
+                    db.connection.end();
+                    if (err) {
+                        return resolve({status: false,
+                                        resultado: err});
+                    }
+                    return resolve({status: true,
+                                    resultado: results});
+                });
+            }else{
+                return resolve({
+                    status: true
+                })
+            }            
         }); 
     }
 
@@ -856,6 +862,7 @@ class Db{
                     }
                 });
                 sql = "DELETE FROM evento_brinquedo WHERE evento = "+evento+" AND " + lista_brinquedos;
+                console.log(sql);
                 db.connection.query(sql, function(err, result){
                     db.connection.end();
                     if(err){
@@ -869,6 +876,10 @@ class Db{
                             resultado: result
                         });
                     } 
+                });
+            }else{
+                return resolve({
+                    status: true
                 });
             }
         });

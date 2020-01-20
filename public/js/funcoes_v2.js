@@ -131,3 +131,14 @@ function emitirAviso(mensagem, id, tempo){
   setTimeout(function(){snackbar.className = snackbar.className.replace("show", ""); }, tempo);
 }
 
+//Refaz o último filtro de informções exibidas na tela, de forma manter a lista exibida atualizada
+function refazer_ultimo_filtro(){
+  socket.emit(nome_do_ultimo_filtro_utilizado,perfil);
+}
+
+function enviarEmailConfirmacao(){
+  let idEvento = evento_em_destaque.id_evento;
+  socket.emit("enviarEmailConfirmacao", idEvento, perfil);
+  $("body").addClass("cursor_progresso");
+}
+

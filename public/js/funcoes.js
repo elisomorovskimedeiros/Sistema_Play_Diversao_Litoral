@@ -293,3 +293,4 @@ function enviarEmailConfirmacao(){
     let perfil = document.body.attributes.perfil.value;
     socket.emit("enviarEmailConfirmacao", idEvento, perfil);
 }
+
