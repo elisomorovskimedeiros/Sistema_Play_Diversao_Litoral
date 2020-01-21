@@ -66,7 +66,6 @@ function preencherJanelaDeListarCliente(clientes){
         '</div>';
     });
      
-    console.log(listaClientes);      
     document.getElementById("listaClientes").innerHTML = listaClientes;
 }
 
