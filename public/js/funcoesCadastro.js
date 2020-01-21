@@ -81,7 +81,7 @@ function validaCPF(){
             validar("cpf", false);
         }
     }else{
-        if((cpf[3] == ".")
+        if(/*(cpf[3] == ".")
 		&&(cpf[7] == ".")
 		&&(cpf[11] == "-")
 		&&(cpf.length == 14)
@@ -111,18 +111,18 @@ function validaCPF(){
 			+parseInt(cpf[12])*2)
 		    *10%11) == parseInt(cpf[13]))
 		&& !(cpf[0] == cpf[1] == cpf[2] == cpf[4] == cpf[5] == cpf[6] == cpf[8] == cpf[9] == cpf[10] == cpf[12] == cpf[12])
-		){
-        if(document.getElementById("cpf").classList.contains("is-invalid")){
-            document.getElementById("cpf").classList.remove("is-invalid");
-        }
-        document.getElementById("cpf").classList.add("is-valid");
-		return true;
-	}else{
-		if(document.getElementById("cpf").classList.contains("is-valid")){
-            document.getElementById("cpf").classList.remove("is-valid");
-        }
-        document.getElementById("cpf").classList.add("is-invalid");
-		return false;
+		*/true){
+            if(document.getElementById("cpf").classList.contains("is-invalid")){
+                document.getElementById("cpf").classList.remove("is-invalid");
+            }
+            document.getElementById("cpf").classList.add("is-valid");
+            return true;
+	    }else{
+            if(document.getElementById("cpf").classList.contains("is-valid")){
+                document.getElementById("cpf").classList.remove("is-valid");
+            }
+            document.getElementById("cpf").classList.add("is-invalid");
+            return false;
 	    }
     }
 	

@@ -12,12 +12,24 @@ var clientesGlobal; //utilizada na edição de clientes
 function enviarClientesParaPagina(clientes){
     //verificar quem pediu
     let paginaQuePediuLista = document.getElementById("listaClientes").parentElement.attributes.id.value;
-    if(paginaQuePediuLista == "formulario_clientes"){        
+    if(paginaQuePediuLista == "formulario_clientes"){ 
         preencherJanelaDeListarCliente(clientes);
     }else if(paginaQuePediuLista == "insercaoClienteNoEvento"){
         preencherJanelaDeInserirEvento(clientes);
     }
 }
+
+//envia os dados para filtro no db e caso não exista nenhum campo com mais de 3
+//caracteres ela apaga os dados da div listaClientes
+    function filtrarClientes(nome, data, logradouro, cidade){
+      filtroCliente = {
+          nome : nome, 
+          data : data,
+          logradouro : logradouro,
+          cidade : cidade
+      }
+      socket.emit("filtroCliente", filtroCliente, perfil);//resposta vem no escutasSocketIO => mandarClientes              
+    }
 
 //recebe a lista de clientes e preenche na janela listarCliente.ejs
 function preencherJanelaDeListarCliente(clientes){
@@ -53,6 +65,8 @@ function preencherJanelaDeListarCliente(clientes){
             '<hr>'+
         '</div>';
     });
+     
+    console.log(listaClientes);      
     document.getElementById("listaClientes").innerHTML = listaClientes;
 }
 
