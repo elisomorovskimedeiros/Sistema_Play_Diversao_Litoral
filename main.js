@@ -147,7 +147,6 @@ var socketio = io.on("connect", function(socketio){
             if(resposta != undefined && resposta.status){
                 let eventos = resposta.resultado;
                 int.mostrarBrinquedosNoEvento(filtroDeBuscaEventos, perfil).then(function(resposta){//segunda query 
-                    console.log(resposta);                
                     if(resposta.status){
                         let brinquedos = resposta.resultado;
                         eventos.forEach(evento => {//laços para distribuição dos brinquedos nos eventos e cálculo do valor liquido a ser recebido
@@ -198,7 +197,6 @@ var socketio = io.on("connect", function(socketio){
         int.editarCliente(cliente, perfil).then(function(resposta){
             socketio.emit("resultadoEdicaoCliente", resposta.status);
             if(!resposta.status){
-                
                 console.log(resposta.resultado);
             }
         });
@@ -262,6 +260,30 @@ var socketio = io.on("connect", function(socketio){
     
     //################### EVENTOS V2 #######################
 
+    function verificarBrinquedosVagos(perfil, data){
+        return int.select_qtd_de_brinquedos(perfil, data).then(function(resposta){
+            if(resposta.status){
+                let lista_brinquedos_disponiveis = [];
+                resposta.resultado.forEach(function(brinquedo){
+                    if(!brinquedo.qtd_alugada){
+                        let quantidade_disponivel =  brinquedo.quantidade - brinquedo.qtd_alugada;
+                        if(quantidade_disponivel > 0){
+                            brinquedo.quantidade_disponivel = quantidade_disponivel;
+                            lista_brinquedos_disponiveis.push(brinquedo);
+                        }
+                    }
+                });
+                return {status: true,
+                        resultado: lista_brinquedos_disponiveis};
+            }else{
+                console.log("Ocorreu um erro");
+                console.log(resposta);
+                return {status: false,
+                        resultado: "Não foi possível carregar a lista de brinquedos vagos"};                
+            }
+        });
+    }
+
     socketio.on("proximos_eventos", function(perfil){
         int.select_proximos_eventos(perfil).then(function(resposta){
             if(resposta.status){
@@ -291,10 +313,6 @@ var socketio = io.on("connect", function(socketio){
                     if((!brinquedo.qtd_alugada) || (brinquedo.quantidade > brinquedo.qtd_alugada)){
                         lista_brinquedos_disponiveis.push(brinquedo);
                     }
-                    /*
-                    if(brinquedo.qtd_alugada > brinquedo.qtd_alugada){
-                        lista_brinquedos_disponiveis.push(brinquedo);
-                    }*/
                 });
                 socketio.emit("receber_brinquedos_vagos", {status: true,
                                                            resultado: lista_brinquedos_disponiveis});
@@ -335,24 +353,30 @@ var socketio = io.on("connect", function(socketio){
                 socketio.emit("resposta_edicao_evento",resposta);
             }
         });
-/*
-        int.editarEvento(dados_recebidos.evento, perfil).then(function(resposta){
-            if(resposta){
-                int.
-            }else{
-                console.log(resposta);
-                socketio.emit("resultado_edicao_evento", "Ocorreu erro na edição do evento");
-            }
-        });
-        socketio.emit("resultado_edicao_evento", "Mensagem de teste");
-        /*
-        int.inserirBrinquedoNoEvento(perfil, brinquedos_inseridos).then(function(resposta){
-            if(resposta.status){
-                socketio.emit("resposta_edicao_evento")
-            }
-        });
-        */
     });
+   
+    socketio.on("buscarBrinquedosVagosPorData", async function(data_perfil){
+        let data = data_perfil.data;
+        let perfil = data_perfil.perfil;
+        let lista_brinquedos_disponiveis = await verificarBrinquedosVagos(perfil, data);
+        lista_brinquedos_disponiveis.data = data;
+        socketio.emit("receberBrinquedosVagosPorData", lista_brinquedos_disponiveis);        
+    });
+
+    socketio.on("eventos_por_intervalo_de_data", async function(datas){
+
+        /* PAREI DIA 06/03 -> CONTINUAR DAQUI
+        FALTOU REALIZAR A QUERY NO BD QUE RETORNE CADA EVENTO COM SEU GRUPO DE BRINQUEDOS
+        int.eventos_por_intervalo_de_data(datas, perfil).then(function(resultado){
+            if(resultado.status){
+                
+            }else{
+                console.log(resultado);
+                return resultado;
+            }
+        });*/
+    });
+    
 });
 
 

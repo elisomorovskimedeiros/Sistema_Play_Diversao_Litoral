@@ -142,3 +142,18 @@ function enviarEmailConfirmacao(){
   $("body").addClass("cursor_progresso");
 }
 
+function selecionar_botoes_controle_a_serem_exibidos(classe_botao){
+  //exibir somente os botôes de controle correspondentes ao filtro brinquedo
+  let botoes = $("#navbarSupportedContent").find(".nav-item")
+  for(let indice = 0; indice < botoes.length; indice++){
+    if($(botoes[indice]).hasClass(classe_botao)){
+      $(botoes[indice]).css("display","inline");
+    }else{
+      $(botoes[indice]).css("display", "none");
+    }
+  }
+}
+
+function pedir_evento_por_data(data_inicio, data_fim){
+  socket.emit("eventos_por_intervalo_de_data",{data_inicio, data_fim});
+}

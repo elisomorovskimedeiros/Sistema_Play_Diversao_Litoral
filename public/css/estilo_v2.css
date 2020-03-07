@@ -92,6 +92,10 @@ td > div{
     width: 100%;
 }
 
+.link_fake:hover{
+    cursor: pointer;
+}
+
 #copia_endereco_cliente{
     width: 80%;
 }

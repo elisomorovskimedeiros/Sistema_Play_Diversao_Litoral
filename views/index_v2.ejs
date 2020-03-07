@@ -57,6 +57,13 @@
                             </div>
                         </div>
                         <div class="afastar-em-cima centralizar">
+                            <button class="btn btn-primary" id="btn_proximos_eventos">
+                                Próximos Eventos 
+                                <i class="fa fa-chevron-right"></i>
+                                <i class="fa fa-chevron-right"></i>
+                            </button>
+                        </div>
+                        <div class="afastar-em-cima centralizar">
                             <button class="btn btn-primary">
                                 Mais Opções 
                                 <i class="fa fa-chevron-right"></i>
@@ -127,14 +134,20 @@
                             <div class="col-sm-12">
                                 Brinquedos vagos:
                             </div>
-                            <div class="col-sm-10 row">                             
-                                <div class="col-sm-8" style="padding-left:0px;">
-                                    <input id="ate" type="date" class="form-control">
+                            <div class="col-sm-7">                             
+                                <div>
+                                    <input id="buscarBrinquedosVagosPorData" type="date" class="form-control">
                                 </div>
                             </div>
-                            <div id="iniciarBuscaPorData" class="col-sm-2 d-flex align-self-center botaoControle">
-                                <i class="fa fa-chevron-right fa-2x"></i>
-                                <i class="fa fa-chevron-right fa-2x"></i>
+                            <div class="col-sm-5" style="width: 100%">
+                                <center id="botaoBuscarBrinquedosVagosPorData" class="botaoControle link_fake">
+                                    <span>
+                                        <i class="fa fa-chevron-right fa-2x"></i>
+                                    </span>
+                                    <span>
+                                        <i class="fa fa-chevron-right fa-2x"></i>
+                                    </span>
+                                </center>
                             </div>
                         </div>       
                     </div>                        
@@ -158,11 +171,11 @@
                         <svg class="svg-inline--fa fa-align-justify fa-w-14" aria-hidden="true" data-prefix="fas" data-icon="align-justify" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M0 84V44c0-8.837 7.163-16 16-16h416c8.837 0 16 7.163 16 16v40c0 8.837-7.163 16-16 16H16c-8.837 0-16-7.163-16-16zm16 144h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 256h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0-128h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"></path></svg><!-- <i class="fas fa-align-justify"></i> -->
                     </button>
 
-                    <div id="info_exibicao" class="" style="width: 60%;text-align: center; padding-left: 5px; " data-toggle="modal" data-target="#janela_troca_cliente_no_evento"></div>
+                    <div id="info_exibicao" class="" style="width: 60%;text-align: center; padding-left: 5px;"></div>
 
                     <div class="navbar-collapse collapse" id="navbarSupportedContent">
                         <ul class="nav navbar-nav ml-auto">                            
-                            <li class="nav-item active">
+                            <li class="nav-item active evento" id="mais_filtros">
                                 <a class="nav-link" href="#">
                                     <div class="d-flex botaoControle">
                                         <span>
@@ -174,7 +187,21 @@
                                     </div>                                
                                 </a>
                             </li>
-                            <li class="nav-item active">
+                            <!--BOTÃO ADICIONAR BRINQUEDOS EM EVENTO-->
+                            <li class="nav-item active brinquedo" id="botao_controle_adicionar_a_evento" style="display: none">
+                                <a class="nav-link" href="#">
+                                    <div class="d-flex botaoControle">
+                                        <span id="figurinha">
+                                            <i class="fa fa-plus" aria-hidden="true"></i>
+                                        </span>
+                                        <span>
+                                            &nbsp;&nbsp;Adicionar à evento
+                                        </span>                                                                   
+                                    </div>                                
+                                </a>
+                            </li>
+                            <!--FIM BOTÃO ADICIONAR BRINQUEDOS EM EVENTO -->
+                            <li class="nav-item active evento brinquedo">
                                 <a class="nav-link" href="#">
                                     <div class="d-flex botaoControle">
                                         <span>
@@ -336,19 +363,7 @@
                                                     </div>
                                                 </div>                  
                                             </div>    
-                                        </div>
-                                        <div class='col-md-3 celulaBrinquedo invisible float' id="divListaBrinquedos">
-                                            <div>
-                                                <span>
-                                                    <img class="foto_brinquedo" width='50px'>
-                                                </span>
-                                                <span class='form-group' style='margin-left: 30px;'>
-                                                    <input type='checkbox' class='form-group-checkbox checkbox_brinquedo'>
-                                                </span>
-                                            </div>
-                                            Nome: <span class="nome_brinquedo_troca_brinquedos"></span><br>
-                                            <div class="qtd">Qtd disponível: <span class="qtd_disponivel_troca_brinquedos"></span></div>
-                                        </div>                                          
+                                        </div>                                                                                  
                                     </div>
                                 </div>
                         
@@ -498,5 +513,28 @@
                 </div>                        
             </div>                   
             <!-- FIM DA CÉLULA DO CLIENTE -->
+
+            <!-- CÉLULA DE EXIBIÇÃO DE BRINQUEDOS -->
+            <div class='col-md-3 celulaBrinquedo invisible float' id="divListaBrinquedos">
+                <div>
+                    <span>
+                        <img class="foto_brinquedo" width='50px'>
+                    </span>
+                     <span class='form-group' style='margin-left: 30px;'>
+                        <input type='checkbox' class='form-group-checkbox checkbox_brinquedo'>
+                    </span>
+                </div>
+                Nome: <span class="nome_brinquedo_troca_brinquedos"></span><br>
+                <div class="qtd">Qtd disponível: <span class="qtd_disponivel_troca_brinquedos"></span></div>
+            </div>
+
+            <!-- FIM DA CÉLULA DE EXIBIÇÃO DE BRINQUEDOS -->
+
+            <!--BOTÕES DE OPÇÕES DE CONTROLE DE TELA-->
+                
+
+
+            <!--FIM BOTÕES DE OPÇÕES DE CONTROLE DE TELA-->
+
             <div id="snackbar"></div>
     <% include partials/v2/rodape_v2 %>

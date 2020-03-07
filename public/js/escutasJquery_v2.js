@@ -257,5 +257,32 @@ $(document).ready(function(){
 
     $("#botao_confirmar_evento").click(function(){
         enviarEmailConfirmacao();
-    });    
+    });
+    
+    //exibir brinquedos vagos na data selecionada
+    $("#botaoBuscarBrinquedosVagosPorData").click(function(){
+        let data = $("#buscarBrinquedosVagosPorData").val();
+        if(data !== ''){
+            socket.emit("buscarBrinquedosVagosPorData", {data, perfil});
+        }
+        nome_do_ultimo_filtro_utilizado = "brinquedos_vagos_por_data";
+    });
+
+    //exibe os eventos dos próximos 15 dias
+    $("#btn_proximos_eventos").click(function(){
+        socket.emit("proximos_eventos", perfil);
+        nome_do_ultimo_filtro_utilizado = "proximos_eventos";
+    });
+
+    $("#iniciarBuscaPorData").click(function(){
+        let data_inicio = $("#de").val();
+        let data_fim = $("#ate").val();
+        if(data_inicio != ''){
+            data_inicio = String(moment(data_inicio).format("YYYY-MM-DD"));
+        } 
+        if(data_fim != ''){
+            data_fim = String(moment(data_fim).format("YYYY-MM-DD"));
+        }
+        pedir_evento_por_data(data_inicio, data_fim);
+    });
 });

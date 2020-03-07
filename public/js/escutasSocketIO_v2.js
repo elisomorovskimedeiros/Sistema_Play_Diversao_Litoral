@@ -2,6 +2,7 @@
 var socket = io("/");
 
 socket.on("receber_eventos", function(resposta){
+    selecionar_botoes_controle_a_serem_exibidos("evento"); 
     if(resposta.erro){
         $("#listagemFiltros").html(resposta.erro);
     }else{
@@ -88,6 +89,23 @@ socket.on("resposta_edicao_evento", function(resposta){
 socket.on("retorno", function(mensagem){
     alert(mensagem);
     $("body").removeClass("cursor_progresso");  
+});
+
+socket.on("receberBrinquedosVagosPorData", function(lista_brinquedos){
+    $("#info_exibicao").html("Brinquedos disponíveis para "+ moment(lista_brinquedos.data).format("DD/MM/YYYY"));
+    $("#listagemFiltros").html("");
+    selecionar_botoes_controle_a_serem_exibidos("brinquedo"); 
+    lista_brinquedos.resultado.forEach(function(brinquedo, indice){
+        let novaDiv = $("#divListaBrinquedos").clone();
+        $(novaDiv).attr("id", "brinquedo_diponivel"+indice)
+                  .appendTo("#listagemFiltros")
+                  .removeClass("invisible")
+                  .removeClass("float");
+        $(novaDiv).find(".foto_brinquedo").attr("src", brinquedo.foto_brinquedo);
+        $(novaDiv).find(".checkbox_brinquedo").attr("id", "checkbox_inserir_brinquedo"+indice);
+        $(novaDiv).find(".nome_brinquedo_troca_brinquedos").html(brinquedo.nome_brinquedo); 
+        $(novaDiv).find(".qtd_disponivel_troca_brinquedos").html(brinquedo.quantidade_disponivel);        
+    });
 });
 
 
