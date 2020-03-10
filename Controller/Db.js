@@ -848,6 +848,38 @@ class Db{
         });
     }
 
+    select_qtd_de_brinquedos_alugados_no_dia(data){
+        data = String(moment(data).format("YYYY-MM-DD"))+"%";
+        let sql = "select count(*) as quantidade_alugada, brinquedo_alugado from " +
+                "(select evento_brinquedo.brinquedo as brinquedo_alugado, "+
+                    "evento_brinquedo.evento as evento "+
+                    "from brinquedo "+
+                    "join evento_brinquedo "+
+                    "on brinquedo.id_brinquedo = evento_brinquedo.brinquedo "+
+                    "join evento "+
+                    "on evento_brinquedo.evento = evento.id_evento "+
+                    "where evento.data like ?" +
+                    ") as filtro_brinquedos "+ 
+                "group by brinquedo_alugado";
+        var db = this;
+        return new Promise(function(resolve){
+            db.connection.query(sql, data, function(err, result){
+                db.connection.end();
+                if(err){
+                    return resolve({
+                        status: false,
+                        resultado: err
+                    });
+                }else{
+                    return resolve({
+                        status: true,
+                        resultado: result
+                    });
+                } 
+            });
+        });
+    }
+
     excluir_brinquedos_de_determinado_evento(brinquedos, evento){
         let sql = '';
         var db = this;

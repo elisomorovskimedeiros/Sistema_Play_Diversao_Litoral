@@ -311,6 +311,14 @@ class Interface{
             return resposta;
         });
     }
+
+    async select_qtd_de_brinquedos_alugados_no_dia(perfil, data){
+        let db = new Db(perfil);
+        return await db.select_qtd_de_brinquedos_alugados_no_dia(data).then(function(resposta){
+            return resposta;
+        });
+    }
+
     async excluir_brinquedos_de_determinado_evento(perfil, brinquedos, evento){
         let db = new Db(perfil);
         return await db.excluir_brinquedos_de_determinado_evento(brinquedos, evento).then(function(resposta){

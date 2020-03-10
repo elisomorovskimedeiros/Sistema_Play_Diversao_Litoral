@@ -260,28 +260,45 @@ var socketio = io.on("connect", function(socketio){
     
     //################### EVENTOS V2 #######################
 
-    function verificarBrinquedosVagos(perfil, data){
-        return int.select_qtd_de_brinquedos(perfil, data).then(function(resposta){
-            if(resposta.status){
-                let lista_brinquedos_disponiveis = [];
-                resposta.resultado.forEach(function(brinquedo){
-                    if(!brinquedo.qtd_alugada){
-                        let quantidade_disponivel =  brinquedo.quantidade - brinquedo.qtd_alugada;
-                        if(quantidade_disponivel > 0){
-                            brinquedo.quantidade_disponivel = quantidade_disponivel;
-                            lista_brinquedos_disponiveis.push(brinquedo);
-                        }
-                    }
+    async function verificarBrinquedosVagos(perfil, data){
+        let lista_brinquedos_disponiveis = [];
+        return int.select_qtd_de_brinquedos_alugados_no_dia(perfil, data).then(function(resposta){
+            if (resposta.status){
+                let qtd_brinquedos_alugada = resposta.resultado;
+                return int.listarTodosBrinquedos(perfil).then(function(resposta){
+                    if (resposta.status){
+                        
+                        let todos_brinquedos = resposta.resultado;
+                        todos_brinquedos.forEach(function(brinquedo_lista){
+                            let esta_alugado = false;
+                            qtd_brinquedos_alugada.forEach(function(brinquedo_alugado){
+                                if(brinquedo_lista.id_brinquedo == brinquedo_alugado.brinquedo_alugado){
+                                    esta_alugado = true;                    
+                                    if(brinquedo_lista.quantidade > brinquedo_alugado.quantidade_alugada){
+                                        brinquedo_lista.quantidade = brinquedo_lista.quantidade - brinquedo_alugado.quantidade_alugada;
+                                        lista_brinquedos_disponiveis.push(brinquedo_lista);
+                                    }
+                                }
+                            });
+                            if(!esta_alugado){
+                                lista_brinquedos_disponiveis.push(brinquedo_lista);
+                            }
+                        });
+                        return lista_brinquedos_disponiveis;
+                    }else{
+                        console.log("Ocorreu um erro");
+                        console.log(resposta);
+                        return {status: false,
+                        resultado: "Não foi possível carregar a lista de geral de brinquedos"};
+                    }    
                 });
-                return {status: true,
-                        resultado: lista_brinquedos_disponiveis};
             }else{
                 console.log("Ocorreu um erro");
                 console.log(resposta);
                 return {status: false,
-                        resultado: "Não foi possível carregar a lista de brinquedos vagos"};                
-            }
-        });
+                        resultado: "Não foi possível carregar a lista de brinquedos vagos"}; 
+            }   
+        });       
     }
 
     socketio.on("proximos_eventos", function(perfil){
@@ -359,8 +376,8 @@ var socketio = io.on("connect", function(socketio){
         let data = data_perfil.data;
         let perfil = data_perfil.perfil;
         let lista_brinquedos_disponiveis = await verificarBrinquedosVagos(perfil, data);
-        lista_brinquedos_disponiveis.data = data;
-        socketio.emit("receberBrinquedosVagosPorData", lista_brinquedos_disponiveis);        
+        socketio.emit("receberBrinquedosVagosPorData", lista_brinquedos_disponiveis,data);  
+        
     });
 
     socketio.on("eventos_por_intervalo_de_data", async function(datas){
