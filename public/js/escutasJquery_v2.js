@@ -274,15 +274,19 @@ $(document).ready(function(){
         nome_do_ultimo_filtro_utilizado = "proximos_eventos";
     });
 
+    //busca evento por intervalo de datas ou por uma data especifica colocada nos campos "de" ou "ate"
     $("#iniciarBuscaPorData").click(function(){
+
         let data_inicio = $("#de").val();
         let data_fim = $("#ate").val();
-        if(data_inicio != ''){
-            data_inicio = String(moment(data_inicio).format("YYYY-MM-DD"));
-        } 
-        if(data_fim != ''){
-            data_fim = String(moment(data_fim).format("YYYY-MM-DD"));
-        }
+       
         pedir_evento_por_data(data_inicio, data_fim);
+        
     });
+/*
+    $("#iniciarBuscaPorData").click(function(){
+        let de = $("#de").val();
+        let ate = $("#ate").val();
+        socket.emit("consulta_intervalo_data", de, ate);
+    });*/
 });

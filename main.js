@@ -380,20 +380,19 @@ var socketio = io.on("connect", function(socketio){
         
     });
 
-    socketio.on("eventos_por_intervalo_de_data", async function(datas){
-
-        /* PAREI DIA 06/03 -> CONTINUAR DAQUI
-        FALTOU REALIZAR A QUERY NO BD QUE RETORNE CADA EVENTO COM SEU GRUPO DE BRINQUEDOS
-        int.eventos_por_intervalo_de_data(datas, perfil).then(function(resultado){
-            if(resultado.status){
-                
-            }else{
-                console.log(resultado);
-                return resultado;
-            }
-        });*/
+    socketio.on("eventos_por_intervalo_de_data", function(perfil, de, ate){
+        if(moment(de).isValid() || moment(ate).isValid()){
+            int.select_evento_por_intervalo_data(perfil, de, ate).then(function(resposta){
+                if(!resposta.status){
+                    console.log("deu erro");
+                    console.log("resposta");
+                }
+                socketio.emit("resposta_consulta_evento_por_intervalo_data", resposta);
+            });
+        }else{
+            socketio.emit("resposta_consulta_evento_por_intervalo_data", {status: false, resultado: "A data informada é inválida"});
+        }        
     });
-    
 });
 
 

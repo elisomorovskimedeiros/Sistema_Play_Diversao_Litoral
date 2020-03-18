@@ -155,5 +155,46 @@ function selecionar_botoes_controle_a_serem_exibidos(classe_botao){
 }
 
 function pedir_evento_por_data(data_inicio, data_fim){
-  socket.emit("eventos_por_intervalo_de_data",{data_inicio, data_fim});
+  let de_valido = false;
+  let ate_valido = false;
+  if(moment(data_inicio).isValid()){
+      data_inicio = String(moment(data_inicio).format("YYYY-MM-DD"));
+      de_valido = true;
+  } 
+  if(moment(data_fim).isValid()){
+      data_fim = String(moment(data_fim).format("YYYY-MM-DD"));
+      ate_valido = true;
+  }
+  if(ate_valido || de_valido){
+    socket.emit("eventos_por_intervalo_de_data",perfil, data_inicio, data_fim);
+  }else{
+    emitirAviso("Insira pelo menos uma data válida", "snackbar", 3000);
+  }  
+}
+
+function carregar_eventos_na_tela(eventos){
+  eventos.forEach(function(evento, indice){
+    let item = $("#peleCelulaEvento").clone().removeClass("invisible").removeClass("float").appendTo("#listagemFiltros").removeClass("invisible");
+    let celulaEvento = item.find(".celulaEvento")[0];
+    $(celulaEvento).attr("id", indice);
+    let campoId = item.find(".idListaEventos")[0];
+    let campoData = item.find(".dataListaEventos")[0];
+    let campoNomeCliente = item.find(".nomeClienteListaEventos")[0];
+    let campoEndereco = item.find(".enderecoListaEventos")[0];
+    let campoBrinquedos = item.find(".brinquedosListaEventos")[0];
+    campoId.innerHTML = evento.id_evento;
+    campoData.innerHTML = moment(evento.data_evento).format("DD/MM/YYYY");
+    campoNomeCliente.innerHTML = evento.nome_cliente;
+    campoEndereco.innerHTML = evento.logradouro_evento + ", " + evento.numero_evento;
+    let lista_brinquedos = "";
+    evento.brinquedos.forEach(function(brinquedo, indice){
+      lista_brinquedos += " " + brinquedo.nome;
+      if(indice == evento.brinquedos.length - 1){
+        lista_brinquedos += ". ";
+      }else{
+        lista_brinquedos += ", ";
+      }
+    });
+    campoBrinquedos.value = lista_brinquedos;    
+  });    
 }

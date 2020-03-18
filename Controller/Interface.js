@@ -326,6 +326,24 @@ class Interface{
         });
     }
 
+    async select_evento_por_intervalo_data(perfil, de, ate){
+        let db = new Db(perfil);
+        /*if(de == ""){
+            return await db.selectEventosPorClienteEData("", ate).then(function(resposta){
+                return resposta;
+            });
+        }else if(ate == ""){
+            return await db.selectEventosPorClienteEData("", de).then(function(resposta){
+                return resposta;
+            });
+        }else{*/
+            return await db.select_evento_por_intervalo_data(de, ate).then(function(resposta){
+                return resposta;
+            });
+        //}
+        
+    }
+
 }
 
 module.exports = Interface;

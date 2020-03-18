@@ -3,12 +3,14 @@ var socket = io("/");
 
 socket.on("receber_eventos", function(resposta){
     selecionar_botoes_controle_a_serem_exibidos("evento"); 
+    console.log(resposta);
     if(resposta.erro){
         $("#listagemFiltros").html(resposta.erro);
     }else{
         $("#listagemFiltros").html("");
         ultimo_filtro_eventos = resposta;
         $("#info_exibicao").html("Eventos até dia " + moment().add(15, "days").format("DD/MM/YYYY"));
+        /*
         ultimo_filtro_eventos.forEach(function(evento, indice){
             let item = $("#peleCelulaEvento").clone().removeClass("invisible").removeClass("float").appendTo("#listagemFiltros").removeClass("invisible");
             let celulaEvento = item.find(".celulaEvento")[0];
@@ -22,9 +24,19 @@ socket.on("receber_eventos", function(resposta){
             campoData.innerHTML = moment(evento.data_evento).format("DD/MM/YYYY");
             campoNomeCliente.innerHTML = evento.nome_cliente;
             campoEndereco.innerHTML = evento.logradouro_evento + ", " + evento.numero_evento;
-            campoBrinquedos.value = evento.brinquedos;
+            let brinquedos = "";
+            evento.brinquedos.forEach(function(brinquedo, indice){
+                brinquedos += brinquedo.nome;
+                if(indice == evento.brinquedos.length - 1){
+                    brinquedos += ".";
+                }else{
+                    brinquedos += ", ";
+                }                
+            });
+            campoBrinquedos.value = brinquedos;
             
-        });        
+        });        */
+        carregar_eventos_na_tela(ultimo_filtro_eventos);
     }
 });
 
@@ -106,6 +118,20 @@ socket.on("receberBrinquedosVagosPorData", function(lista_brinquedos,data){
         $(novaDiv).find(".nome_brinquedo_troca_brinquedos").html(brinquedo.nome_brinquedo); 
         $(novaDiv).find(".qtd_disponivel_troca_brinquedos").html(brinquedo.quantidade);        
     });
+});
+
+socket.on("resposta_consulta_evento_por_intervalo_data", function(resposta){
+    selecionar_botoes_controle_a_serem_exibidos("evento"); 
+    if(!resposta.status){
+        $("#listagemFiltros").html(resposta.resultado);
+    }else{
+        let eventos = resposta.resultado;
+        $("#listagemFiltros").html("");
+        ultimo_filtro_eventos = eventos;
+        $("#info_exibicao").html("Exibindo eventos de " + moment(eventos[0].data_evento).format("DD/MM/YYYY") 
+            + " até " + moment(eventos[eventos.length - 1].data_evento).format("DD/MM/YYYY"));
+        carregar_eventos_na_tela(eventos);
+    }   
 });
 
 
