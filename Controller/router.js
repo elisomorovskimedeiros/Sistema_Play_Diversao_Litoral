@@ -569,6 +569,7 @@ function separarBrinquedos(idsBrinquedos){
 
 //rota que o cliente usa para se cadastrar
 router.get("/cadastroPlay/:perfil/:idEvento", async function(req, res){
+
     let idEvento = req.params.idEvento;
     let perfil = req.params.perfil;
     let sessao = await int.acharSessao(idEvento, perfil).then(function(resposta){

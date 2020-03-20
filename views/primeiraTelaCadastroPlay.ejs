@@ -1,58 +1,41 @@
 <% include partials/cabecalho_cadastro %>
         <div id="formPlay">
-            <div  class="post hidden visible animated bounceInRight">
-                <form action="/cadastro/primeiraTela/<%= perfil %>" method="POST" class="needs-validation" novalidate>
+            <div  class="post container card hidden visible animated bounceInRight">
+                <form action="/cadastro/primeiraTela/<%= perfil %>" method="POST" id="form_primeira_tela">
                     <div class="row letraAzul containerFormulario form-group">                    
                         <div class="col-md-12">
                             <h1>Seus dados e contato:</h1>
                         </div>
-                        <div class="col-md-6">
-                            <label for="nome"><strong>Nome:</strong></label>
+                        <div class="col-md-6" id="div_nome">
+                            <label for="nome"><strong><span class="text-danger">* &nbsp</span>Nome:</strong></label>
                             <input type="text" name="idEvento" value="<%=idEvento%>" style="display: none;">
                             <input type="text" class="form-control" required placeholder="exemplo: José da Silva" name="nome" id="nome" onblur="validaNome(this)">
-                            <div class="valid-feedback">
-                                <img src="/imagens/certo.png"><strong>Certo!</strong>
-                            </div>
-                            <div class="invalid-feedback">
-                                <img src="/imagens/errado.png"><strong>O nome completo precisa ter mais de 2 letras e espaço</strong>                            
-                            </div>
+                            <div class="invalid-feedback"></div>
                         </div>                        
-                        <div class="col-md-6">
-                            <label><strong>CPF ou CNPJ(somente números):</strong></label>
-                            <input type="text" class="form-control" required name="cpf" id="cpf" onblur="validaCPF()">
-                            <div class="valid-feedback">
-                                <img src="/imagens/certo.png"><strong>Certo!</strong>
-                            </div>
-                            <div class="invalid-feedback">
-                                <img src="/imagens/errado.png"><strong>Por favor insira um CPF ou CNPJ válido</strong>                            
-                            </div>
+                        <div class="col-md-6" id="div_cpf">
+                            <label><strong><span class="text-danger">* &nbsp</span> CPF ou CNPJ(somente números):</strong></label>
+                            <input type="text" class="form-control" required name="cpf" id="cpf" onblur="validaCPF(this)">
+                            <div class="invalid-feedback"></div>
                         </div>                        
-                        <div class="col-md-6">
-                            <label><strong>Seu telefone (somente números):</strong></label>
+                        <div class="col-md-6" id="div_tel">
+                            <label><strong><span class="text-danger">* &nbsp</span> Seu telefone (somente números):</strong></label>
                             <input type="text" class="form-control" placeholder="exemplo: 51991625582" required name="telefone" id="telefone" onblur="validaTelefone(this)">
-                            <div class="valid-feedback">
-                                <img src="/imagens/certo.png"><strong>Certo!</strong>
-                            </div>
-                            <div class="invalid-feedback">
-                                <img src="/imagens/errado.png"><strong>Telefones celulares precisam ter 10 dígitos e celulares 11 dígitos</strong>                            
-                            </div>
+                            <div class="invalid-feedback"></div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6" id="div_tel_alternativo">
                             <label><strong>Seu segundo telefone, ou de uma pessoa próxima (somente números):</strong></label>
-                            <input type="text" class="form-control" placeholder="exemplo: 51991625582" name="telefoneAltarnativo" id="telefoneAlternativo" onblur="validaTelefone(this)">
-                            <div class="valid-feedback">
-                                <img src="/imagens/certo.png"><strong>Certo!</strong>
-                            </div>
-                            <div class="invalid-feedback">
-                                <img src="/imagens/errado.png"><strong>Telefones celulares precisam ter 10 dígitos e celulares 11 dígitos</strong>                            
-                            </div>
+                            <input type="text" class="form-control" placeholder="exemplo: 51991625582" name="telefoneAltarnativo" id="telefoneAlternativo">
+                            <div class="invalid-feedback"></div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6" id="div_nome">
                             <label><strong>Email:</strong></label>
                             <input type="email" class="form-control" placeholder="exemplo: jose@email.com.br" name="email" id="email">                            
+                        </div>
+                        <div class="col-md-6 text-danger">
+                            <strong>* CAMPOS OBRIGATÓRIOS</strong>                           
                         </div>                                                
-                        <div class="col-md-6">
-                            <button type="submit" class="btn btn-primary">Próximo >>></button>
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-primary" id="btn_submit_primeira_tela"><strong>PRÓXIMO >>></strong></button>
                         </div>                    
                     </div>
                 </form>
