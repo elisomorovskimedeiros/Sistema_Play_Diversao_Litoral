@@ -167,6 +167,7 @@ function pedir_evento_por_data(data_inicio, data_fim){
   }
   if(ate_valido || de_valido){
     socket.emit("eventos_por_intervalo_de_data",perfil, data_inicio, data_fim);
+    nome_do_ultimo_filtro_utilizado = "eventos_por_intervalo_de_data";
   }else{
     emitirAviso("Insira pelo menos uma data válida", "snackbar", 3000);
   }  

@@ -677,7 +677,7 @@ router.post("/cadastro/:tela/:perfil", function(req, res){
 
 router.get("/teste", isLoggedIn, function(req, res){
     let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
-    res.render("teste",{perfil});
+    res.render("modulo_evento",{perfil});
 });
 
 router.get("/*", function(req, res){
@@ -730,7 +730,6 @@ function dadosTerceiraTela(req, idEvento, perfil){
     });
     return sessoes[indice];    
 }
-
 
 module.exports = router;
 

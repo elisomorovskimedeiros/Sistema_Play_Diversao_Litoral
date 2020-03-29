@@ -13,11 +13,17 @@ let login = function(passport){
    
     connection = mysql.createPool({
         supportBigNumbers: true,
-        bigNumberStrings: true,          
+        bigNumberStrings: true,
+        /*          
         host     : 'mysql10-farm76.kinghost.net',
         user     : 'solevento',
         password : 'Medeiros15',
         database : 'solevento', //não colocar se for criar um banco através do node
+        */
+        host     : 'localhost',
+        user     : 'play',
+        password : 'play',
+        database : 'play', //não colocar se for criar um banco através do node
         multipleStatements: false
     });
 

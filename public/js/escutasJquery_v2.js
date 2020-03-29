@@ -3,8 +3,12 @@ $(document).ready(function(){
 
     //solicita consulta inicial no bd
     if(window.location.pathname === "/teste_v2"){
-        socket.emit("proximos_eventos", perfil);
-        nome_do_ultimo_filtro_utilizado = "proximos_eventos";
+        if(nome_do_ultimo_filtro_utilizado){
+            socket.emit(nome_do_ultimo_filtro_utilizado, perfil);
+        }else{
+            socket.emit("proximos_eventos", perfil);
+            nome_do_ultimo_filtro_utilizado = "proximos_eventos";
+        }        
     };
 
     //exibe e esconde divs de opções no sidebar
@@ -265,13 +269,13 @@ $(document).ready(function(){
         if(data !== ''){
             socket.emit("buscarBrinquedosVagosPorData", {data, perfil});
         }
-        nome_do_ultimo_filtro_utilizado = "brinquedos_vagos_por_data";
+        nome_do_ultimo_filtro_utilizado = "buscarBrinquedosVagosPorData";
     });
 
     //exibe os eventos dos próximos 15 dias
     $("#btn_proximos_eventos").click(function(){
         socket.emit("proximos_eventos", perfil);
-        nome_do_ultimo_filtro_utilizado = "proximos_eventos";
+        nome_do_ultimo_filtro_utilizado = "btn_proximos_eventos";
     });
 
     //busca evento por intervalo de datas ou por uma data especifica colocada nos campos "de" ou "ate"

@@ -96,6 +96,27 @@ td > div{
     cursor: pointer;
 }
 
+.field_set_modulo_evento{
+    border: 2px solid !important;
+    border-radius: 25px;
+}
+.borda_azul{
+    border-color: #007bff !important;
+}
+.borda_verde{
+    border-color: #28a745 !important;
+}
+.borda_vermelha{
+    border-color: red !important;
+}
+.borda_amarela{
+    border-color: yellow !important;
+}
+
+.texto_icone_brinquedos{
+    font-size: 12px;
+}
+
 #copia_endereco_cliente{
     width: 80%;
 }
