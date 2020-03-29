@@ -1,25 +1,18 @@
-// Exemplo de JavaScript inicial para desativar envios de formulário, se houver campos inválidos.
-(function() {
-    'use strict';
-    window.addEventListener('load', function() {
-      // Pega todos os formulários que nós queremos aplicar estilos de validação Bootstrap personalizados.
-      var forms = document.getElementsByClassName('needs-validation');
-      // Faz um loop neles e evita o envio
-      var validation = Array.prototype.filter.call(forms, function(form) {
-        form.addEventListener('submit', function(event) {
-          if (form.checkValidity() === false) {
-            event.preventDefault();
-            event.stopPropagation();
-          }
-          form.classList.add('was-validated');
-        }, false);
-      });
-    }, false);
-  })();
+
+function inserir_feedback_no_campo(validacao){
+    console.log(validacao.status);
+    if(!validacao.status){
+        $(validacao.campo).removeClass("is-valid");
+        $(validacao.campo).addClass("is-invalid");
+        $(validacao.campo).next().html(validacao.mensagem);
+        window.location.href = "#"+$(validacao.campo).parent().attr("id");
+    }else{
+        $(validacao.campo).removeClass("is-invalid");
+        $(validacao.campo).addClass("is-valid");
+    }
+}
 
 function validar(campo, validade){
-    console.log(campo);
-    console.log(validade);
     let objeto = document.getElementById(campo);
     if(validade){
         if(objeto.classList.contains("is-invalid")){
@@ -34,7 +27,34 @@ function validar(campo, validade){
     }   
 }
 
+function validaNome(campo){
+    let nome = $(campo).val();
+    let temEspaco = false;
+    let validacao = {};
+    for(let indice = 0; indice < nome.length; indice++){
+      if(nome[indice] === ' '){
+        temEspaco = true;
+      }
+    }
+    if(!temEspaco){
+      validacao = {status : false,
+        mensagem : "Seu nome deve estar completo com nome e sobrenome",
+        campo : campo
+        };
+    }else if(nome.length < 3){
+      validacao = {status : false,
+        mensagem : "Seu nome deve estar completo e não pode ter menos de 3 caracteres",
+        campo : campo
+        };
+    }else{
+      validacao = {status : true,
+        campo : campo
+      };
+    }
+    inserir_feedback_no_campo(validacao);
+}
 
+/*
 function validaNome(campo){
     let nome = campo.value;
     let temEspaco = false;
@@ -60,7 +80,7 @@ function validaNome(campo){
         }
         campo.classList.add("is-invalid");
     }
-}
+}*/
 
 function verificarSeEhCNPJ(valor){
     let resposta = false;
@@ -72,7 +92,30 @@ function verificarSeEhCNPJ(valor){
     return resposta;
 }
 
-function validaCPF(){
+function validaCPF(campo){
+    let validacao = {};
+    let cpf = '';
+    let cpf_informado = $(campo).val();
+    for(let i = 0; i < cpf_informado.length; i++){
+      if(cpf_informado.charCodeAt(i) >= 48 && cpf_informado.charCodeAt(i) <= 57){
+        cpf += cpf_informado[i];
+      }
+    }
+    
+    if(cpf.length != 11){
+      validacao = {status : false,
+        mensagem : "O CPF possui 11 números!",
+        campo : campo
+      };
+    }else{
+      validacao = {status : true,
+      campo : campo
+      };
+    }
+    inserir_feedback_no_campo(validacao);
+}
+
+/*function validaCPF(){
     var cpf = document.getElementById("cpf").value;
     if(verificarSeEhCNPJ(cpf)){
         if(cpf.length == 18){
@@ -81,54 +124,39 @@ function validaCPF(){
             validar("cpf", false);
         }
     }else{
-        if((cpf[3] == ".")
-		&&(cpf[7] == ".")
-		&&(cpf[11] == "-")
-		&&(cpf.length == 14)
-		&&(!isNaN(cpf.substring(0,3)))
-		&&(!isNaN(cpf.substring(4,7)))
-		&&(!isNaN(cpf.substring(8,11)))
-		&&(!isNaN(cpf.substring(12)))
-		&&(((parseInt(cpf[0])*10
-			+parseInt(cpf[1])*9
-			+parseInt(cpf[2])*8
-			+parseInt(cpf[4])*7
-			+parseInt(cpf[5])*6
-			+parseInt(cpf[6])*5
-			+parseInt(cpf[8])*4
-			+parseInt(cpf[9])*3
-			+parseInt(cpf[10])*2)
-		    *10%11) == parseInt(cpf[12]))
-		&&(((parseInt(cpf[0])*11
-			+parseInt(cpf[1])*10
-			+parseInt(cpf[2])*9
-			+parseInt(cpf[4])*8
-			+parseInt(cpf[5])*7
-			+parseInt(cpf[6])*6
-			+parseInt(cpf[8])*5
-			+parseInt(cpf[9])*4
-			+parseInt(cpf[10])*3
-			+parseInt(cpf[12])*2)
-		    *10%11) == parseInt(cpf[13]))
-		&& !(cpf[0] == cpf[1] == cpf[2] == cpf[4] == cpf[5] == cpf[6] == cpf[8] == cpf[9] == cpf[10] == cpf[12] == cpf[12])
-		){
-        if(document.getElementById("cpf").classList.contains("is-invalid")){
-            document.getElementById("cpf").classList.remove("is-invalid");
-        }
-        document.getElementById("cpf").classList.add("is-valid");
-		return true;
-	}else{
-		if(document.getElementById("cpf").classList.contains("is-valid")){
-            document.getElementById("cpf").classList.remove("is-valid");
-        }
-        document.getElementById("cpf").classList.add("is-invalid");
-		return false;
+        if(true){
+            if(document.getElementById("cpf").classList.contains("is-invalid")){
+                document.getElementById("cpf").classList.remove("is-invalid");
+            }
+            document.getElementById("cpf").classList.add("is-valid");
+            return true;
+	    }else{
+            if(document.getElementById("cpf").classList.contains("is-valid")){
+                document.getElementById("cpf").classList.remove("is-valid");
+            }
+            document.getElementById("cpf").classList.add("is-invalid");
+            return false;
 	    }
     }
 	
-}
+}*/
 
-function validaTelefone(telefone){
+function validaTelefone(campo){
+    let validacao = {};
+    if($(campo).val() != ''){
+      validacao = {status : true,
+        campo : campo
+      };
+    }else{
+      validacao = {status : false,
+        mensagem : "Insira um telefone",
+        campo : campo
+      };
+    }
+    inserir_feedback_no_campo(validacao);
+  }
+
+/*function validaTelefone(telefone){
     var telefoneVal = telefone.value;;
     if(telefoneVal.length == 13){
         if(telefone.classList.contains("is-invalid")){
@@ -149,40 +177,54 @@ function validaTelefone(telefone){
         telefone.classList.add("is-invalid");
         return false;
     }      
-}
+}*/
 
 function validaNumero(campo){
-    let numero = campo.value;
-    if(numero.length > 0){
-        if(campo.classList.contains("is-invalid")){
-            campo.classList.remove("is-invalid");
-        }
-        campo.classList.add("is-valid");        
-		return true;
+    let numero = $(campo).val();
+    if(numero && numero.length > 0){
+        validacao = {status : true,
+            campo : campo
+          };
     }else{
-        if(campo.classList.contains("is-valid")){
-            campo.classList.remove("is-valid");
-        }
-        campo.classList.add("is-invalid");
-        return false;
-    }      
+        validacao = {status : false,
+            mensagem : "Faltou colocar o número",
+            campo : campo
+        };
+    }
+    inserir_feedback_no_campo(validacao);      
 }
 
-function validaCheck(campo){
-    console.log(campo);    
-    if(campo.checked){
-        if(campo.classList.contains("is-invalid")){
-            campo.classList.remove("is-invalid");
-        }
-        campo.classList.add("is-valid");        
-		return true;
+//verifica só se a palavra inserida tem mais de 2 letras
+function validaRuaOuBairro(campo){
+    nome = $(campo).val();
+    if(nome && nome.length > 2){
+        validacao = {status : true,
+            campo : campo
+        };
     }else{
-        if(campo.classList.contains("is-valid")){
-            campo.classList.remove("is-valid");
-        }
-        campo.classList.add("is-invalid");
-        return false;
-    }  
+        validacao = {status : false,
+            mensagem : "O nome deve ter mais de 2 letras",
+            campo : campo
+        };
+    }
+    inserir_feedback_no_campo(validacao);   
+}
+
+
+function validaCheck(campo){
+    if(campo.checked){
+        validacao = {status : true,
+            mensagem : "Concordo",
+            campo : campo
+        };       
+    }else{
+        validacao = {status : false,
+            mensagem : "<strong class='text-danger'>Preciso que aceite os nossos termos.<br>" + 
+                "Sem isso não temos como locar os brinquedos para o seu evento.</strong> ",
+            campo : campo
+        };
+    } 
+    inserir_feedback_no_campo(validacao);
 }
 
 
@@ -331,6 +373,10 @@ $(document).ready(function(){
         $("#complementoFesta").val($("#complemento").val());
         $("#bairroFesta").val($("#bairro").val());
         $("#cidadeFesta").val($("#cidade").val());
+        validaRuaOuBairro($("#logradouroFesta"));
+        validaRuaOuBairro($("#bairroFesta"));
+        validaRuaOuBairro($("#cidadeFesta"));
+        validaNumero($("#numeroFesta"));   
     });
 
     //função do botão de cópiar campo para a área de transferência do sistema
@@ -338,5 +384,46 @@ $(document).ready(function(){
         $("#texto").select();
         console.log($("#texto")[0].innerText);
         document.execCommand("copy");
+    });
+
+    $("#btn_submit_primeira_tela").click(function(){
+        validaNome($("#nome"));
+        validaCPF($("#cpf"));
+        validaTelefone($("#telefone"));
+        let campos_invalidos = $("body").find(".is-invalid");
+        if(campos_invalidos.length){
+            window.location.href = "#" + campos_invalidos[0].id;
+        }else{
+            $("#form_primeira_tela").submit();
+        }
+    });
+
+    $("#btn_submit_segunda_tela").click(function(){
+        validaRuaOuBairro($("#logradouro"));
+        validaRuaOuBairro($("#bairro"));
+        validaRuaOuBairro($("#cidade"));
+        validaRuaOuBairro($("#logradouroFesta"));
+        validaRuaOuBairro($("#bairroFesta"));
+        validaRuaOuBairro($("#cidadeFesta"));
+        validaNumero($("#numero"));
+        validaNumero($("#numeroFesta"));        
+        let campos_invalidos = $("body").find(".is-invalid");
+        if(campos_invalidos.length){
+            window.location.href = "#" + campos_invalidos[0].id;
+        }else{
+            $("#form_segunda_tela").submit();
+        }
+    });
+
+    $("#btn_submit_terceira_tela").click(function(){
+        validaCheck(document.getElementById("checkContrato"));
+        validaNumero($("#data"));
+        validaNumero($("#hora"));
+        let campos_invalidos = $("body").find(".is-invalid");
+        if(campos_invalidos.length && campos_invalidos.length > 0){
+            window.location.href = "#" + campos_invalidos[0].id;
+        }else{
+            $("#form_terceira_tela").submit();
+        }
     });
 }); 

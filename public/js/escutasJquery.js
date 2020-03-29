@@ -3,6 +3,7 @@ var perfil;
 $(document).ready(function(){ 
     perfil = $("body").attr("perfil");
 
+
     //usando em:
     //listarCliente.ejs, inserirEvento.ejs
     $("#data, #nome, #logradouro, #cidade").on("keyup change paste input", function(){

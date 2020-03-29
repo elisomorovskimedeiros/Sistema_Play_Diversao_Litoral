@@ -1,33 +1,23 @@
 <% include partials/cabecalho_cadastro %>
         <div id="formPlay">
-            <div id="terceiraTela" class="post hidden visible animated bounceInRight">
-                <form action="/cadastro/terceiraTela/<%= perfil %>" method="POST" class="needs-validation" novalidate>
+            <div id="terceiraTela" class="post container card hidden visible animated bounceInRight">
+                <form action="/cadastro/terceiraTela/<%= perfil %>" method="POST" class="needs-validation" id="form_terceira_tela">
                     <div class="row letraAzul containerFormulario form-group">
                         <div class="col-md-12 row">
                             <div class="col-md-12">
                                 <h1><strong>Qual será a data e a hora da festa?
                                 </strong></h1>
                             </div>                       
-                            <div class="col-md-6">
+                            <div class="col-md-6" id="div_data">
                                 <label><strong>Data:</strong></label>
                                 <input type="text" style="display: none" name="idEvento" value="<%=idEvento%>">
                                 <input type="date" required class="form-control centralizar" name="data" id="data" onblur="validaNumero(this)">
-                                <div class="valid-feedback">
-                                    <img src="/imagens/certo.png"><strong>Certo!</strong>
-                                </div>
-                                <div class="invalid-feedback">
-                                    <img src="/imagens/errado.png"><strong>Insira uma data válida</strong>                            
-                                </div>
+                                <div class="invalid-feedback"></div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6" id="div_hora">
                                 <label><strong>Hora:</strong></label>
                                 <input type="time" required class="form-control centralizar" name="hora" id="hora" onblur="validaNumero(this)">
-                                <div class="valid-feedback">
-                                        <img src="/imagens/certo.png"><strong>Certo!</strong>
-                                </div>
-                                <div class="invalid-feedback">
-                                        <img src="/imagens/errado.png"><strong>Insira um horário válido</strong>                            
-                                </div>
+                                <div class="invalid-feedback"></div>
                             </div>
                         </div>
                         <div class="col-md-12" id="containerContrato">
@@ -174,20 +164,17 @@
                                             Substituição – R$ 350,00<br>
                                     </p>
                             </div>
-                            <div class="form-group">
-                                <input type="checkbox" required class="form-check-input" id="checkContrato" onchange="validaCheck(this)">
-                                <label>Concordo</label>
-                                <div class="valid-feedback">
-                                    <img src="/imagens/certo.png"><strong>Obrigado!</strong>
-                                </div>
-                                <div class="invalid-feedback">
-                                    <img src="/imagens/errado.png"><strong>Preciso que aceite os nossos termos<br>
-                                    Sem isso não temos como locar os brinquedos para o seu evento.</strong>                            
-                                </div>
+                            <div class="form-check" id="div_check_contrato">
+                                <input type="checkbox" class="form-check-input" required id="checkContrato" onchange="validaCheck(this)">
+                                
+                                
+                                
+                                <label class="form-check-label" for="checkContrato">Concordo</label>
                             </div>
+                            
                         </div>                                         
                         <div class="col-md-12">
-                            <button type="submit" class="btn btn-primary">Terminar</button>
+                            <button type="button" id="btn_submit_terceira_tela" class="btn btn-primary">Terminar</button>
                         </div>            
                     </div>                    
                 </form>  

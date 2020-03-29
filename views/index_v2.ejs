@@ -1,0 +1,540 @@
+<% include partials/v2/cabecalho_v2 %>
+    <div id="tudo" class="wrapper">
+        <!-- Sidebar Holder -->
+        <nav id="sidebar" class="">
+            <div class="sidebar-header">
+                <h3>Painel de Controle</h3>
+            </div>
+
+                <!-- OPÇÕES DE EVENTOS -->
+            <div class="caixa-de-controle">
+                <div class="d-flex justify-content-between">
+                    <span>
+                        <i class="fa fa-birthday-cake fa-2x"></i>
+                        &nbsp;&nbsp;Eventos
+                    </span> 
+                    <span id="exibirOpcoesEvento" class="botaoControle botaoControleExibicao">
+                        <i class="fa fa-chevron-down fa-2x "></i>
+                        <div class="nomeBotao escondida">Exibir opções</div>
+                        &nbsp;&nbsp;&nbsp;
+                    </span>                    
+                </div>                
+                <div id="opcoesEvento" class="caixaOpcoes" style="display:none;">
+                    <div class="afastar-em-cima">
+                        <div class="d-flex justify-content-around">
+                            <span class="d-flex align-self-end">
+                                Opções
+                            </span>
+                            <span id="adicionarEvento" class="botaoControle">
+                                <i class="fa fa-plus fa-2x"></i>
+                                <div class="nomeBotao escondida">Adicionar Evento</div>
+                            </span>                            
+                        </div>
+                        <div class="form-group">
+                            <input id="procurarEvento" type="text" placeholder="Busca rápida" class="form-control">
+                        </div>
+                        <div class="row caixa_separada" id="buscaPorDatas">
+                            <div class="col-sm-12">
+                                Busca por datas:
+                            </div>
+                            <div class="col-sm-10 row">
+                                <div class="col-sm-4 d-flex align-self-center">
+                                    De:
+                                </div>
+                                <div class="col-sm-8 form-group" style="padding-left:0px;">
+                                    <input id="de" type="date" class="form-control">
+                                </div>
+                                <div class="col-sm-4 d-flex align-self-center">
+                                    Até:
+                                </div>
+                                <div class="col-sm-8" style="padding-left:0px;">
+                                    <input id="ate" type="date" class="form-control">
+                                </div>
+                            </div>
+                            <div id="iniciarBuscaPorData" class="col-sm-2 d-flex align-self-center botaoControle">
+                                <i class="fa fa-chevron-right fa-2x"></i>
+                                <i class="fa fa-chevron-right fa-2x"></i>
+                            </div>
+                        </div>
+                        <div class="afastar-em-cima centralizar">
+                            <button class="btn btn-primary" id="btn_proximos_eventos">
+                                Próximos Eventos 
+                                <i class="fa fa-chevron-right"></i>
+                                <i class="fa fa-chevron-right"></i>
+                            </button>
+                        </div>
+                        <div class="afastar-em-cima centralizar">
+                            <button class="btn btn-primary">
+                                Mais Opções 
+                                <i class="fa fa-chevron-right"></i>
+                                <i class="fa fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>                        
+                </div>
+            </div>
+            <!-- FIM DAS OPÇÕES DE EVENTOS -->
+
+            <!-- OPÇÕES DE CLIENTES -->
+            <div class="caixa-de-controle">
+                <div class="d-flex justify-content-between">
+                    <span>
+                        <i class="fa fa-user-circle fa-2x"></i>
+                        &nbsp;&nbsp;Clientes
+                    </span> 
+                    <span id="exibirOpcoesCliente" class="botaoControle botaoControleExibicao">
+                        <i class="fa fa-chevron-down fa-2x "></i>
+                        <div class="nomeBotao escondida">Exibir opções</div>
+                        &nbsp;&nbsp;&nbsp;
+                    </span>                    
+                </div>                
+                <div id="opcoesCliente" class="caixaOpcoes" style="display:none;">
+                    <div class="afastar-em-cima">
+                        <div class="d-flex justify-content-around">
+                            <span class="d-flex align-self-end">
+                                Informe algo:
+                            </span>
+                            <span id="adicionarCliente" class="botaoControle">
+                                <i class="fa fa-plus fa-2x"></i>
+                                <div class="nomeBotao escondida">Adicionar Cliente</div>
+                            </span>
+                        </div>
+                        <div class="form-group">
+                            <input id="procurarCliente" placeholder="Busca Rápida" type="text" class="form-control">
+                        </div>       
+                    </div>                        
+                </div>
+            </div>
+            <!-- FIM DAS OPÇÕES DE CLIENTES -->
+
+            <!-- OPÇÕES DE BRINQUEDOS -->
+            <div class="caixa-de-controle">
+                <div class="d-flex justify-content-between">
+                    <span>
+                        <i class="fa fa-bicycle fa-2x"></i>
+                        &nbsp;Brinquedos
+                    </span> 
+                    <span id="exibirOpcoesBrinquedos" class="botaoControle botaoControleExibicao">
+                        <i class="fa fa-chevron-down fa-2x "></i>
+                        <div class="nomeBotao escondida">Exibir opções</div>
+                        &nbsp;&nbsp;&nbsp;
+                    </span>                    
+                </div>                
+                <div id="opcoesBrinquedos" class="caixaOpcoes" style="display:none;">
+                    <div class="afastar-em-cima">
+                        <div class="d-flex justify-content-around">
+                            <button class="btn btn-primary">Listar Brinquedos</button>
+                            <span id="adicionarBrinquedo" class="botaoControle">
+                                <i class="fa fa-plus fa-2x"></i>
+                                <div class="nomeBotao escondida">Adicionar Brinquedo</div>
+                            </span>                            
+                        </div>
+                       
+                        <div class="row form-group caixa_separada">
+                            <div class="col-sm-12">
+                                Brinquedos vagos:
+                            </div>
+                            <div class="col-sm-7">                             
+                                <div>
+                                    <input id="buscarBrinquedosVagosPorData" type="date" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-sm-5" style="width: 100%">
+                                <center id="botaoBuscarBrinquedosVagosPorData" class="botaoControle link_fake">
+                                    <span>
+                                        <i class="fa fa-chevron-right fa-2x"></i>
+                                    </span>
+                                    <span>
+                                        <i class="fa fa-chevron-right fa-2x"></i>
+                                    </span>
+                                </center>
+                            </div>
+                        </div>       
+                    </div>                        
+                </div>
+            </div>
+            <!-- FIM DAS OPÇÕES DE BRINQUEDOS -->       
+        </nav>
+
+        <!-- CONTEÚDO DA PÁGINA -->
+        <div id="content">
+            <!-- CABEÇALHO DO CONTEÚDO --> 
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+
+                    <button type="button" id="sidebarCollapse" class="navbar-btn btn btn-dark">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <button class="btn btn-dark d-inline-block d-lg-none ml-auto collapsed" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <svg class="svg-inline--fa fa-align-justify fa-w-14" aria-hidden="true" data-prefix="fas" data-icon="align-justify" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M0 84V44c0-8.837 7.163-16 16-16h416c8.837 0 16 7.163 16 16v40c0 8.837-7.163 16-16 16H16c-8.837 0-16-7.163-16-16zm16 144h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 256h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0-128h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"></path></svg><!-- <i class="fas fa-align-justify"></i> -->
+                    </button>
+
+                    <div id="info_exibicao" class="" style="width: 60%;text-align: center; padding-left: 5px;"></div>
+
+                    <div class="navbar-collapse collapse" id="navbarSupportedContent">
+                        <ul class="nav navbar-nav ml-auto">                            
+                            <li class="nav-item active evento" id="mais_filtros">
+                                <a class="nav-link" href="#">
+                                    <div class="d-flex botaoControle">
+                                        <span>
+                                            <i class="fa fa-search" aria-hidden="true"></i>
+                                        </span>
+                                        <span>
+                                            &nbsp;&nbsp;Mais Filtros
+                                        </span>                                                                   
+                                    </div>                                
+                                </a>
+                            </li>
+                            <!--BOTÃO ADICIONAR BRINQUEDOS EM EVENTO-->
+                            <li class="nav-item active brinquedo" id="botao_controle_adicionar_a_evento" style="display: none">
+                                <a class="nav-link" a href="/criarSessaoCliente">
+                                    <div class="d-flex botaoControle">
+                                        <span id="figurinha">
+                                            <i class="fa fa-plus" aria-hidden="true"></i>
+                                        </span>
+                                        <span>
+                                            &nbsp;&nbsp;Adicionar à evento
+                                        </span>                                                                   
+                                    </div>                                
+                                </a>
+                            </li>
+                            <!--FIM BOTÃO ADICIONAR BRINQUEDOS EM EVENTO -->
+                            <li class="nav-item active evento brinquedo" id="gerar_link_cadastro">
+                                <a class="nav-link" href="#">
+                                    <div class="d-flex botaoControle">
+                                        <span>
+                                            <i class="fa fa-id-card" aria-hidden="true"></i>
+                                        </span>
+                                        <span>
+                                            &nbsp;&nbsp;Link de Cadastro
+                                        </span>                                                                   
+                                    </div>                                
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <!-- FIM DO CABEÇALHO DO CONTEÚDO -->         
+            <!-- EVENTOS -->
+
+            <div id="conteudoEventos">
+                <div id="filtroAvancadoEventos">
+                </div>
+                 <!--LOCAL ONDE SERÃO EXIBIDOS OS RESULTADOS DOS FILTROS-->
+                <div id="listagemFiltros" class="row">                                       
+                </div>
+            </div>
+
+
+
+
+            <!-- FIM EVENTOS -->
+        </div>
+        <!-- FIM DO CONTEÚDO DA PÁGINA -->
+    </div>
+
+            <!--MODAL PARA COLOCAR EVENTO EM DESTAQUE -->
+            
+            <div class="modal fade" id="janelaDestaqueEvento" onhide="executar_no_fechamento_do_modal()">              
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <!-- cabecalho -->
+                            <form name="form-destaque-evento" id="form-destaque-evento">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="titulo_modal_destaque_evento"></h4>
+                                    <button type="button" class="close" data-dismiss="modal" id="fecharModalDestaqueEvento">
+                                        <span>&times;</span>
+                                    </button>
+                                </div>
+                        
+                                <!-- corpo -->
+                                <div class="modal-body" id="corpoModal">
+                                    <div class="d-flex justify-content-around form-group">
+                                        <button type="button" id="botao_editar_evento" class="btn btn-outline-primary">Editar Evento</button>                                        
+                                        <button type="button" id="botao_confirmar_evento" class="btn btn-outline-success">Enviar Confirmação</button>
+                                        <button type="button" id="botao_excluir_evento" class="btn btn-outline-danger">Excluír Evento</button>
+                                    </div>
+
+                                    <div class="row" id="formulario_evento_em_destaque">
+                                        <div class="form-group col-md-10">
+                                            <label for="cliente">Cliente</label>
+                                            <input type="text" readonly class="form-control" id="nome_cliente_destaque_evento">
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <label for="botao_trocar_cliente">&nbsp;</label>
+                                            <button type="button" id="botao_trocar_cliente" class="btn btn-outline-secondary form-control invisible">Trocar</button>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="telefone">Telefone</label>
+                                            <input type="text" readonly class="form-control" id="telefone_destaque_evento">
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="telefone_alternativo">Telefone alternativo</label>
+                                            <input type="text" readonly class="form-control" id="telefone_alternativo_destaque_evento">
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="email_destaque_evento">Email</label>
+                                            <input type="text" readonly class="form-control" id="email_destaque_evento">
+                                        </div>
+                                        <div class="col-md-12 row">
+                                            <div class="col-md-4 form-group">
+                                                <label for="data_destaque_evento">Data</label>
+                                                <input type="date" readonly class="form-control" id="data_destaque_evento">
+                                            </div>
+                                            <div class="col-md-4 form-group">
+                                                <label for="hora_destaque_evento">Hora</label>
+                                                <input type="time" readonly class="form-control" id="hora_destaque_evento">
+                                            </div>                                
+                                        </div>
+                                        <hr>
+                                        <div id="div_botao_copia_endereco" class="form-group col-md-12 d-flex justify-content-center invisible">
+                                            <button class="form-control btn btn-outline-info" id="copia_endereco_cliente" type="button">
+                                                Utilizar endereço do cliente
+                                            </button>
+                                        </div>                        
+                                        <div class="form-group col-md-8">
+                                            <label for="endereco_destaque_evento">Endereço</label>
+                                            <input type="text" readonly class="form-control" placeholder="Rua, Avenida, Praça" id="logradouro_destaque_evento">
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="endereco_destaque_evento">Número</label>
+                                            <input type="numero" readonly class="form-control" id="numero_destaque_evento">
+                                        </div>                                
+                                        <div class="form-group col-md-6">
+                                            <label for="complemento_destaque_evento">Complemento</label>
+                                            <input type="text" readonly class="form-control" id="complemento_destaque_evento">
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="observacao_destaque_evento">Observação do endereço</label>
+                                            <input type="text" readonly class="form-control" id="observacao_destaque_evento">
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="bairro_destaque_evento">Bairro</label>
+                                            <input type="text" readonly class="form-control" id="bairro_destaque_evento">
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="cidade_destaque_evento">Cidade</label>
+                                            <input type="text" readonly class="form-control" id="cidade_destaque_evento">
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="valor_total_destaque_evento">Valor Total</label>
+                                            <input type="number" readonly class="form-control" id="valor_total_destaque_evento">
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="valor_destaque_evento">Valor do Desconto</label>
+                                            <input type="number" readonly class="form-control" id="valor_desconto_destaque_evento">
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="valor_sinal_destaque_evento">Valor do Sinal</label>
+                                            <input type="number" readonly class="form-control" id="valor_sinal_destaque_evento">
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="receber_no_ato_destaque_evento">Receber no Ato</label>
+                                            <input type="number" readonly class="form-control" readonly id="receber_no_ato_destaque_evento">
+                                        </div> 
+                                        <div class="form-group col-md-12">
+                                            <label for="observacao_destaque_evento">Observação sobre o evento</label>
+                                            <input type="text" readonly class="form-control" id="observacao_destaque_evento">
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <label for="abrigo_destaque_evento">Possui local abrigado?</label>
+                                            <input type="text" readonly class="form-control" id="abrigo_destaque_evento">
+                                        </div>                                        
+                                        <div class="container_listagem_de_brinquedos">
+                                            <h4 id="titulo_div_lista_brinquedos_no_evento"></h4> 
+                                            <div class="container_dos_brinquedos_no_evento">
+                                                <div>
+                                                    <div class="row linha_lista_brinquedos" id="div_lista_brinquedos_no_evento">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <button type="button" id="btn_editar_brinquedos_evento" class="btn btn-primary form-control invisible btn_principal_central">Trocar Brinquedos</button>
+                                        </div>
+                                        <div class="container_listagem_de_brinquedos">
+                                            <h4 class="titulo_div_lista_brinquedos"></h4> 
+                                            <div class="container_troca_dos_brinquedos">
+                                                <div>
+                                                    <div class="row" id="linha_lista_brinquedos">                                                        
+                                                    </div>
+                                                </div>                  
+                                            </div>    
+                                        </div>                                                                                  
+                                    </div>
+                                </div>
+                        
+                                <!-- rodape -->
+                                <div class="modal-footer invisible" id="rodape_modal_destaque_evento">                                    
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                                        Cancelar
+                                    </button>
+                                    <button type="button" id="btnEnviarEdicaoEvento" class="btn btn-primary">
+                                        Concluir Edição
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>     
+                </div>            
+                <!--FIM DO MODAL DE DESTAQUE DE EVENTO-->
+
+
+                <!--MODAL PARA TROCAR CLIENTE NO EVENTO -->
+            
+            <div class="modal fade" id="janela_troca_cliente_no_evento">              
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <!-- cabecalho -->
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="titulo_modal_troca_cliente_no_evento">Troca de cliente no evento</h4>
+                                <button type="button" class="close" data-dismiss="modal" id="fechar_modal_troca_cliente_no_evento">
+                                    <span>&times;</span>
+                                </button>
+                            </div>
+                    
+                            <!-- corpo -->
+                            <div class="modal-body" id="corpo_modal_troca_cliente_no_evento">
+                                <div class="row">
+                                    <div class="col-md-6 form-group">
+                                        <label>Parte do nome do cliente</label>
+                                        <input type="text" class="form-control" id="nome_cliente_no_evento" placeholder="Informe o nome do cliente">
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <label>Parte do endereço do cliente</label>
+                                        <input type="text" class="form-control" id="logradouro_cliente_no_evento" placeholder="Informe parte do endereço">
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <label>Parte do nome da cidade</label>
+                                        <input type="text" class="form-control" id="cidade_cliente_no_evento" placeholder="Informe parte da cidade">
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <label>Data de algum evento do cliente que busca</label>
+                                        <input type="date" class="form-control" id="data_cliente_no_evento">
+                                    </div>        
+                                </div>
+                                <div id="listaClientes" class="row area_lista_clientes">
+                                </div>                                 
+                            </div>
+                        
+                            <!-- rodape -->
+                            <div class="modal-footer invisible" id="rodape_modal_destaque_evento">                                    
+                                <button type="button" class="btn btn-default" data-dismiss="modal">
+                                    Cancelar
+                                </button>
+                                <button type="button" id="btnEnviarEdicaoEvento" class="btn btn-primary">
+                                    Concluir Edição
+                                </button>
+                            </div>
+                    </div>
+                </div>     
+            </div>
+
+    <!--JANELA DE EXCLUSÃO DE EVENTOS-->
+    
+    <div class="modal fade" id="janelaDeRemocaoEvento">              
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <!-- cabecalho -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Tem certeza que quer excluir esse evento?</h4>
+                        <button type="button" class="close" data-dismiss="modal" id="fecharModalExcluir">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+            
+                        <!-- rodape -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            Cancelar
+                        </button>
+                        <button id="btnExcluirEvento" class="btn btn-danger">
+                            Excluir
+                        </button>
+                    </div>
+            </div>                
+        </div>     
+    </div>
+
+            <!-- CÉLULA INDIVIDUAL COM CADA EVENTO LISTADO -->
+            <div id="peleCelulaEvento" class="col-md-4 invisible margin-bottom-15px float">
+                <div class="celula celulaEvento" data-toggle="modal" data-target="#janelaDestaqueEvento">
+                    <table cellpadding="4">
+                        <tr>
+                            <td colspan="4">Id:&nbsp;<span class="idLista idListaEventos campoLista campoListaEventos">sdfsa</span>
+                            Data:&nbsp;<span class="dataLista dataListaEventos campoLista campoListaEventos">sadfdsa</span></td> 
+                        </tr>
+                        <tr>
+                            <td>Cliente:&nbsp;</td><td><div class="nomeCliente nomeClienteListaEventos campoLista campoListaEventos">asfasfsadfdsafdsafdsafdsafsafsadfdsafadsfdsafadsfdasfdsafdasfddsfasdfdsafdasfsa</div></td>
+                        </tr>
+                        <tr>
+                            <td>Endereço:&nbsp;</td><td><div class="enderecoListaEventos campoLista campoListaEventos"></div></td>
+                        </tr>
+                        <tr>
+                            <td>Brinquedos:&nbsp;</td><td><div style="width: max-content; height: max-content;" class="campoLista campoListaEventos">
+                                <textarea class="brinquedosListaEventos" readonly></textarea>
+                            </div></td>
+                        </tr>
+                    </table>
+                </div>                        
+            </div>                   
+            <!-- FIM DA CÉLULA DO EVENTO -->
+            
+            <!-- CÉLULA INDIVIDUAL COM CADA CLIENTE LISTADO -->
+            <div id="peleCelulaCliente" class="col-sm-6 margin-bottom-15px invisible float">
+                <div class="celula celula_cliente">
+                    <table cellpadding="4">
+                        <tr>
+                            <td colspan="4">Id:&nbsp;<span id = "id_lista" class="campo_id campoLista">sdfsa</span>
+                            Nome:&nbsp;<span id = "nome_lista" class="campoLista">sadfdsa</span></td> 
+                        </tr>
+                        <tr>
+                            <td>Telefone:&nbsp;</td><td><div id = "telefone_lista" class="campoLista">dasfsa</div></td>
+                        </tr>
+                        <tr>
+                            <td>Tel. Recado</td><td><div id = "tel_alt_lista" class="campoLista">fasfasfsa</div></td>
+                        </tr>
+                        <tr>
+                            <td>email:&nbsp;</td><td><div id = "email_lista" class="campoLista">dfasfasdfsda</div></td>
+                        </tr>
+                        <tr>
+                            <td>CPF:&nbsp;</td><td><div id = "cpf_lista" class="campoLista">dfasfasdfsda</div></td>
+                        </tr>
+                        <tr>
+                            <td>Endereço:&nbsp;</td><td><div id = "end_lista" class="campoLista">dfasfasdfsda</div></td>
+                        </tr>
+                        <tr>
+                            <td>Cidade:&nbsp;</td><td><div id = "cidade_lista" class="campoLista">dfasfasdfsda</div></td>
+                        </tr>
+                    </table>
+                </div>                        
+            </div>                   
+            <!-- FIM DA CÉLULA DO CLIENTE -->
+
+            <!-- CÉLULA DE EXIBIÇÃO DE BRINQUEDOS -->
+            <div class='col-md-3 celulaBrinquedo invisible float' id="divListaBrinquedos">
+                <div>
+                    <span>
+                        <img class="foto_brinquedo" width='50px'>
+                    </span>
+                     <span class='form-group' style='margin-left: 30px;'>
+                        <input type='checkbox' class='form-group-checkbox checkbox_brinquedo'>
+                    </span>
+                </div>
+                Nome: <span class="nome_brinquedo_troca_brinquedos"></span><br>
+                <div class="qtd">Qtd disponível: <span class="qtd_disponivel_troca_brinquedos"></span></div>
+            </div>
+
+            <!-- FIM DA CÉLULA DE EXIBIÇÃO DE BRINQUEDOS -->
+
+            <!--BOTÕES DE OPÇÕES DE CONTROLE DE TELA-->
+                
+
+
+            <!--FIM BOTÕES DE OPÇÕES DE CONTROLE DE TELA-->
+
+            <div id="snackbar"></div>
+    <% include partials/v2/rodape_v2 %>

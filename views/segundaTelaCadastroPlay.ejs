@@ -1,7 +1,7 @@
 <% include partials/cabecalho_cadastro %>
         <div id="formPlay">
-            <div id="segundaTela" class="post hidden visible animated bounceInRight">
-                <form action="/cadastro/segundaTela/<%= perfil %>" method="POST" class="needs-validation" novalidate>
+            <div id="segundaTela" class="post  container card hidden visible animated bounceInRight">
+                <form action="/cadastro/segundaTela/<%= perfil %>" method="POST" class="needs-validation" id="form_segunda_tela">
                     <div class="row letraAzul containerFormulario">
                         <div class="col-md-6" id="avisoJaPossuiCadastro" style="display: none">
                             <h2>
@@ -13,106 +13,68 @@
                             <div>
                                 <h1>Qual o seu endereço?</h1>
                             </div>
-                            <div class="form-group">
-                                <label><strong>Nome da rua onde mora:</strong></label>
+                            <div class="form-group" id="div_logradouro_cliente">
+                                <label><strong class="text-danger">* &nbsp;</strong><strong>Nome da rua onde mora:</strong></label>
                                 <input type="text" name="idEvento" value="<%=idEvento%>" style="display: none;">
-                                <input type="text" class="form-control" required placeholder="exemplo: Rua Mal. Floriano" name="logradouro" id="logradouro" onblur="validaNome(this)">
-                                <div class="valid-feedback">
-                                    <img src="/imagens/certo.png"><strong>Certo!</strong>
-                                </div>
-                                <div class="invalid-feedback">
-                                    <img src="/imagens/errado.png"><strong>Precisa ter mais de 2 letras e espaço</strong>                            
-                                </div>
+                                <input type="text" class="form-control" required placeholder="exemplo: Rua Mal. Floriano" name="logradouro" id="logradouro" onblur="validaRuaOuBairro(this)">
+                                <div class="invalid-feedback"></div>
                             </div>
-                            <div class="form-group">
-                                <label><strong>Número de sua casa:</strong></label>
+                            <div class="form-group" id="div_numero_cliente">
+                                <label><strong class="text-danger">* &nbsp;</strong><strong>Número de sua casa:</strong></label>
                                 <input type="number" required class="form-control centralizar" name="numero" id="numero" size="5" onblur="validaNumero(this)">
-                                <div class="valid-feedback">
-                                    <img src="/imagens/certo.png"><strong>Certo!</strong>
-                                </div>
-                                <div class="invalid-feedback">
-                                    <img src="/imagens/errado.png"><strong>Insira o número de sua casa</strong>                            
-                                </div>
+                                <div class="invalid-feedback"></div>
                             </div>
                             <div class="form-group">
                                 <label><strong>Complemento:</strong></label>
                                 <input type="text" class="form-control" placeholder="exemplo: Ap. 5 ou esq. Av. Ceará" name="complemento" id="complemento">
                             </div>
-                            <div class="form-group">
-                                <label><strong>Bairro:</strong></label>
-                                <input type="text" class="form-control" required placeholder="exemplo: Jardim Perdizes" name="bairro" id="bairro" onblur="validaNome(this)">
-                                <div class="valid-feedback">
-                                    <img src="/imagens/certo.png"><strong>Certo!</strong>
-                                </div>
-                                <div class="invalid-feedback">
-                                    <img src="/imagens/errado.png"><strong>O Bairro precisa ter mais de 2 letras</strong>                            
-                                </div>
+                            <div class="form-group"  id="div_bairro_cliente">
+                                <label><strong class="text-danger">* &nbsp;</strong><strong>Bairro:</strong></label>
+                                <input type="text" class="form-control" required placeholder="exemplo: Jardim Perdizes" name="bairro" id="bairro" onblur="validaRuaOuBairro(this)">
+                                <div class="invalid-feedback"></div>
                             </div>
-                             <div class="form-group">
-                                <label><strong>Cidade:</strong></label>
-                                <input type="text" class="form-control" required placeholder="exemplo: Capão da Canoa" name="cidade" id="cidade" onblur="validaNome(this)">
-                                <div class="valid-feedback">
-                                    <img src="/imagens/certo.png"><strong>Certo!</strong>
-                                </div>
-                                <div class="invalid-feedback">
-                                    <img src="/imagens/errado.png"><strong>A cidade precisa ter mais de 2 letras</strong>                            
-                                </div>
+                             <div class="form-group" id="div_cidade_cliente">
+                                <label><strong class="text-danger">* &nbsp;</strong><strong>Cidade:</strong></label>
+                                <input type="text" class="form-control" required placeholder="exemplo: Capão da Canoa" name="cidade" id="cidade" onblur="validaRuaOuBairro(this)">
+                                <div class="invalid-feedback"></div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <h1>Onde será sua festa?</h1>                        
-                                <h3><strong>Caso seja na sua casa mesmo, aperte em copiar</strong></h3><br>
-                                <button type="button" class="btn btn-primary form-group" id="copiarEndereco">Copiar</button>
+                                <button type="button" class="btn btn-primary form-group" id="copiarEndereco">Será na minha casa mesmo</button>
                             </div>                       
                             
-                            <div class="form-group">
-                                <label><strong>Nome da rua da festa:</strong></label>
-                                <input type="text" class="form-control" required placeholder="exemplo: Rua Mal. Floriano" name="logradouroFesta" id="logradouroFesta">
-                                <div class="valid-feedback">
-                                    <img src="/imagens/certo.png"><strong>Certo!</strong>
-                                </div>
-                                <div class="invalid-feedback">
-                                    <img src="/imagens/errado.png"><strong>O nome completo precisa ter mais de 2 letras e espaço</strong>                            
-                                </div>
+                            <div class="form-group" id="div_logradouro_evento">
+                                <label><strong class="text-danger">* &nbsp;</strong><strong>Nome da rua da festa:</strong></label>
+                                <input type="text" class="form-control" required placeholder="exemplo: Rua Mal. Floriano" name="logradouroFesta" id="logradouroFesta" onblur="validaRuaOuBairro(this)">
+                                <div class="invalid-feedback"></div>
                             </div>
-                            <div class="form-group">
-                                <label><strong>Número do local da festa:</strong></label>
-                                <input type="number" required class="form-control centralizar" name="numeroFesta" id="numeroFesta" size="5">
-                                <div class="valid-feedback">
-                                    <img src="/imagens/certo.png"><strong>Certo!</strong>
-                                </div>
-                                <div class="invalid-feedback">
-                                    <img src="/imagens/errado.png"><strong>Insira o número de sua casa</strong>                            
-                                </div>
+                            <div class="form-group" id="div_numero_evento">
+                                <label><strong class="text-danger">* &nbsp;</strong><strong>Número do local da festa:</strong></label>
+                                <input type="number" required class="form-control centralizar" name="numeroFesta" id="numeroFesta" size="5" onblur="validaNumero(this)">
+                                <div class="invalid-feedback"></div>
                             </div>
                             <div class="form-group">
                                 <label><strong>Complemento:</strong></label>
                                 <input type="text" class="form-control" placeholder="exemplo: Ap. 5 ou esq. Av. Ceará" name="complementoFesta" id="complementoFesta">
                             </div>
-                            <div class="form-group">
-                                <label><strong>Bairro da Festa:</strong></label>
-                                <input type="text" class="form-control" required placeholder="exemplo: Jardim Perdizes" name="bairroFesta" id="bairroFesta">
-                                <div class="valid-feedback">
-                                    <img src="/imagens/certo.png"><strong>Certo!</strong>
-                                </div>
-                                <div class="invalid-feedback">
-                                    <img src="/imagens/errado.png"><strong>O Bairro precisa ter mais de 2 letras</strong>                            
-                                </div>
+                            <div class="form-group" id="div_bairro_evento">
+                                <label><strong class="text-danger">* &nbsp;</strong><strong>Bairro da Festa:</strong></label>
+                                <input type="text" class="form-control" required placeholder="exemplo: Jardim Perdizes" name="bairroFesta" id="bairroFesta"  onblur="validaRuaOuBairro(this)">
+                                <div class="invalid-feedback"></div>
                             </div>
-                            <div class="form-group">
-                                <label><strong>Cidade da Festa:</strong></label>
-                                <input type="text" class="form-control" required placeholder="exemplo: Capão da Canoa" name="cidadeFesta" id="cidadeFesta">
-                                <div class="valid-feedback">
-                                    <img src="/imagens/certo.png"><strong>Certo!</strong>
-                                </div>
-                                <div class="invalid-feedback">
-                                    <img src="/imagens/errado.png"><strong>A cidade precisa ter mais de 2 letras</strong>                            
-                                </div>
-                            </div>                                       
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-primary">Próximo >>></button>
-                            </div>    
+                            <div class="form-group" id="div_cidade_evento">
+                                <label><strong class="text-danger">* &nbsp;</strong><strong>Cidade da Festa:</strong></label>
+                                <input type="text" class="form-control" required placeholder="exemplo: Capão da Canoa" name="cidadeFesta" id="cidadeFesta"  onblur="validaRuaOuBairro(this)">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                            <div>
+                                <strong class="text-danger">* CAMPOS OBRIGATÓRIOS</strong>
+                            </div>  
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <button type="button" class="btn btn-primary" id="btn_submit_segunda_tela">Próximo >>></button>
                         </div>                   
                     </div>                    
                 </form>  

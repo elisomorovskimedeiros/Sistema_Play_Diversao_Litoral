@@ -13,11 +13,17 @@ let login = function(passport){
    
     connection = mysql.createPool({
         supportBigNumbers: true,
-        bigNumberStrings: true,          
+        bigNumberStrings: true,
+        /*          
         host     : 'mysql10-farm76.kinghost.net',
         user     : 'solevento',
         password : 'Medeiros15',
         database : 'solevento', //não colocar se for criar um banco através do node
+        */
+        host     : 'localhost',
+        user     : 'play',
+        password : 'play',
+        database : 'play', //não colocar se for criar um banco através do node
         multipleStatements: false
     });
 
@@ -45,7 +51,6 @@ let login = function(passport){
                 
                 salt = salt+''+password;
                 var encPassword = crypto.createHash('sha1').update(salt).digest('hex');
-                        
                 var dbPassword  = usuario.password;
                 if(!(dbPassword == encPassword)){
                     return done(null, false, req.flash('message','Usuário ou senha inválidos.'));

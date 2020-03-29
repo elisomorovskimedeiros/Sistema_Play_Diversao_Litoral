@@ -57,8 +57,14 @@ router.get("/logout", function(req, res){
 
 router.get("/", isLoggedIn, function(req, res){
     let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
-    let tituloIndex = perfil.tituloIndex;
-    res.render("index",{perfil});
+    let usuario = req.user.nome;
+    res.render("index",{perfil, usuario});
+});
+
+router.get("/teste_v2", isLoggedIn, function(req, res){
+    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    let usuario = req.user.nome;
+    res.render("index_v2",{perfil, usuario});
 });
 
 router.get("/inserirCliente", isLoggedIn, function(req, res){
@@ -563,6 +569,7 @@ function separarBrinquedos(idsBrinquedos){
 
 //rota que o cliente usa para se cadastrar
 router.get("/cadastroPlay/:perfil/:idEvento", async function(req, res){
+
     let idEvento = req.params.idEvento;
     let perfil = req.params.perfil;
     let sessao = await int.acharSessao(idEvento, perfil).then(function(resposta){
@@ -668,6 +675,11 @@ router.post("/cadastro/:tela/:perfil", function(req, res){
     }    
 });
 
+router.get("/teste", isLoggedIn, function(req, res){
+    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    res.render("modulo_evento",{perfil});
+});
+
 router.get("/*", function(req, res){
     res.redirect("/");
 });
@@ -718,7 +730,6 @@ function dadosTerceiraTela(req, idEvento, perfil){
     });
     return sessoes[indice];    
 }
-
 
 module.exports = router;
 

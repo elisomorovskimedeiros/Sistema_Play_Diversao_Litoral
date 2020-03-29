@@ -525,15 +525,21 @@ class Db{
     
         var db = this;
         return new Promise(function (resolve, reject) {
-            db.connection.query(sql, function (err, results, fields) {
-                db.connection.end();
-                if (err) {
-                    return resolve({status: false,
-                                    resultado: err});
-                }
-                return resolve({status: true,
-                                resultado: results});
-            });
+            if(brinquedosEvento.brinquedos.length > 0){
+                db.connection.query(sql, function (err, results, fields) {
+                    db.connection.end();
+                    if (err) {
+                        return resolve({status: false,
+                                        resultado: err});
+                    }
+                    return resolve({status: true,
+                                    resultado: results});
+                });
+            }else{
+                return resolve({
+                    status: true
+                })
+            }            
         }); 
     }
 
@@ -570,7 +576,8 @@ class Db{
     }
 
     selectBrinquedosPorIdEvento(id_evento){
-        let sql = "SELECT brinquedo.nome_brinquedo FROM brinquedo JOIN evento_brinquedo "+
+        let sql = "SELECT brinquedo.id_brinquedo, brinquedo.nome_brinquedo, brinquedo.foto_brinquedo, "+
+            "brinquedo.quantidade FROM brinquedo JOIN evento_brinquedo "+
             "ON evento_brinquedo.brinquedo = brinquedo.id_brinquedo "+
             "WHERE evento_brinquedo.evento = ?";
         var db = this;
@@ -753,6 +760,232 @@ class Db{
                 }
                 return resolve({status: true,
                                 resultado: result});                
+            });
+        });
+    }
+
+    //########### MÉTODOS V2 ###########
+    select_proximos_eventos(){
+        /*
+        let sql = "select id_evento, data_evento, logradouro_evento, numero_evento, complemento_evento, " +
+        "observacao_endereco_evento, cidade_evento, valor_total, valor_desconto, valor_sinal, observacao_evento,  " +
+        "bairro_evento, abrigo, id_cliente, nome_cliente, telefone, telefone_recado, email, logradouro_cliente, " +
+        "numero_cliente, complemento_endereco_cliente, observacao_endereco_cliente, bairro_cliente, cidade_cliente, "+
+        "group_concat(brinquedo) as brinquedos from  " +
+        "(select evento.id_evento as id_evento, brinquedo.nome_brinquedo as brinquedo,  " +
+        "evento.data as data_evento, evento.logradouro as logradouro_evento,  " +
+        "evento.numero as numero_evento, evento.complemento as complemento_evento,  " +
+        "evento.observacao as observacao_endereco_evento, evento.cidade as cidade_evento,  " +
+        "evento.valor_total as valor_total, evento.valor_desconto as valor_desconto,  " +
+        "evento.valor_sinal as valor_sinal, evento.observacao_evento as observacao_evento,  " +
+        "evento.bairro as bairro_evento, evento.possui_local_abrigado as abrigo,  " +
+        "cliente.id_cliente as id_cliente, cliente.nome as nome_cliente, cliente.telefone as telefone, " +
+        "cliente.telefone_recado as telefone_recado, cliente.email as email,  " +
+        "cliente.logradouro as logradouro_cliente, cliente.numero as numero_cliente, " + 
+        "cliente.complemento as complemento_endereco_cliente, cliente.observacao_endereco as observacao_endereco_cliente, " + 
+        "cliente.bairro as bairro_cliente, cliente.cidade as cidade_cliente " + 
+        "from " +
+        "cliente join evento on cliente.id_cliente = evento.id_cliente " +
+        "left join evento_brinquedo " + //o left join foi colocado pois os eventos podem estar ainda sem brinquedos inseridos
+        "on evento.id_evento = evento_brinquedo.evento  " +
+        "left join brinquedo " +
+        "on evento_brinquedo.brinquedo = brinquedo.id_brinquedo " +
+        "where evento.data BETWEEN CURDATE() AND CURDATE() + INTERVAL 15 DAY ORDER BY evento.data ASC) " +
+        "as tab group by id_evento order by data_evento asc; ";*/
+        
+        let busca_brinquedo = "'{\"nome\":\"', brinquedo.nome_brinquedo, '\", \"imagem\":\"',brinquedo.foto_brinquedo,'\"}')) ";
+        let sql = "SELECT evento.bairro as bairro_evento, evento.cidade as cidade_evento, evento.complemento as complemento_evento, "+
+            "evento.data as data_evento, evento.id_evento as id_evento, evento.logradouro as logradouro_evento, "+
+            "evento.numero as numero_evento, evento.observacao as observacao_endereco_evento, evento.observacao_evento as observacao_evento, "+
+            "evento.valor_desconto, evento.valor_sinal, evento.valor_total, evento.possui_local_abrigado as abrigo, "+
+            "cliente.bairro as bairro_cliente, cliente.cidade as cidade_cliente, cliente.complemento as complemento_endereco_cliente, "+
+            "cliente.email, cliente.id_cliente, cliente.logradouro as logradouro_cliente, cliente.nome as nome_cliente, "+
+            "cliente.numero as numero_cliente, cliente.observacao_endereco as observacao_endereco_cliente, cliente.telefone, cliente.telefone_recado, "+
+            "group_concat(CONCAT(" +
+            busca_brinquedo +
+            "as brinquedos FROM brinquedo " +
+            "join evento_brinquedo on brinquedo.id_brinquedo = evento_brinquedo.brinquedo "+
+            "join evento on evento_brinquedo.evento = evento.id_evento "+
+            "join cliente on evento.id_cliente = cliente.id_cliente " +
+            "where evento.data BETWEEN CURDATE() AND CURDATE() + INTERVAL 15 DAY "+ 
+            "group by evento.id_evento "+
+            "order by evento.data asc";
+        var db = this;
+        return new Promise(function(resolve){
+            db.connection.query(sql, function(err, resultado){
+                db.connection.end();
+                if(err){
+                    return resolve({
+                        status: false,
+                        resultado: err
+                    });
+                }else{
+                    resultado.forEach(function(linha){
+                        linha.brinquedos = "["+linha.brinquedos+"]";
+                        linha.brinquedos = JSON.parse(linha.brinquedos);
+                    });
+                    return resolve({
+                        status: true,
+                        resultado: resultado
+                    });
+                } 
+            });
+        });
+    }
+    
+    select_qtd_de_brinquedos(data){
+        data = String(moment(data).format("YYYY-MM-DD"))+"%";
+        let sql = "select brinquedo.*, qtd_alugada.* from brinquedo left join "+
+        "(select count(*) as qtd_alugada, id_brinquedo_alugado "+
+            "from (select evento_brinquedo.brinquedo as id_brinquedo_alugado, evento.id_evento as id_evento "+
+                "from evento join evento_brinquedo on evento.id_evento = evento_brinquedo.evento "+
+                "where evento.data like ?) "+
+            "as consulta group by id_brinquedo_alugado) "+
+        "as qtd_alugada "+
+        "on brinquedo.id_brinquedo = qtd_alugada.id_brinquedo_alugado";
+        /*
+        let sql = "select grupo.*, brinquedo.nome_brinquedo, brinquedo.foto_brinquedo, brinquedo.quantidade from "+
+            "(select count(*) as qtd_alugada, id_brinquedo "+
+                "from (select evento_brinquedo.brinquedo as id_brinquedo, evento.id_evento as id_evento "+
+                    "from evento join evento_brinquedo "+
+                "on evento.id_evento = evento_brinquedo.evento where evento.data like ?) as consulta "+
+            "group by id_brinquedo) as grupo join brinquedo "+
+        "on brinquedo.id_brinquedo = grupo.id_brinquedo";*/
+        var db = this;
+        return new Promise(function(resolve){
+            db.connection.query(sql, data, function(err, result){
+                db.connection.end();
+                if(err){
+                    return resolve({
+                        status: false,
+                        resultado: err
+                    });
+                }else{
+                    return resolve({
+                        status: true,
+                        resultado: result
+                    });
+                } 
+            });
+        });
+    }
+
+    select_qtd_de_brinquedos_alugados_no_dia(data){
+        data = String(moment(data).format("YYYY-MM-DD"))+"%";
+        let sql = "select count(*) as quantidade_alugada, brinquedo_alugado from " +
+                "(select evento_brinquedo.brinquedo as brinquedo_alugado, "+
+                    "evento_brinquedo.evento as evento "+
+                    "from brinquedo "+
+                    "join evento_brinquedo "+
+                    "on brinquedo.id_brinquedo = evento_brinquedo.brinquedo "+
+                    "join evento "+
+                    "on evento_brinquedo.evento = evento.id_evento "+
+                    "where evento.data like ?" +
+                    ") as filtro_brinquedos "+ 
+                "group by brinquedo_alugado";
+        var db = this;
+        return new Promise(function(resolve){
+            db.connection.query(sql, data, function(err, result){
+                db.connection.end();
+                if(err){
+                    return resolve({
+                        status: false,
+                        resultado: err
+                    });
+                }else{
+                    return resolve({
+                        status: true,
+                        resultado: result
+                    });
+                } 
+            });
+        });
+    }
+
+    excluir_brinquedos_de_determinado_evento(brinquedos, evento){
+        let sql = '';
+        var db = this;
+        return new Promise(function(resolve){
+            if(brinquedos.length > 0){
+                let lista_brinquedos = "(";
+                brinquedos.forEach(function(brinquedo, indice){
+                    if(indice < brinquedos.length - 1){
+                        lista_brinquedos += "brinquedo = "+String(brinquedo) + " OR "; 
+                    }else{
+                        lista_brinquedos += "brinquedo = "+String(brinquedo) + ")";
+                    }
+                });
+                sql = "DELETE FROM evento_brinquedo WHERE evento = "+evento+" AND " + lista_brinquedos;
+                console.log(sql);
+                db.connection.query(sql, function(err, result){
+                    db.connection.end();
+                    if(err){
+                        return resolve({
+                            status: false,
+                            resultado: err
+                        });
+                    }else{
+                        return resolve({
+                            status: true,
+                            resultado: result
+                        });
+                    } 
+                });
+            }else{
+                return resolve({
+                    status: true
+                });
+            }
+        });
+    }
+
+    select_evento_por_intervalo_data(de, ate){
+        let intervalo_de_busca = "";
+        //caso alguma das datas venha vazia, o sistema tem que buscar por data única ao invés de um intervalo de datas
+        if(de == ''){
+            intervalo_de_busca = "like '" + ate + "%'";
+        }else if(ate == ''){
+            intervalo_de_busca = "like '" + de + "%'";
+        }else{
+            intervalo_de_busca = "between '" + de + "%' and '" + ate + " 23:59:59'";
+        }        
+        let busca_brinquedo = "'{\"nome\":\"', brinquedo.nome_brinquedo, '\", \"imagem\":\"',brinquedo.foto_brinquedo,'\"}')) ";
+        let sql = "SELECT evento.bairro as bairro_evento, evento.cidade as cidade_evento, evento.complemento as complemento_evento, "+
+            "evento.data as data_evento, evento.id_evento as id_evento, evento.logradouro as logradouro_evento, "+
+            "evento.numero as numero_evento, evento.observacao as observacao_endereco_evento, evento.observacao_evento as observacao_evento, "+
+            "evento.valor_desconto, evento.valor_sinal, evento.valor_total, evento.possui_local_abrigado as abrigo, "+
+            "cliente.bairro as bairro_cliente, cliente.cidade as cidade_cliente, cliente.complemento as complemento_endereco_cliente, "+
+            "cliente.email, cliente.id_cliente, cliente.logradouro as logradouro_cliente, cliente.nome as nome_cliente, "+
+            "cliente.numero as numero_cliente, cliente.observacao_endereco as observacao_endereco_cliente, cliente.telefone, cliente.telefone_recado, "+
+            "group_concat(CONCAT(" +
+            busca_brinquedo +
+            "as brinquedos FROM brinquedo " +
+            "join evento_brinquedo on brinquedo.id_brinquedo = evento_brinquedo.brinquedo "+
+            "join evento on evento_brinquedo.evento = evento.id_evento "+
+            "join cliente on evento.id_cliente = cliente.id_cliente " +
+            "where evento.data "+ intervalo_de_busca + 
+            "group by evento.id_evento "+
+            "order by evento.data asc";
+        var db = this;
+        return new Promise(function(resolve){
+            db.connection.query(sql, function(err, resultado){
+                db.connection.end();
+                if(err){
+                    console.log(err);
+                    return resolve({
+                        status: false,
+                        resultado: err
+                    });
+                }else{
+                    resultado.forEach(function(linha){
+                        linha.brinquedos = "["+linha.brinquedos+"]";
+                        linha.brinquedos = JSON.parse(linha.brinquedos);
+                    });                   
+                    return resolve({
+                        status: true,
+                        resultado: resultado
+                    });
+                } 
             });
         });
     }

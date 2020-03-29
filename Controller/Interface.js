@@ -296,6 +296,54 @@ class Interface{
             }
         });                
     }   
+
+    //########## MÉTODOS V2 ###########
+    async select_proximos_eventos(perfil){
+        let db = new Db(perfil);
+        return await db.select_proximos_eventos().then(function(resposta){
+            return resposta;
+        });
+    }
+    
+    async select_qtd_de_brinquedos(perfil, data){
+        let db = new Db(perfil);
+        return await db.select_qtd_de_brinquedos(data).then(function(resposta){
+            return resposta;
+        });
+    }
+
+    async select_qtd_de_brinquedos_alugados_no_dia(perfil, data){
+        let db = new Db(perfil);
+        return await db.select_qtd_de_brinquedos_alugados_no_dia(data).then(function(resposta){
+            return resposta;
+        });
+    }
+
+    async excluir_brinquedos_de_determinado_evento(perfil, brinquedos, evento){
+        let db = new Db(perfil);
+        return await db.excluir_brinquedos_de_determinado_evento(brinquedos, evento).then(function(resposta){
+            return resposta;
+        });
+    }
+
+    async select_evento_por_intervalo_data(perfil, de, ate){
+        let db = new Db(perfil);
+        /*if(de == ""){
+            return await db.selectEventosPorClienteEData("", ate).then(function(resposta){
+                return resposta;
+            });
+        }else if(ate == ""){
+            return await db.selectEventosPorClienteEData("", de).then(function(resposta){
+                return resposta;
+            });
+        }else{*/
+            return await db.select_evento_por_intervalo_data(de, ate).then(function(resposta){
+                return resposta;
+            });
+        //}
+        
+    }
+
 }
 
 module.exports = Interface;
