@@ -174,6 +174,64 @@ function pedir_evento_por_data(data_inicio, data_fim){
 }
 
 function carregar_eventos_na_tela(eventos){
+  let cor_borda_fieldset = "borda_azul";
+  //laço que exibe eventos recebidos do servidor 
+  eventos.forEach(function(evento, indice){
+    let item = $("#peleCelulaEvento").clone().removeClass("invisible").removeClass("float").appendTo("#listagemFiltros").removeClass("invisible");
+    let celulaEvento = item.find(".celulaEvento")[0];
+    $(celulaEvento).attr("id", indice);
+    let campoId = item.find(".idListaEventos")[0];
+    let campoData = item.find(".dataListaEventos")[0];
+    let campoNomeCliente = item.find(".nomeClienteListaEventos")[0];
+    let campoEndereco = item.find(".enderecoListaEventos")[0];
+    let campoBrinquedos = item.find(".brinquedosListaEventos")[0];
+    let campoTelefone = item.find(".telefone_cliente")[0];
+    let campoTelefoneRecado = item.find(".telefone_recado")[0];
+    campoId.innerHTML = evento.id_evento;
+    campoData.innerHTML = moment(evento.data_evento).format("DD/MM/YYYY");
+    campoNomeCliente.innerHTML = evento.nome_cliente;
+    let endereco_evento = evento.logradouro_evento + ", " + evento.numero_evento;
+    if (evento.bairro_evento.length > 2) endereco_evento += ", "+evento.bairro_evento;
+    if (evento.cidade_evento.length > 2) endereco_evento += ", "+evento.cidade_evento + ".";
+    else endereco_evento += "."
+    campoEndereco.innerHTML = endereco_evento;
+    campoTelefone.innerHTML = evento.telefone;
+    campoTelefoneRecado.innerHTML = evento.telefone_recado;
+    $(campoBrinquedos).attr("id","campo_brinquedos_evento_"+evento.id_evento);
+    $(campoBrinquedos).html('');
+    //laço que exibe brinquedos dentro do evento
+    evento.brinquedos.forEach(function(brinquedo, indice){
+      let celula_icone_brinquedo = $("#brinquedo_individual").clone();
+      $(celula_icone_brinquedo).removeClass("invisible")
+        .removeClass("float")
+        .attr("id","evento_"+evento.id_evento+"_icone_brinquedo_"+indice)
+        .appendTo(campoBrinquedos);
+      let nome_brinquedo = celula_icone_brinquedo.find(".nome_brinquedo")[0];
+      let icone_brinquedo = celula_icone_brinquedo.find(".icone_brinquedo")[0];
+      nome_brinquedo.innerHTML = brinquedo.nome;
+      $(icone_brinquedo).attr("src",brinquedo.imagem);
+    });
+    //lógica para alteração a cor do fieldset
+    let fieldset = $(item).find(".field_set_modulo_evento")[0];
+    switch (cor_borda_fieldset){
+      case "borda_azul": $(fieldset).addClass("borda_azul");
+                         cor_borda_fieldset = "borda_amarela";
+                         break;
+      case "borda_amarela": $(fieldset).addClass("borda_amarela");
+                            cor_borda_fieldset = "borda_vermelha";
+                            break;
+      case "borda_vermelha": $(fieldset).addClass("borda_vermelha");
+                            cor_borda_fieldset = "borda_verde";
+                            break;
+      case "borda_verde": $(fieldset).addClass("borda_verde");
+                            cor_borda_fieldset = "borda_azul";
+                            break;
+    }  
+  });    
+}
+/*
+function carregar_eventos_na_tela(eventos){
+  console.log(eventos[0]);
   eventos.forEach(function(evento, indice){
     let item = $("#peleCelulaEvento").clone().removeClass("invisible").removeClass("float").appendTo("#listagemFiltros").removeClass("invisible");
     let celulaEvento = item.find(".celulaEvento")[0];
@@ -186,7 +244,11 @@ function carregar_eventos_na_tela(eventos){
     campoId.innerHTML = evento.id_evento;
     campoData.innerHTML = moment(evento.data_evento).format("DD/MM/YYYY");
     campoNomeCliente.innerHTML = evento.nome_cliente;
-    campoEndereco.innerHTML = evento.logradouro_evento + ", " + evento.numero_evento;
+    let endereco_evento = evento.logradouro_evento + ", " + evento.numero_evento;
+    if (evento.bairro_evento != '') endereco_evento += ", "+evento.bairro_evento;
+    if (evento.cidade_evento != '') endereco_evento += ", "+evento.cidade_evento + ".";
+    else endereco_evento += "."
+    campoEndereco.innerHTML = endereco_evento;
     let lista_brinquedos = "";
     evento.brinquedos.forEach(function(brinquedo, indice){
       lista_brinquedos += " " + brinquedo.nome;
@@ -198,4 +260,4 @@ function carregar_eventos_na_tela(eventos){
     });
     campoBrinquedos.value = lista_brinquedos;    
   });    
-}
+}*/

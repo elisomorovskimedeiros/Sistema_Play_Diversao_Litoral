@@ -460,6 +460,7 @@
     </div>
 
             <!-- CÉLULA INDIVIDUAL COM CADA EVENTO LISTADO -->
+            <!--
             <div id="peleCelulaEvento" class="col-md-4 invisible margin-bottom-15px float">
                 <div class="celula celulaEvento" data-toggle="modal" data-target="#janelaDestaqueEvento">
                     <table cellpadding="4">
@@ -480,8 +481,37 @@
                         </tr>
                     </table>
                 </div>                        
-            </div>                   
+            </div>                   -->
             <!-- FIM DA CÉLULA DO EVENTO -->
+
+            <!--NOVA CÉLULA INDIVIDUAL COM CADA EVENTO-->
+            <div  id="peleCelulaEvento" class="col-xl-6 invisible float">
+                <div class="celula celulaEvento" data-toggle="modal" data-target="#janelaDestaqueEvento">
+                    <fieldset class="p-2 field_set_modulo_evento borda_azul" style="border: 2px;">
+                        <legend class="w-auto"><span>Evento id: </span><span class="idListaEventos"></span></legend>
+                        <div class="row" style="margin-top: -15px;">
+                            <div class="col-md-8 nomeClienteListaEventos"></div><div class="col-md-4 dataListaEventos"></div>
+                            <div class="col-md-5 telefone_cliente"></div><div class="col-md-5 telefone_recado"></div>
+                            <div class="col-md-12 enderecoListaEventos"></div>
+                            <div class="col-md-12">
+                                Brinquedos:
+                            </div>
+                            <div class="col-md-12 row brinquedosListaEventos">
+                                <div class="col-md-3" id="brinquedo_individual">
+                                    <div class="modulo_brinquedo">
+                                        <div class="nome_brinquedo"></div>
+                                        <div class="modulo_brinquedo">
+                                            <img class="icone_brinquedo" src="" width="40px">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <!--FIM DA NOVA CÉLULA INDIVIDUAL COM CADA EVENTO-->
+
             
             <!-- CÉLULA INDIVIDUAL COM CADA CLIENTE LISTADO -->
             <div id="peleCelulaCliente" class="col-sm-6 margin-bottom-15px invisible float">
