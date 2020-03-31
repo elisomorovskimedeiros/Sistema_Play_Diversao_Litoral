@@ -121,8 +121,20 @@ td > div{
     margin-left: auto;
     margin-right: auto;
 }
-.nome_brinquedo{
+.letra_bem_pequena{
     font-size: 10px;
+}
+
+.espaco_em_cima{
+    margin-top: 10px;
+}
+
+.letra_pequena{
+    font-size: 15px;
+}
+
+hr{
+    margin-top: 5px;
 }
 
 

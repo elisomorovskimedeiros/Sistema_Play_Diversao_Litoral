@@ -224,7 +224,8 @@
                 <div id="filtroAvancadoEventos">
                 </div>
                  <!--LOCAL ONDE SERÃO EXIBIDOS OS RESULTADOS DOS FILTROS-->
-                <div id="listagemFiltros" class="row">                                       
+                <div id="listagemFiltros" class="row">
+                                                   
                 </div>
             </div>
 
@@ -459,31 +460,6 @@
         </div>     
     </div>
 
-            <!-- CÉLULA INDIVIDUAL COM CADA EVENTO LISTADO -->
-            <!--
-            <div id="peleCelulaEvento" class="col-md-4 invisible margin-bottom-15px float">
-                <div class="celula celulaEvento" data-toggle="modal" data-target="#janelaDestaqueEvento">
-                    <table cellpadding="4">
-                        <tr>
-                            <td colspan="4">Id:&nbsp;<span class="idLista idListaEventos campoLista campoListaEventos">sdfsa</span>
-                            Data:&nbsp;<span class="dataLista dataListaEventos campoLista campoListaEventos">sadfdsa</span></td> 
-                        </tr>
-                        <tr>
-                            <td>Cliente:&nbsp;</td><td><div class="nomeCliente nomeClienteListaEventos campoLista campoListaEventos">asfasfsadfdsafdsafdsafdsafsafsadfdsafadsfdsafadsfdasfdsafdasfddsfasdfdsafdasfsa</div></td>
-                        </tr>
-                        <tr>
-                            <td>Endereço:&nbsp;</td><td><div class="enderecoListaEventos campoLista campoListaEventos"></div></td>
-                        </tr>
-                        <tr>
-                            <td>Brinquedos:&nbsp;</td><td><div style="width: max-content; height: max-content;" class="campoLista campoListaEventos">
-                                <textarea class="brinquedosListaEventos" readonly></textarea>
-                            </div></td>
-                        </tr>
-                    </table>
-                </div>                        
-            </div>                   -->
-            <!-- FIM DA CÉLULA DO EVENTO -->
-
             <!--NOVA CÉLULA INDIVIDUAL COM CADA EVENTO-->
             <div  id="peleCelulaEvento" class="col-xl-6 invisible float">
                 <div class="celula celulaEvento" data-toggle="modal" data-target="#janelaDestaqueEvento">
@@ -499,7 +475,7 @@
                             <div class="col-md-12 row brinquedosListaEventos">
                                 <div class="col-md-3" id="brinquedo_individual">
                                     <div class="modulo_brinquedo">
-                                        <div class="nome_brinquedo"></div>
+                                        <div class="nome_brinquedo letra_bem_pequena"></div>
                                         <div class="modulo_brinquedo">
                                             <img class="icone_brinquedo" src="" width="40px">
                                         </div>
@@ -511,6 +487,15 @@
                 </div>
             </div>
             <!--FIM DA NOVA CÉLULA INDIVIDUAL COM CADA EVENTO-->
+
+            <!--DATA EXIBIDA ANTES DOS EVENTOS PARA CADA DIA-->
+            <div id="div_data" class="col-md-12 letra_pequena espaco_em_cima invisible float">
+                <center>
+                    Eventos do dia: <span class="data_cabecalho_eventos">14/03/2020</span>
+                </center>  
+                <hr>
+            </div>
+            <!--FIM DA DATA EXIBIDA ANTES DOS EVENTOS PARA CADA DIA-->
 
             
             <!-- CÉLULA INDIVIDUAL COM CADA CLIENTE LISTADO -->

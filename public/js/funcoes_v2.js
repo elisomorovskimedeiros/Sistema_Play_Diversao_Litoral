@@ -174,9 +174,20 @@ function pedir_evento_por_data(data_inicio, data_fim){
 }
 
 function carregar_eventos_na_tela(eventos){
+  let data_evento = moment(eventos[0].data_evento).format("DD/MM/YYYY");
+  let div_data_evento = $("#div_data").clone().removeClass("invisible").removeClass("float").appendTo("#listagemFiltros").removeClass("invisible");
+  $(div_data_evento).removeAttr("id");
+  $($(div_data_evento).find(".data_cabecalho_eventos")[0]).html(data_evento);
   let cor_borda_fieldset = "borda_azul";
   //laço que exibe eventos recebidos do servidor 
   eventos.forEach(function(evento, indice){
+    let data_no_array = moment(evento.data_evento).format("DD/MM/YYYY");
+    if(data_no_array != data_evento){
+      data_evento = data_no_array;
+      let div_data_evento1 = $("#div_data").clone().removeClass("invisible").removeClass("float").appendTo("#listagemFiltros").removeClass("invisible");
+      $(div_data_evento1).removeAttr("id");
+      $($(div_data_evento1).find(".data_cabecalho_eventos")[0]).html(data_evento);
+    }    
     let item = $("#peleCelulaEvento").clone().removeClass("invisible").removeClass("float").appendTo("#listagemFiltros").removeClass("invisible");
     let celulaEvento = item.find(".celulaEvento")[0];
     $(celulaEvento).attr("id", indice);
@@ -188,7 +199,7 @@ function carregar_eventos_na_tela(eventos){
     let campoTelefone = item.find(".telefone_cliente")[0];
     let campoTelefoneRecado = item.find(".telefone_recado")[0];
     campoId.innerHTML = evento.id_evento;
-    campoData.innerHTML = moment(evento.data_evento).format("DD/MM/YYYY");
+    campoData.innerHTML = data_no_array;
     campoNomeCliente.innerHTML = evento.nome_cliente;
     let endereco_evento = evento.logradouro_evento + ", " + evento.numero_evento;
     if (evento.bairro_evento.length > 2) endereco_evento += ", "+evento.bairro_evento;
@@ -229,35 +240,3 @@ function carregar_eventos_na_tela(eventos){
     }  
   });    
 }
-/*
-function carregar_eventos_na_tela(eventos){
-  console.log(eventos[0]);
-  eventos.forEach(function(evento, indice){
-    let item = $("#peleCelulaEvento").clone().removeClass("invisible").removeClass("float").appendTo("#listagemFiltros").removeClass("invisible");
-    let celulaEvento = item.find(".celulaEvento")[0];
-    $(celulaEvento).attr("id", indice);
-    let campoId = item.find(".idListaEventos")[0];
-    let campoData = item.find(".dataListaEventos")[0];
-    let campoNomeCliente = item.find(".nomeClienteListaEventos")[0];
-    let campoEndereco = item.find(".enderecoListaEventos")[0];
-    let campoBrinquedos = item.find(".brinquedosListaEventos")[0];
-    campoId.innerHTML = evento.id_evento;
-    campoData.innerHTML = moment(evento.data_evento).format("DD/MM/YYYY");
-    campoNomeCliente.innerHTML = evento.nome_cliente;
-    let endereco_evento = evento.logradouro_evento + ", " + evento.numero_evento;
-    if (evento.bairro_evento != '') endereco_evento += ", "+evento.bairro_evento;
-    if (evento.cidade_evento != '') endereco_evento += ", "+evento.cidade_evento + ".";
-    else endereco_evento += "."
-    campoEndereco.innerHTML = endereco_evento;
-    let lista_brinquedos = "";
-    evento.brinquedos.forEach(function(brinquedo, indice){
-      lista_brinquedos += " " + brinquedo.nome;
-      if(indice == evento.brinquedos.length - 1){
-        lista_brinquedos += ". ";
-      }else{
-        lista_brinquedos += ", ";
-      }
-    });
-    campoBrinquedos.value = lista_brinquedos;    
-  });    
-}*/
