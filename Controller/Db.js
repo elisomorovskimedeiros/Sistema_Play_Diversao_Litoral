@@ -989,6 +989,28 @@ class Db{
             });
         });
     }
+
+    select_nome_imagem_brinquedo(id_brinquedo){
+        let db = this;
+        let sql = "SELECT nome_brinquedo, foto_brinquedo FROM brinquedo WHERE brinquedo.id_brinquedo = ?";
+        return new Promise(function(resolve){
+            db.connection.query(sql, id_brinquedo, function(err, resultado){  
+                db.connection.end();  
+                if(err){
+                    console.log(err);
+                    return resolve({
+                        status: false,
+                        resultado: err
+                    });
+                }else{
+                    return resolve({
+                        status: true,
+                        resultado: resultado
+                    });
+                }
+            });
+        });
+    }
 }
 
 module.exports = Db;

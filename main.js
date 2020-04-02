@@ -8,6 +8,8 @@ const     express = require("express"),
          passport = require("passport"),
             Email = require("./Model/Email"),
            moment = require("moment");
+             Jimp = require('jimp'),//redimensionador de imagens
+               fs = require("fs-extra");
 
 const app = express(),
       int = new Interface();

@@ -1,7 +1,6 @@
 const express = require("express"),
        router = express.Router(),
        passport = require("passport"),
-       fs = require("fs"),
        Interface = require("../Controller/Interface"),
            Evento = require("../Model/Evento"),
            Cliente = require("../Model/Cliente"),
@@ -9,7 +8,9 @@ const express = require("express"),
         //multer = require('../Controller/multer'), //utilizar o sharp para configurar a imagem após o upload  fonte: https://medium.com/collabcode/upload-e-compress%C3%A3o-de-imagens-com-nodejs-68109eed066e    
         multer  = require('multer'),       
         login = require("../Controller/Login"),
-        Email = require("../Model/Email");
+        Email = require("../Model/Email"),
+        Jimp = require('jimp'),//redimensionador de imagens
+        fs = require("fs-extra");
 
 //const upload = multer({dest: 'public/imagens/'});
 const int = new Interface();
@@ -40,6 +41,7 @@ function isLoggedIn(req, res, next){
     }
     res.redirect("/login"); //não prossegue com a execução e redireciona para a página login
 }
+
 
 
 //executa o login do usuario
@@ -135,19 +137,91 @@ router.get("/inserirBrinquedo", isLoggedIn, function(req, res){
 
 //############ INSERÇÃO DE BRINQUEDO ################
 //utilizado o midlleware Multer para captura do upload do arquivo contendo a foto do brinquedo
+//utilizado o Jimp para redimensionar as imagens dos brinquedos
+//utilizado fs-extra para manipular a árvore de diretórios que contém as imagens
 
 //configuração do multer
 //site que ajudou: https://code.tutsplus.com/tutorials/file-upload-with-multer-in-node--cms-32088
 var storage = multer.diskStorage({
     destination: function(req, file, cb){
-        cb(null, "public/imagens/");//local de gravação do arquivo
+        //criando o diretorio do arquivo
+        let dir = '';
+        if (req.body.nome_insercao_brinquedo)
+            dir = "public/imagens/brinquedos/"+req.body.nome_insercao_brinquedo;
+        else
+            dir = "public/imagens/brinquedos/"+req.body.nome_edicao;
+        dir = removeAcento(dir);
+        console.log(dir);
+        criar_diretorios_arquivos(dir);
+        cb(null, dir);//local de gravação do arquivo
     },
     filename: function (req, file,cb){
         cb(null, file.originalname);//nome do arquivo
     }
 });
 
+function removeAcento (text){       
+    text = text.toLowerCase();                                                         
+    text = text.replace(new RegExp('[ÁÀÂÃ]','gi'), 'a');
+    text = text.replace(new RegExp('[ÉÈÊ]','gi'), 'e');
+    text = text.replace(new RegExp('[ÍÌÎ]','gi'), 'i');
+    text = text.replace(new RegExp('[ÓÒÔÕ]','gi'), 'o');
+    text = text.replace(new RegExp('[ÚÙÛ]','gi'), 'u');
+    text = text.replace(new RegExp('[Ç]','gi'), 'c');
+    return text;                 
+}
+
 var upload = multer({ storage: storage});//variável que manipula o post
+
+async function redimensionar_imagem(caminho_arquivo_origem, caminho_arquivo_destino, height){
+    //framework de redimensionamento de imagens
+    Jimp.read(caminho_arquivo_origem)
+        .then(lenna => {
+            return lenna
+        .resize(Jimp.AUTO, height) // resize
+        .write(caminho_arquivo_destino); // save
+    })
+    .catch(err => {
+        console.error(err);
+    });
+}
+
+//função utilizada para criar a árvore de diretórios que contém as fotos dos brinquedos
+//fs-extra para manipular arquivos e diretórios
+function criar_diretorios_arquivos(dir){
+    try {
+        if (!fs.existsSync(dir)) {
+            console.log(dir);
+            fs.mkdirSync(dir, 0744);
+        }
+        if (!fs.existsSync(dir+"/miniaturas")) {
+
+            fs.mkdirSync(dir+"/miniaturas", 0744);
+        }
+    } catch (e) {
+        console.log("deu erro na manipulação dos diretórios");
+        console.log(e);
+    }
+    
+}
+
+//essa função é utilizada para remover as fotos de brinquedos que não são mais usadas
+function remover_arquivo(arquivo){
+    console.log("remover arquivo");
+    console.log(arquivo);
+    try {
+        fs.remove(arquivo, (err) => {
+            if (err) {
+                console.error(err)
+                return 
+            }
+        });
+    } catch (e) {
+        console.log("deu erro");
+        console.log(e);
+    }
+    
+}
 
 router.post('/inserirBrinquedo', upload.single('foto_insercao_brinquedo'), (req, res, next) => {
     const file = req.file;
@@ -156,6 +230,10 @@ router.post('/inserirBrinquedo', upload.single('foto_insercao_brinquedo'), (req,
         console.log("não veio foto");
     }else{
         foto_brinquedo = "imagens/"+ req.file.originalname;
+        let caminho_arquivo_origem = "public/imagens/brinquedos/"+req.body.nome_insercao_brinquedo+"/"+file.originalname;
+        let caminho_arquivo_destino = "public/imagens/brinquedos/"+req.body.nome_insercao_brinquedo+"/miniaturas/miniatura"+file.originalname;
+        redimensionar_imagem(caminho_arquivo_origem, caminho_arquivo_destino, 40);//miniatura usada para a lista geral
+        redimensionar_imagem(caminho_arquivo_origem, caminho_arquivo_origem, 200);//imagem usada para a tela de detalhes
     }
     //gravação do brinquedo no db
     var brinquedo = {
@@ -180,9 +258,20 @@ router.post('/inserirBrinquedo', upload.single('foto_insercao_brinquedo'), (req,
     });  
 });
 
+function remover_foto_brinquedo(perfil, id_brinquedo){
+    int.select_nome_imagem_brinquedo(perfil,id_brinquedo).then(function(resposta){        
+        let nome_imagem_brinquedo;
+        if (resposta.status){
+            diretorio_brinquedo = resposta.resultado[0].nome_brinquedo;
+        }
+        diretorio_brinquedo = removeAcento(diretorio_brinquedo);
+        remover_arquivo(diretorio_brinquedo);
+    });
+}
+
 router.post("/editarBrinquedo", upload.single('foto'), (req, res, next) =>{
     const file = req.file;
-    
+    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
     //edição dos dados do brinquedo no db
     var brinquedo = {
         id_brinquedo: req.body.id_brinquedo,
@@ -192,11 +281,11 @@ router.post("/editarBrinquedo", upload.single('foto'), (req, res, next) =>{
         quantidade: req.body.quantidade_edicao,
         observacao: req.body.observacao_edicao
     }
-
+    remover_foto_brinquedo(perfil.perfil, brinquedo.id_brinquedo);
     if(file){//caso algum erro tenha ocorrido
         brinquedo.foto_brinquedo = "imagens/"+ req.file.originalname 
      }
-    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    
 
     int.editarBrinquedo(brinquedo,perfil.perfil).then(function(brinquedos){
         if(brinquedos.status){
