@@ -247,7 +247,7 @@ function inserirBrinquedosNoEvento(){
         brinquedos.forEach(brinquedo => {
             listaBrinquedos += '<div class="col-md-4" style="margin-top: 30px; margin-left: auto; margin-right: auto; height: 300px;">' +            
                                     '<div style="width: 200px;">' +
-                                        '<img src="'+ brinquedo.foto_brinquedo +'" width="200px" >' +
+                                        '<img src="'+ caminho_imagens_brinquedos+"/"+removeAcento(brinquedo.nome_brinquedo)+"/miniatura/miniatura_"+brinquedo.foto_brinquedo +'" width="200px" >' +
                                     '</div>' +
                                     brinquedo.nome_brinquedo +
                                '</div>';
@@ -307,3 +307,15 @@ function enviarEmailConfirmacao(){
     socket.emit("enviarEmailConfirmacao", idEvento, perfil);
 }
 
+//########################
+//função que remove acentos que possam existir nos nomes que serão dados aos arquivos ou diretórios
+function removeAcento(text){       
+    text = text.toLowerCase();                                                         
+    text = text.replace(new RegExp('[ÁÀÂÃ]','gi'), 'a');
+    text = text.replace(new RegExp('[ÉÈÊ]','gi'), 'e');
+    text = text.replace(new RegExp('[ÍÌÎ]','gi'), 'i');
+    text = text.replace(new RegExp('[ÓÒÔÕ]','gi'), 'o');
+    text = text.replace(new RegExp('[ÚÙÛ]','gi'), 'u');
+    text = text.replace(new RegExp('[Ç]','gi'), 'c');
+    return text;                 
+}

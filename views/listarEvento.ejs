@@ -139,7 +139,7 @@
                                             <div class="col-md-3 form-group" style="margin-top: 30px; margin-left: 15px; height: max-content;">
                                                 Selecionar: <input type="checkbox" class="form-control-checkbox checkbox-lista-brinquedos" name="brinquedo<%=brinquedo.id_brinquedo%>" id="<%=brinquedo.nome_brinquedo%>"> 
                                                 <div style="width: 200px;">
-                                                    <img src= '<%= brinquedo.foto_brinquedo %>' width="200px" >
+                                                    <img src= "imagens/brinquedos/<%= brinquedo.nome_brinquedo_para_foto%>/<%=brinquedo.foto_brinquedo %>" width="200px" >
                                                 </div>
                                                 Id do Brinquedo: <%= brinquedo.id_brinquedo %><br>
                                                 Nome: <%= brinquedo.nome_brinquedo %><br>

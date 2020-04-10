@@ -121,7 +121,7 @@ socket.on("mandarEssesEventos", function(resultado){
             listaBrinquedos += 
             '<div class="col-md-4" style="margin-top: 30px; margin-left: auto; margin-right: auto; height: max-content; width: max-content;">' +
                 '<div style="width: 200px;">'+
-                    '<img src="'+brinquedo.foto_brinquedo+'" width="200px" >' +
+                    '<img src="imagens/brinquedos/'+removeAcento(brinquedo.nome_brinquedo)+'/'+brinquedo.foto_brinquedo+'" width="200px" >' +
                 '</div>'+
                 'Id do Brinquedo: '+ brinquedo.id_brinquedo +'<br>' +
                 'Nome: '+ brinquedo.nome_brinquedo +' <br>' +
@@ -161,7 +161,7 @@ socket.on("mandarEssesEventos", function(resultado){
                 "<div class='col-md-3 divListaBrinquedos'>"+
                     "<div>"+
                         "<span>"+
-                            "<img src='"+brinquedo.foto_brinquedo+"' width='50px'>"+
+                            "<img src='imagens/brinquedos/"+removeAcento(brinquedo.nome_brinquedo)+"/miniatura/miniatura_"+brinquedo.foto_brinquedo+"' width='50px'>"+
                         "</span>"+
                         "<span class='form-group' style='margin-left: 30px;'>"+
                             "<input type='checkbox' class='form-group-checkbox brinqudo-evento' id='selBrinquedo' id_brinquedo='"+brinquedo.id_brinquedo+"'>"+

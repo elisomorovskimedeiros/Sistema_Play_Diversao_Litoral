@@ -1,11 +1,8 @@
 const   LocalStrategy  = require('passport-local').Strategy,                
         mysql          = require("mysql"),
         crypto         = require('crypto'),
-        flash          = require('connect-flash'),
         Perfil         = require('../Model/Perfil'),
-        Usuario        = require('../Model/Usuario');  
-        //express = require('express'),
-        //router = express.Router(),
+        ConexaoDbLogin = require("../../perfis/play_litoral/configuracaoConexao");
         
 
 
@@ -14,19 +11,12 @@ let login = function(passport){
     connection = mysql.createPool({
         supportBigNumbers: true,
         bigNumberStrings: true,
-        /*          
-        host     : 'mysql10-farm76.kinghost.net',
-        user     : 'solevento',
-        password : 'Medeiros15',
-        database : 'solevento', //não colocar se for criar um banco através do node
-        */
-        host     : 'localhost',
-        user     : 'play',
-        password : 'play',
-        database : 'play', //não colocar se for criar um banco através do node
+        host     : ConexaoDbLogin.host,
+        user     : ConexaoDbLogin.user,
+        password : ConexaoDbLogin.password,
+        database : ConexaoDbLogin.database, //não colocar se for criar um banco através do node
         multipleStatements: false
     });
-
     
     passport.use('local', new LocalStrategy({
         usernameField: 'username',
@@ -46,7 +36,7 @@ let login = function(passport){
                     return done(null, false, req.flash('message','Usuário ou senha inválidos.')); 
                 }
 
-                perfil = new Perfil();
+                let perfil = new Perfil();
                 usuario = rows[0];
                 
                 salt = salt+''+password;

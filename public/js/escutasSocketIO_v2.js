@@ -9,32 +9,6 @@ socket.on("receber_eventos", function(resposta){
         $("#listagemFiltros").html("");
         ultimo_filtro_eventos = resposta;
         $("#info_exibicao").html("Eventos até dia " + moment().add(15, "days").format("DD/MM/YYYY"));
-        /*
-        ultimo_filtro_eventos.forEach(function(evento, indice){
-            let item = $("#peleCelulaEvento").clone().removeClass("invisible").removeClass("float").appendTo("#listagemFiltros").removeClass("invisible");
-            let celulaEvento = item.find(".celulaEvento")[0];
-            $(celulaEvento).attr("id", indice);
-            let campoId = item.find(".idListaEventos")[0];
-            let campoData = item.find(".dataListaEventos")[0];
-            let campoNomeCliente = item.find(".nomeClienteListaEventos")[0];
-            let campoEndereco = item.find(".enderecoListaEventos")[0];
-            let campoBrinquedos = item.find(".brinquedosListaEventos")[0];
-            campoId.innerHTML = evento.id_evento;
-            campoData.innerHTML = moment(evento.data_evento).format("DD/MM/YYYY");
-            campoNomeCliente.innerHTML = evento.nome_cliente;
-            campoEndereco.innerHTML = evento.logradouro_evento + ", " + evento.numero_evento;
-            let brinquedos = "";
-            evento.brinquedos.forEach(function(brinquedo, indice){
-                brinquedos += brinquedo.nome;
-                if(indice == evento.brinquedos.length - 1){
-                    brinquedos += ".";
-                }else{
-                    brinquedos += ", ";
-                }                
-            });
-            campoBrinquedos.value = brinquedos;
-            
-        });        */
         carregar_eventos_na_tela(ultimo_filtro_eventos);
     }
 });
@@ -43,7 +17,7 @@ socket.on("receber_eventos", function(resposta){
 socket.on("receber_brinquedos_vagos", function(resposta){
     if(resposta.status){
         lista_brinquedos_disponiveis = resposta.resultado;
-        exibir_brinquedos_disponiveis();
+        exibir_brinquedos_disponiveis_dentro_do_evento_em_destaque();
     }else{
         $("#titulo_div_lista_brinquedos").clone().appendTo("#linha_lista_brinquedos").html(resposta.erro);
     }
@@ -112,7 +86,7 @@ socket.on("receberBrinquedosVagosPorData", function(lista_brinquedos,data){
                   .appendTo("#listagemFiltros")
                   .removeClass("invisible")
                   .removeClass("float");
-        $(novaDiv).find(".foto_brinquedo").attr("src", brinquedo.foto_brinquedo);
+        $(novaDiv).find(".foto_brinquedo").attr("src", caminho_imagens_brinquedos+"/"+removeAcento(brinquedo.nome_brinquedo)+"/miniatura/miniatura_"+brinquedo.foto_brinquedo);
         $(novaDiv).find(".checkbox_brinquedo").attr("id", "checkbox_inserir_brinquedo"+indice);
         $(novaDiv).find(".nome_brinquedo_troca_brinquedos").html(brinquedo.nome_brinquedo); 
         $(novaDiv).find(".qtd_disponivel_troca_brinquedos").html(brinquedo.quantidade);        

@@ -7,3 +7,4 @@ var brinquedos_do_evento_em_destaque = {};
 var ultimo_filtro_clientes = {};
 var cliente_em_destaque = {};
 var ultimo_filtro_brinquedos = {};
+var caminho_imagens_brinquedos = "imagens/brinquedos/";

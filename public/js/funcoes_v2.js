@@ -50,7 +50,7 @@
                                                     .removeClass("invisible")
                                                     .removeClass("float")
                                                     .addClass("brinquedo_no_evento"))[0];
-          $(div_criada).find(".foto_brinquedo").attr("src", brinquedo.foto_brinquedo);
+          $(div_criada).find(".foto_brinquedo").attr("src", caminho_imagens_brinquedos+"/"+removeAcento(brinquedo.nome_brinquedo)+"/miniatura/miniatura_"+brinquedo.foto_brinquedo);
           $(div_criada).find(".checkbox_brinquedo").attr("id", "checkbox_brinquedo_no_evento"+indice).attr("id_brinquedo", brinquedo.id_brinquedo).hide();
           $(div_criada).find(".nome_brinquedo_troca_brinquedos").html(brinquedo.nome_brinquedo);
           $(div_criada).find(".qtd").addClass("invisible");
@@ -58,7 +58,7 @@
       }            
     }
 
-    function exibir_brinquedos_disponiveis(){      
+    function exibir_brinquedos_disponiveis_dentro_do_evento_em_destaque(){      
       if(lista_brinquedos_disponiveis && lista_brinquedos_disponiveis.length > 0){
         lista_brinquedos_disponiveis.forEach(function(brinquedo, indice){
           let div_criada = ($("#divListaBrinquedos").clone()
@@ -67,7 +67,7 @@
                                                     .removeClass("invisible")
                                                     .removeClass("float")
                                                     .addClass("brinquedo_disponivel"))[0];
-          $(div_criada).find(".foto_brinquedo").attr("src", brinquedo.foto_brinquedo);
+          $(div_criada).find(".foto_brinquedo").attr("src", caminho_imagens_brinquedos+"/"+removeAcento(brinquedo.nome_brinquedo)+"/miniatura/miniatura_"+brinquedo.foto_brinquedo);
           $(div_criada).find(".checkbox_brinquedo").attr("id", "checkbox_brinquedo"+indice).attr("id_brinquedo", brinquedo.id_brinquedo);
           $(div_criada).find(".nome_brinquedo_troca_brinquedos").html(brinquedo.nome_brinquedo);
           $(div_criada).find(".qtd").addClass("invisible");
@@ -220,7 +220,7 @@ function carregar_eventos_na_tela(eventos){
       let nome_brinquedo = celula_icone_brinquedo.find(".nome_brinquedo")[0];
       let icone_brinquedo = celula_icone_brinquedo.find(".icone_brinquedo")[0];
       nome_brinquedo.innerHTML = brinquedo.nome;
-      $(icone_brinquedo).attr("src",brinquedo.imagem);
+      $(icone_brinquedo).attr("src",caminho_imagens_brinquedos+"/"+removeAcento(brinquedo.nome)+"/miniatura/miniatura_"+brinquedo.imagem);
     });
     //lógica para alteração a cor do fieldset
     let fieldset = $(item).find(".field_set_modulo_evento")[0];
@@ -239,4 +239,17 @@ function carregar_eventos_na_tela(eventos){
                             break;
     }  
   });    
+}
+
+//########################
+//função que remove acentos que possam existir nos nomes que serão dados aos arquivos ou diretórios
+function removeAcento(text){       
+  text = text.toLowerCase();                                                         
+  text = text.replace(new RegExp('[ÁÀÂÃ]','gi'), 'a');
+  text = text.replace(new RegExp('[ÉÈÊ]','gi'), 'e');
+  text = text.replace(new RegExp('[ÍÌÎ]','gi'), 'i');
+  text = text.replace(new RegExp('[ÓÒÔÕ]','gi'), 'o');
+  text = text.replace(new RegExp('[ÚÙÛ]','gi'), 'u');
+  text = text.replace(new RegExp('[Ç]','gi'), 'c');
+  return text;                 
 }

@@ -2,10 +2,10 @@ const nodemailer = require("nodemailer"),
        Interface = require("../Controller/Interface");
 
 //Serviço de envio de email
-
+const caminho_perfil = "../../perfis/";
 class Email{
     constructor(perfil){
-        this.perfil = perfil = require("../Model/perfis/"+perfil+"/customizacao");
+        this.perfil = perfil = require(caminho_perfil+perfil+"/customizacao");
         this.int = new Interface();
         this.transporter = nodemailer.createTransport({
             pool: true,
@@ -47,7 +47,7 @@ class Email{
             return resposta;
         });
         if (evento){
-            const Textos = require("../Model/perfis/"+perfil.perfil+"/Textos");
+            const Textos = require(caminho_perfil+perfil.perfil+"/Textos");
             let textos = new Textos(evento);
      
             let mensagem = textos.mensagemConfirmacaoEvento();
@@ -72,7 +72,7 @@ class Email{
         let evento = await int.pegarEventoClienteEBrinquedosPorIdEvento(idEvento, email.perfil.perfil).then(function(resposta){
             return resposta;
         });
-        const Textos = require("../Model/perfis/"+email.perfil.perfil+"/Textos");
+        const Textos = require(caminho_perfil+email.perfil.perfil+"/Textos");
         let textos = new Textos(evento);
         let mensagemCliente = textos.mensagemCadastroCliente();
         let mensagemSistema =  textos.mensagemCadastroPlay();

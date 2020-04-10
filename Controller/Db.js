@@ -1,14 +1,11 @@
 const mysql = require("mysql"),
-    Brinquedo = require("../Model/Brinquedo"),
-    Cliente = require("../Model/Cliente"),
-    Evento = require("../Model/Evento"),
     moment = require("moment");
 
 class Db{
     
     constructor(perfil){
         if(perfil){
-            this.esquemaConexao = require("../Model/perfis/"+perfil+"/conexaoDb");
+            this.esquemaConexao = require("../../perfis/"+perfil+"/conexaoDb");
         }/*else{
             this.esquemaConexao = require("../Model/perfis/play_litoral/conexaoDb");
         }*/
@@ -991,6 +988,7 @@ class Db{
     }
 
     select_nome_imagem_brinquedo(id_brinquedo){
+        console.log(id_brinquedo);
         let db = this;
         let sql = "SELECT nome_brinquedo, foto_brinquedo FROM brinquedo WHERE brinquedo.id_brinquedo = ?";
         return new Promise(function(resolve){

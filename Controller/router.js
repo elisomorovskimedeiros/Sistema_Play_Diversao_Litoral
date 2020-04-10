@@ -1,18 +1,15 @@
 const express = require("express"),
        router = express.Router(),
-       passport = require("passport"),
        Interface = require("../Controller/Interface"),
            Evento = require("../Model/Evento"),
            Cliente = require("../Model/Cliente"),
-
-        //multer = require('../Controller/multer'), //utilizar o sharp para configurar a imagem após o upload  fonte: https://medium.com/collabcode/upload-e-compress%C3%A3o-de-imagens-com-nodejs-68109eed066e    
+           Brinquedo = require("../Model/Brinquedo"),
         multer  = require('multer'),       
-        login = require("../Controller/Login"),
         Email = require("../Model/Email"),
-        Jimp = require('jimp'),//redimensionador de imagens
-        fs = require("fs-extra");
+        obj_arquivo = require("../Model/Arquivo");
 
-//const upload = multer({dest: 'public/imagens/'});
+
+let caminho_perfil = "../../perfis/";
 const int = new Interface();
 let perfil = undefined;
 class Sessao{
@@ -25,6 +22,7 @@ class Sessao{
 }
 
 let clientes, sessoes = []; //utilizado no post /cadastroPlay
+let obj_brinquedo = new Brinquedo();
 
 function stringToDate(dataString){
     dataString = dataString.split("-");
@@ -58,20 +56,20 @@ router.get("/logout", function(req, res){
 });   
 
 router.get("/", isLoggedIn, function(req, res){
-    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    let perfil = require(caminho_perfil+req.user.perfil+"/customizacao");
     let usuario = req.user.nome;
     res.render("index",{perfil, usuario});
 });
 
 router.get("/teste_v2", isLoggedIn, function(req, res){
-    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    let perfil = require(caminho_perfil+req.user.perfil+"/customizacao");
     let usuario = req.user.nome;
     res.render("index_v2",{perfil, usuario});
 });
 
 router.get("/inserirCliente", isLoggedIn, function(req, res){
     let resposta;
-    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    let perfil = require(caminho_perfil+req.user.perfil+"/customizacao");
     res.render("inserirCliente.ejs",{resposta, perfil});
 });
 
@@ -90,7 +88,7 @@ router.post("/inserirCliente", isLoggedIn, function(req, res){
         cidade: req.body.cidade_novo_cliente,
         observacao_cliente: req.body.observacao_cliente_novo_cliente
     }
-    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    let perfil = require(caminho_perfil+req.user.perfil+"/customizacao");
     
     int.inserirCliente(cliente,perfil.perfil).then(function(resposta){
         if(resposta.status){
@@ -103,7 +101,7 @@ router.post("/inserirCliente", isLoggedIn, function(req, res){
 });
 
 router.get("/listarTodosClientes", isLoggedIn, function(req, res){
-    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    let perfil = require(caminho_perfil+req.user.perfil+"/customizacao");
     int.listarTodosClientes(perfil).then(function(clientes){       
         res.render("listarCliente.ejs",{clientes, perfil});
     });    
@@ -111,13 +109,13 @@ router.get("/listarTodosClientes", isLoggedIn, function(req, res){
 
 router.get("/listarCliente",  isLoggedIn, function(req, res){
     let clientes = undefined;
-    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    let perfil = require(caminho_perfil+req.user.perfil+"/customizacao");
     res.render("listarCliente.ejs",{clientes, perfil});
 });
 
 router.post("/listarCliente", isLoggedIn, function(req, res){
     let nomeCliente = req.body.nome_cliente;
-    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    let perfil = require(caminho_perfil+req.user.perfil+"/customizacao");
     int.listarCliente(nomeCliente,perfil).then(function(resposta){
         if(resposta.status){
             let clientes = resposta.resultado;
@@ -130,7 +128,7 @@ router.post("/listarCliente", isLoggedIn, function(req, res){
 
 router.get("/inserirBrinquedo", isLoggedIn, function(req, res){
     let resposta;
-    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    let perfil = require(caminho_perfil+req.user.perfil+"/customizacao");
     res.render("inserirBrinquedo.ejs", {resposta,perfil});
 });
 
@@ -143,16 +141,17 @@ router.get("/inserirBrinquedo", isLoggedIn, function(req, res){
 //configuração do multer
 //site que ajudou: https://code.tutsplus.com/tutorials/file-upload-with-multer-in-node--cms-32088
 var storage = multer.diskStorage({
-    destination: function(req, file, cb){
+    destination: async function(req, file, cb){
         //criando o diretorio do arquivo
         let dir = '';
+        let nome_brinquedo = '';
         if (req.body.nome_insercao_brinquedo)
-            dir = "public/imagens/brinquedos/"+req.body.nome_insercao_brinquedo;
+            nome_brinquedo = req.body.nome_insercao_brinquedo;
         else
-            dir = "public/imagens/brinquedos/"+req.body.nome_edicao;
-        dir = removeAcento(dir);
-        console.log(dir);
-        criar_diretorios_arquivos(dir);
+            nome_brinquedo = req.body.nome_edicao;
+        dir = "public/imagens/brinquedos/"+nome_brinquedo;
+        dir = obj_arquivo.removeAcento(dir);
+        await obj_arquivo.criar_diretorios_arquivos(dir);        
         cb(null, dir);//local de gravação do arquivo
     },
     filename: function (req, file,cb){
@@ -160,172 +159,36 @@ var storage = multer.diskStorage({
     }
 });
 
-function removeAcento (text){       
-    text = text.toLowerCase();                                                         
-    text = text.replace(new RegExp('[ÁÀÂÃ]','gi'), 'a');
-    text = text.replace(new RegExp('[ÉÈÊ]','gi'), 'e');
-    text = text.replace(new RegExp('[ÍÌÎ]','gi'), 'i');
-    text = text.replace(new RegExp('[ÓÒÔÕ]','gi'), 'o');
-    text = text.replace(new RegExp('[ÚÙÛ]','gi'), 'u');
-    text = text.replace(new RegExp('[Ç]','gi'), 'c');
-    return text;                 
-}
-
 var upload = multer({ storage: storage});//variável que manipula o post
 
-async function redimensionar_imagem(caminho_arquivo_origem, caminho_arquivo_destino, height){
-    //framework de redimensionamento de imagens
-    Jimp.read(caminho_arquivo_origem)
-        .then(lenna => {
-            return lenna
-        .resize(Jimp.AUTO, height) // resize
-        .write(caminho_arquivo_destino); // save
-    })
-    .catch(err => {
-        console.error(err);
-    });
-}
-
-//função utilizada para criar a árvore de diretórios que contém as fotos dos brinquedos
-//fs-extra para manipular arquivos e diretórios
-function criar_diretorios_arquivos(dir){
-    try {
-        if (!fs.existsSync(dir)) {
-            console.log(dir);
-            fs.mkdirSync(dir, 0744);
-        }
-        if (!fs.existsSync(dir+"/miniaturas")) {
-
-            fs.mkdirSync(dir+"/miniaturas", 0744);
-        }
-    } catch (e) {
-        console.log("deu erro na manipulação dos diretórios");
-        console.log(e);
-    }
-    
-}
-
-//essa função é utilizada para remover as fotos de brinquedos que não são mais usadas
-function remover_arquivo(arquivo){
-    console.log("remover arquivo");
-    console.log(arquivo);
-    try {
-        fs.remove(arquivo, (err) => {
-            if (err) {
-                console.error(err)
-                return 
-            }
-        });
-    } catch (e) {
-        console.log("deu erro");
-        console.log(e);
-    }
-    
-}
-
-router.post('/inserirBrinquedo', upload.single('foto_insercao_brinquedo'), (req, res, next) => {
-    const file = req.file;
-    let foto_brinquedo = '';
-    if(!file){//caso algum erro tenha ocorrido
-        console.log("não veio foto");
-    }else{
-        foto_brinquedo = "imagens/"+ req.file.originalname;
-        let caminho_arquivo_origem = "public/imagens/brinquedos/"+req.body.nome_insercao_brinquedo+"/"+file.originalname;
-        let caminho_arquivo_destino = "public/imagens/brinquedos/"+req.body.nome_insercao_brinquedo+"/miniaturas/miniatura"+file.originalname;
-        redimensionar_imagem(caminho_arquivo_origem, caminho_arquivo_destino, 40);//miniatura usada para a lista geral
-        redimensionar_imagem(caminho_arquivo_origem, caminho_arquivo_origem, 200);//imagem usada para a tela de detalhes
-    }
-    //gravação do brinquedo no db
-    var brinquedo = {
-        nome_brinquedo: req.body.nome_insercao_brinquedo,
-        caracteristicas: req.body.caracteristicas_insercao_brinquedo,
-        foto_brinquedo: foto_brinquedo,
-        valor_brinquedo: req.body.valor_insercao_brinquedo,
-        quantidade: req.body.quantidade_insercao_brinquedo,
-        observacao: req.body.observacao_insercao_brinquedo
-    }
-
-    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
-    int.inserirBrinquedo(brinquedo,perfil.perfil).then(function(resultado){
-        let resposta;
-        if(resultado.status){
-            resposta = "Brinquedo inserido com sucesso!";
-        }else{
-            console.log(resultado);
-            resposta = "Ocorreu um erro na inserção do brinquedo";
-        }
-        res.render("inserirBrinquedo", {resposta, perfil});
-    });  
+router.post('/inserirBrinquedo', upload.single("foto_insercao_brinquedo"), function(req, res){
+    obj_brinquedo.processo_de_insercao_do_brinquedo(req,res, int)
 });
 
-function remover_foto_brinquedo(perfil, id_brinquedo){
-    int.select_nome_imagem_brinquedo(perfil,id_brinquedo).then(function(resposta){        
-        let nome_imagem_brinquedo;
-        if (resposta.status){
-            diretorio_brinquedo = resposta.resultado[0].nome_brinquedo;
-        }
-        diretorio_brinquedo = removeAcento(diretorio_brinquedo);
-        remover_arquivo(diretorio_brinquedo);
-    });
-}
-
 router.post("/editarBrinquedo", upload.single('foto'), (req, res, next) =>{
-    const file = req.file;
-    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
-    //edição dos dados do brinquedo no db
-    var brinquedo = {
-        id_brinquedo: req.body.id_brinquedo,
-        nome_brinquedo: req.body.nome_edicao,
-        caracteristicas: req.body.caracteristicas_edicao,
-        valor_brinquedo: req.body.valor_edicao,
-        quantidade: req.body.quantidade_edicao,
-        observacao: req.body.observacao_edicao
-    }
-    remover_foto_brinquedo(perfil.perfil, brinquedo.id_brinquedo);
-    if(file){//caso algum erro tenha ocorrido
-        brinquedo.foto_brinquedo = "imagens/"+ req.file.originalname 
-     }
-    
-
-    int.editarBrinquedo(brinquedo,perfil.perfil).then(function(brinquedos){
-        if(brinquedos.status){
-            resposta = "Brinquedo editado com sucesso!";            
-        }else{
-            resposta = "Ocorreu um erro na edição do brinquedo";
-        }
-        res.render("listarBrinquedos", {brinquedos, perfil});
-    });
+    obj_brinquedo.editar_brinquedo(req,res,int);
 });
 
 router.get("/listarBrinquedos", isLoggedIn, function(req, res){
     let brinquedos;
-    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    let perfil = require(caminho_perfil+req.user.perfil+"/customizacao");
     res.render("listarBrinquedos.ejs", {brinquedos, perfil});
 });
 
 router.get("/listarTodosBrinquedos", isLoggedIn, function(req, res){
-    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
-    int.listarTodosBrinquedos(perfil.perfil).then(function(resposta){  
-        let brinquedos;
-        if(resposta.status){
-            brinquedos = resposta.resultado;
-            res.render("listarBrinquedos.ejs",{brinquedos, perfil});
-        }else{
-            console.log(resposta.resultado);
-        }             
-    });     
+    obj_brinquedo.listar_todos_brinquedos(req, res, int);
 });
 
 
 router.get("/inserirEvento", isLoggedIn, function(req, res){
     let resposta;
-    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    let perfil = require(caminho_perfil+req.user.perfil+"/customizacao");
     res.render("inserirEvento.ejs",{resposta, perfil});
 });
 
 
 router.post("/inserirEvento", isLoggedIn, function(req, res){
-    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    let perfil = require(caminho_perfil+req.user.perfil+"/customizacao");
 
     let evento = new Evento(req.body.id_cliente, req.body.data_evento, req.body.logradouro_evento, 
         Number(req.body.numero), req.body.complemento, req.body.bairro_evento, req.body.cidade_evento, 
@@ -362,7 +225,7 @@ router.post("/inserirEvento", isLoggedIn, function(req, res){
 });
 
 router.post("/inserirBrinquedosNoEvento", isLoggedIn, function(req, res){
-    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    let perfil = require(caminho_perfil+req.user.perfil+"/customizacao");
     let brinquedoEvento;
     idsBrinquedos = Object.keys(req.body);  
     //Exemplo do formato do req.body vindo do cliente: [ '4', '5', 'id_evento' ].
@@ -393,10 +256,13 @@ router.post("/inserirBrinquedosNoEvento", isLoggedIn, function(req, res){
 
 router.get("/listarEvento", isLoggedIn, function(req, res){
     let evento;
-    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    let perfil = require(caminho_perfil+req.user.perfil+"/customizacao");
     //é necessário puxar a lista dos brinquedos do bd para o caso de edição dos eventos
     int.listarTodosBrinquedos(perfil.perfil).then(function(resposta){
         let brinquedos = resposta.resultado;
+        brinquedos.forEach(function(brinquedo){
+            brinquedo.nome_brinquedo_para_foto = obj_arquivo.removeAcento(brinquedo.nome_brinquedo);
+        });
         res.render("listarEvento.ejs",{evento, brinquedos, perfil});
     });    
 });
@@ -418,7 +284,7 @@ router.post("/editarCliente", isLoggedIn, function(req, res){
         cidade: req.body.cidade,
         observacao_cliente: req.body.observacao_cliente
     }
-    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    let perfil = require(caminho_perfil+req.user.perfil+"/customizacao");
     int.editarCliente(cliente,perfil).then(function(resposta){
         if(resposta.errno != undefined){
             res.send("Ocorreu o seguinte erro de inserção do evento no banco de dados: "+resposta);
@@ -431,7 +297,7 @@ router.post("/editarCliente", isLoggedIn, function(req, res){
 
 router.post("/excluirCliente", isLoggedIn,  function(req, res){
     let idCliente = req.body.id_cliente_excluir;
-    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    let perfil = require(caminho_perfil+req.user.perfil+"/customizacao");
     int.excluirEventosPorIdCliente(idCliente,perfil).then(function(resposta){        
         if(resposta.errno){
             res.send("Ocorreu o seguinte erro na remoção dos eventos: "+ resposta.errno);            
@@ -451,7 +317,7 @@ router.post("/excluirCliente", isLoggedIn,  function(req, res){
 router.get("/criarSessaoCliente", isLoggedIn, function(req,res){
     //evento que será utilizado na sessao
     evento = new Evento(null, new Date(), "cliente preencherá", 0, " ", " ", " ", 0, 0, 0, " ");
-    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    let perfil = require(caminho_perfil+req.user.perfil+"/customizacao");
     int.inserirEvento(evento,perfil.perfil).then(function(resposta){
         if(resposta.status){            
             evento.id_evento = resposta.resultado.insertId;
@@ -486,7 +352,7 @@ router.get("/criarSessaoCliente", isLoggedIn, function(req,res){
 
 //rota na qual o atendente insere os brinquedos pedidos para o evento e os valores correspondentes
 router.post("/criarSessaoCliente", isLoggedIn, async function(req,res){
-    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    let perfil = require(caminho_perfil+req.user.perfil+"/customizacao");
     /*
     let sessao = await int.acharSessao(req.body.idEvento, perfil.perfil).then(function(resposta){
         if(resposta){
@@ -546,7 +412,7 @@ async function editarBrinquedosNoBanco(req){
     let temBrinquedo = false;
     let body = req.body;
     //primeiro: são excluídos os brinquedos do evento
-    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    let perfil = require(caminho_perfil+req.user.perfil+"/customizacao");
     int.excluirBrinquedosEvento(body.id_evento_edicao,perfil.perfil).then(function(resposta){
         //segundo: são listadas as chaves que começam com "brinquedo" no body
         Object.keys(body).forEach(function(campo){
@@ -569,14 +435,7 @@ async function editarBrinquedosNoBanco(req){
 }
 
 router.post("/excluirBrinquedo", function(req,res){
-    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
-    int.excluirBrinquedo(req.body.id_brinquedo_excluir, perfil.perfil).then(function(resposta){        
-        let brinquedos = {status: resposta.status};
-        if(!resposta.status){
-            console.log(resposta.resultado);
-        }
-        res.render("listarBrinquedos.ejs", {brinquedos, perfil});
-    });
+    obj_brinquedo.remover_brinquedo(req,res,int);
 });
 
 async function editarEventoNoBanco(req){
@@ -610,7 +469,7 @@ async function editarEventoNoBanco(req){
     //evento.data.setHours(Number((body.hora).slice(0,2)));/*-(data.getTimezoneOffset())/60)*///para setar a hora, o sistema automaticamente guarda a hora utc, que é 
     // a hora de Brasília +3. Portanto foi subtraído a hora do retorno do método getTimezoneOffset() que mostra o desvio UTC em minutos.
     //evento.data.setMinutes((body.hora).slice(3,5));
-    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    let perfil = require(caminho_perfil+req.user.perfil+"/customizacao");
     return await int.editarEvento(evento,perfil.perfil).then(function(resposta){
         if(!resposta.status){
             console.log(resposta.resultado);
@@ -627,7 +486,7 @@ async function editarEventoNoBanco(req){
 
 
 router.post("/editarEvento", isLoggedIn, function(req,res){
-    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    let perfil = require(caminho_perfil+req.user.perfil+"/customizacao");
     editarEventoNoBanco(req).then(function(respostaEvento){
         if (respostaEvento.status){
             //função que fará o tratamento da tabela evento_brinquedo no bd
@@ -687,7 +546,7 @@ router.get("/cadastroPlay/:perfil/:idEvento", async function(req, res){
 });
 
 router.post("/removerEvento/:idEvento", function(req, res){
-    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    let perfil = require(caminho_perfil+req.user.perfil+"/customizacao");
     let idEvento = req.params.idEvento;
     int.excluirBrinquedosEvento(idEvento, perfil.perfil).then(function(resposta){        
         if(resposta.status){
@@ -718,7 +577,7 @@ router.get("/primeiraTela/:perfil/:idEvento", function(req, res){
 
 router.post("/cadastro/:tela/:perfil", function(req, res){
     let tela = req.params.tela;
-    let dadosPerfil = require("../Model/perfis/"+req.params.perfil+"/customizacao");
+    let dadosPerfil = require(caminho_perfil+req.params.perfil+"/customizacao");
     let perfil = req.params.perfil;
     let idEvento = req.body.idEvento;
     switch(tela){
@@ -765,7 +624,7 @@ router.post("/cadastro/:tela/:perfil", function(req, res){
 });
 
 router.get("/teste", isLoggedIn, function(req, res){
-    let perfil = require("../Model/perfis/"+req.user.perfil+"/customizacao");
+    let perfil = require(caminho_perfil+req.user.perfil+"/customizacao");
     res.render("modulo_evento",{perfil});
 });
 
