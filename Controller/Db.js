@@ -741,7 +741,7 @@ class Db{
 
     listarEventoClientePorIdBrinquedo(idBrinquedo){
         let sql = "SELECT evento.id_evento, evento.data, evento.logradouro, evento.numero, "+
-        "evento.cidade, cliente.nome, cliente.telefone FROM cliente "+
+        "evento.cidade, evento.status, cliente.nome, cliente.telefone FROM cliente "+
             "JOIN evento ON cliente.id_cliente = evento.id_cliente JOIN evento_brinquedo "+
                 "ON evento.id_evento = evento_brinquedo.evento JOIN brinquedo "+
                 "ON evento_brinquedo.brinquedo = brinquedo.id_brinquedo "+
@@ -794,7 +794,7 @@ class Db{
         let sql = "SELECT evento.bairro as bairro_evento, evento.cidade as cidade_evento, evento.complemento as complemento_evento, "+
             "evento.data as data_evento, evento.id_evento as id_evento, evento.logradouro as logradouro_evento, "+
             "evento.numero as numero_evento, evento.observacao as observacao_endereco_evento, evento.observacao_evento as observacao_evento, "+
-            "evento.valor_desconto, evento.valor_sinal, evento.valor_total, evento.possui_local_abrigado as abrigo, "+
+            "evento.valor_desconto, evento.valor_sinal, evento.valor_total, evento.possui_local_abrigado as abrigo, evento.status,"+
             "cliente.bairro as bairro_cliente, cliente.cidade as cidade_cliente, cliente.complemento as complemento_endereco_cliente, "+
             "cliente.email, cliente.id_cliente, cliente.logradouro as logradouro_cliente, cliente.nome as nome_cliente, "+
             "cliente.numero as numero_cliente, cliente.observacao_endereco as observacao_endereco_cliente, cliente.telefone, cliente.telefone_recado, "+
@@ -834,7 +834,7 @@ class Db{
         data = String(moment(data).format("YYYY-MM-DD"))+"%";
         let sql = "select brinquedo.*, qtd_alugada.* from brinquedo left join "+
         "(select count(*) as qtd_alugada, id_brinquedo_alugado "+
-            "from (select evento_brinquedo.brinquedo as id_brinquedo_alugado, evento.id_evento as id_evento "+
+            "from (select evento_brinquedo.brinquedo as id_brinquedo_alugado, evento.id_evento as id_evento, evento.status as status "+
                 "from evento join evento_brinquedo on evento.id_evento = evento_brinquedo.evento "+
                 "where evento.data like ?) "+
             "as consulta group by id_brinquedo_alugado) "+
@@ -913,7 +913,6 @@ class Db{
                     }
                 });
                 sql = "DELETE FROM evento_brinquedo WHERE evento = "+evento+" AND " + lista_brinquedos;
-                console.log(sql);
                 db.connection.query(sql, function(err, result){
                     db.connection.end();
                     if(err){
@@ -950,7 +949,7 @@ class Db{
         let sql = "SELECT evento.bairro as bairro_evento, evento.cidade as cidade_evento, evento.complemento as complemento_evento, "+
             "evento.data as data_evento, evento.id_evento as id_evento, evento.logradouro as logradouro_evento, "+
             "evento.numero as numero_evento, evento.observacao as observacao_endereco_evento, evento.observacao_evento as observacao_evento, "+
-            "evento.valor_desconto, evento.valor_sinal, evento.valor_total, evento.possui_local_abrigado as abrigo, "+
+            "evento.valor_desconto, evento.valor_sinal, evento.valor_total, evento.possui_local_abrigado as abrigo, evento.status,"+
             "cliente.bairro as bairro_cliente, cliente.cidade as cidade_cliente, cliente.complemento as complemento_endereco_cliente, "+
             "cliente.email, cliente.id_cliente, cliente.logradouro as logradouro_cliente, cliente.nome as nome_cliente, "+
             "cliente.numero as numero_cliente, cliente.observacao_endereco as observacao_endereco_cliente, cliente.telefone, cliente.telefone_recado, "+

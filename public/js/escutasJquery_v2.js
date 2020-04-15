@@ -38,8 +38,10 @@ $(document).ready(function(){
     $("body").on("click", ".celulaEvento", function(celula){
         let posicao_array_eventos = $(celula.currentTarget).attr("id");
         let evento = ultimo_filtro_eventos[posicao_array_eventos];
+        let status_evento = funcao_status_evento(evento.status); //troca o código númérico do status por uma string com seu significado
         evento_em_destaque = evento;
         $("#titulo_modal_destaque_evento").html("Evento " + evento.id_evento);
+        $("#status_evento_em_destaque").html(status_evento);
         $("#nome_cliente_destaque_evento").val(evento.nome_cliente);
         $("#telefone_destaque_evento").val(evento.telefone);
         $("#telefone_alternativo_destaque_evento").val(evento.telefone_alternativo);
@@ -74,6 +76,12 @@ $(document).ready(function(){
         cliente_em_destaque.observacao_endereco = evento.observacao_endereco_cliente;
         cliente_em_destaque.telefone = evento.telefone;
         cliente_em_destaque.telefone_recado = evento.telefone_recado;
+
+        if(evento.status == 2){//evento cancelado
+            $("#botao_cancelar_evento").attr("disabled", true);
+        }else{
+            $("#botao_cancelar_evento").attr("disabled", false);
+        }
     });
 
     $("#botao_editar_evento").click(function(){
@@ -85,16 +93,7 @@ $(document).ready(function(){
     });
 
     $("#janelaDestaqueEvento").on("hide.bs.modal", function(){
-        if(!$("#rodape_modal_destaque_evento").hasClass("invisible")){
-            desabilitar_edicao_evento();
-        }
-        $("#div_lista_brinquedos_no_evento").html(""); 
-        $("#linha_lista_brinquedos").html("");
-        evento_em_destaque = {};
-        brinquedos_do_evento_em_destaque = {};
-        lista_de_brinquedos_disponiveis = {};
-        ultimo_filtro_clientes = {};
-        cliente_em_destaque = {};     
+        executar_no_fechamento_do_modal();     
     });
 
     $("#btn_editar_brinquedos_evento").click(function(){
@@ -260,7 +259,7 @@ $(document).ready(function(){
     });
 
     $("#botao_confirmar_evento").click(function(){
-        enviarEmailConfirmacao();
+        confirmarEvento();
     });
     
     //exibir brinquedos vagos na data selecionada
@@ -275,7 +274,7 @@ $(document).ready(function(){
     //exibe os eventos dos próximos 15 dias
     $("#btn_proximos_eventos").click(function(){
         socket.emit("proximos_eventos", perfil);
-        nome_do_ultimo_filtro_utilizado = "btn_proximos_eventos";
+        nome_do_ultimo_filtro_utilizado = "proximos_eventos";
     });
 
     //busca evento por intervalo de datas ou por uma data especifica colocada nos campos "de" ou "ate"
@@ -286,6 +285,10 @@ $(document).ready(function(){
        
         pedir_evento_por_data(data_inicio, data_fim);
         
+    });
+
+    $("#botao_cancelar_evento").click(function(){
+        cancelar_evento(evento_em_destaque.id_evento);
     });
 /*
     $("#iniciarBuscaPorData").click(function(){

@@ -136,10 +136,11 @@ function refazer_ultimo_filtro(){
   socket.emit(nome_do_ultimo_filtro_utilizado,perfil);
 }
 
-function enviarEmailConfirmacao(){
+function confirmarEvento(){
   let idEvento = evento_em_destaque.id_evento;
   socket.emit("enviarEmailConfirmacao", idEvento, perfil);
   $("body").addClass("cursor_progresso");
+  exibir_barra_de_progresso_no_modal();
 }
 
 function selecionar_botoes_controle_a_serem_exibidos(classe_botao){
@@ -198,6 +199,7 @@ function carregar_eventos_na_tela(eventos){
     let campoBrinquedos = item.find(".brinquedosListaEventos")[0];
     let campoTelefone = item.find(".telefone_cliente")[0];
     let campoTelefoneRecado = item.find(".telefone_recado")[0];
+    let status_evento = item.find(".status")[0];
     campoId.innerHTML = evento.id_evento;
     campoData.innerHTML = data_no_array;
     campoNomeCliente.innerHTML = evento.nome_cliente;
@@ -237,7 +239,19 @@ function carregar_eventos_na_tela(eventos){
       case "borda_verde": $(fieldset).addClass("borda_verde");
                             cor_borda_fieldset = "borda_azul";
                             break;
-    }  
+    }
+    //seletor do status do evento ---- status 0: "Não confirmado", 1: "Confirmado", 2: Cancelado
+    switch (evento.status){
+      case 0: $(fieldset).css("background-color","#8bffec67");
+              $(status_evento).html("Não Confirmado");
+              break;
+      case 1: $(fieldset).css("background-color","#ffffff");
+              $(status_evento).html("Confirmado");
+              break;
+      case 2: $(fieldset).css("background-color","#f867a467");
+              $(status_evento).html("CANCELADO");
+              break;
+    }
   });    
 }
 
@@ -252,4 +266,40 @@ function removeAcento(text){
   text = text.replace(new RegExp('[ÚÙÛ]','gi'), 'u');
   text = text.replace(new RegExp('[Ç]','gi'), 'c');
   return text;                 
+}
+
+function funcao_status_evento(codigo_status){
+  switch (codigo_status){
+    case 0: return "Não Confirmado";
+    case 1: return "Confirmado";
+    case 2: return "CANCELADO";
+  }
+}
+
+function executar_no_fechamento_do_modal(){
+  if(!$("#rodape_modal_destaque_evento").hasClass("invisible")){
+    desabilitar_edicao_evento();
+  }
+  $("#div_lista_brinquedos_no_evento").html(""); 
+  $("#linha_lista_brinquedos").html("");
+  evento_em_destaque = {};
+  brinquedos_do_evento_em_destaque = {};
+  lista_de_brinquedos_disponiveis = {};
+  ultimo_filtro_clientes = {};
+  cliente_em_destaque = {};
+  refazer_ultimo_filtro();
+}
+
+function exibir_barra_de_progresso_no_modal(){
+  let progresso = $("body").find(".barra_progresso")[0];
+  $(progresso).clone().appendTo("#corpoModal").addClass("show").attr("id","progresso_confirmacao");
+}
+
+function remover_barra_de_progresso_do_modal(){
+  $("#progresso_confirmacao").remove();
+}
+
+function cancelar_evento(id_evento){
+  exibir_barra_de_progresso_no_modal();
+  socket.emit("cancelar_evento", perfil, id_evento);
 }

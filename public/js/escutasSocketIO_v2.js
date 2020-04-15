@@ -71,9 +71,13 @@ socket.on("resposta_edicao_evento", function(resposta){
     refazer_ultimo_filtro();    
 });
 //retorno do envio de confirmação via email
-socket.on("retorno", function(mensagem){
-    alert(mensagem);
-    $("body").removeClass("cursor_progresso");  
+socket.on("retorno_mudanca_status_evento", function(mensagem){
+    alert(mensagem.mensagem);
+    $("body").removeClass("cursor_progresso");
+    remover_barra_de_progresso_do_modal();
+    if(mensagem.status){
+        $("#status_evento_em_destaque").html(funcao_status_evento(mensagem.status_evento));
+    } 
 });
 
 socket.on("receberBrinquedosVagosPorData", function(lista_brinquedos,data){

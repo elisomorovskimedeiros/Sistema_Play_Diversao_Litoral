@@ -239,13 +239,19 @@
 
             <!--MODAL PARA COLOCAR EVENTO EM DESTAQUE -->
             
-            <div class="modal fade" id="janelaDestaqueEvento" onhide="executar_no_fechamento_do_modal()">              
+            <div class="modal fade" id="janelaDestaqueEvento">              
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <!-- cabecalho -->
                             <form name="form-destaque-evento" id="form-destaque-evento">
                                 <div class="modal-header">
-                                    <h4 class="modal-title" id="titulo_modal_destaque_evento"></h4>
+                                    <h4 class="modal-title d-flex flex-row justify-content-around" style="width: 100%; margin: 0px;">
+                                        <div id="titulo_modal_destaque_evento">
+                                        </div>
+                                        <div>
+                                            <span>Status: </span><span id="status_evento_em_destaque"></span>
+                                        </div>
+                                    </h4>
                                     <button type="button" class="close" data-dismiss="modal" id="fecharModalDestaqueEvento">
                                         <span>&times;</span>
                                     </button>
@@ -255,8 +261,8 @@
                                 <div class="modal-body" id="corpoModal">
                                     <div class="d-flex justify-content-around form-group">
                                         <button type="button" id="botao_editar_evento" class="btn btn-outline-primary">Editar Evento</button>                                        
-                                        <button type="button" id="botao_confirmar_evento" class="btn btn-outline-success">Enviar Confirmação</button>
-                                        <button type="button" id="botao_excluir_evento" class="btn btn-outline-danger">Excluír Evento</button>
+                                        <button type="button" id="botao_confirmar_evento" class="btn btn-outline-success">Confirmar Evento</button>
+                                        <button type="button" id="botao_cancelar_evento" class="btn btn-outline-danger">Cancelar Evento</button>
                                     </div>
 
                                     <div class="row" id="formulario_evento_em_destaque">
@@ -467,7 +473,15 @@
                         <legend class="w-auto"><span>Evento id: </span><span class="idListaEventos"></span></legend>
                         <div class="row" style="margin-top: -15px;">
                             <div class="col-md-8 nomeClienteListaEventos"></div><div class="col-md-4 dataListaEventos"></div>
-                            <div class="col-md-5 telefone_cliente"></div><div class="col-md-5 telefone_recado"></div>
+                            <div class="col-md-4">
+                                <div>Telefone: </div><div class="telefone_cliente"></div>
+                            </div>
+                            <div class="col-md-4">
+                                <div>Telefone Recado: </div><div class="telefone_recado"></div>
+                            </div>
+                            <div class="col-md-4">
+                                <div>Status: </div><div class="status"></div>
+                            </div>
                             <div class="col-md-12 enderecoListaEventos"></div>
                             <div class="col-md-12">
                                 Brinquedos:
@@ -552,4 +566,7 @@
             <!--FIM BOTÕES DE OPÇÕES DE CONTROLE DE TELA-->
 
             <div id="snackbar"></div>
+            <div class="barra_progresso">
+                <img src="imagens/loading.gif">
+            </div>
     <% include partials/v2/rodape_v2 %>

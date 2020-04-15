@@ -185,14 +185,25 @@ var socketio = io.on("connect", function(socketio){
     });
 
     socketio.on("enviarEmailConfirmacao", function(idEvento, perfil){
-        let enviarEmail = new Email(perfil);
-        enviarEmail.enviarEmailConfirmacao(idEvento).then(function(resultadoEnvio){
-            if(resultadoEnvio){
-                socketio.emit("retorno", "Mensagem Enviada com sucesso");
+        let evento = { 
+            id_evento: idEvento,
+            status: 1
+        };
+        int.editarEvento(evento, perfil).then(function(resposta){
+            if(resposta.status){
+                let enviarEmail = new Email(perfil);
+                enviarEmail.enviarEmailConfirmacao(idEvento).then(function(resultadoEnvio){
+                    if(resultadoEnvio){
+                        socketio.emit("retorno_mudanca_status_evento", {status: true, status_evento: 1, mensagem: "Mensagem Enviada com sucesso"});
+                    }else{
+                        socketio.emit("retorno_mudanca_status_evento", {status: false, status_evento: 1, mensagem: "Ocorreu um erro no envio do email"});
+                    } 
+                }); 
             }else{
-                socketio.emit("retorno", "Ocorreu um erro no envio do email");
-            } 
-        });              
+                console.log(resposta);
+                socketio.emit("retorno_mudanca_status_evento", {status: true, status_evento: 1, mensagem: "Ocorreu um erro ao confirmar o evento no banco de dados"});
+            }            
+        });                     
     });
 
     socketio.on("editarCliente", function(cliente, perfil){
@@ -394,6 +405,19 @@ var socketio = io.on("connect", function(socketio){
         }else{
             socketio.emit("resposta_consulta_evento_por_intervalo_data", {status: false, resultado: "A data informada é inválida"});
         }        
+    });
+
+    socketio.on("cancelar_evento", function(perfil, id_evento){
+        let evento = {id_evento: id_evento,
+                      status: 2};
+        int.editarEvento(evento, perfil).then(function(resposta){
+            if(resposta.status){
+                socketio.emit("retorno_mudanca_status_evento", {status: true, status_evento: 2, mensagem: "Evento Cancelado"});
+            }else{
+                console.log(resposta);
+                socketio.emit("retorno_mudanca_status_evento", {status: false, status_evento: 2, mensagem: "Ocorreu um erro ao cancelar o evento"});
+            }
+        });
     });
 });
 
