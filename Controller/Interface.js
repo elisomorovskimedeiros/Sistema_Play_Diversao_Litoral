@@ -340,6 +340,74 @@ class Interface{
             return resposta;
         });
     }
+
+    async inserirEventoComClienteEBrinquedo(perfil, tudoJunto){
+        console.log(tudoJunto.brinquedos);
+        let db = new Db(perfil);
+        let evento = {
+            bairro: tudoJunto.bairro,
+            cidade: tudoJunto.cidade,
+            complemento: tudoJunto.complemento_evento,
+            data: moment(tudoJunto.data_evento).format("YYYY-MM-DD HH:mm"),
+            logradouro: tudoJunto.logradouro,
+            numero: tudoJunto.numero,
+            observacao: tudoJunto.observacao,
+            observacao_evento: tudoJunto.observacao_evento,
+            valor_desconto: tudoJunto.valor_desconto,
+            valor_sinal: tudoJunto.valor_sinal,
+            valor_total: tudoJunto.valor_total,
+            possui_local_abrigado: tudoJunto.abrigo,
+            id_cliente: tudoJunto.id_cliente               
+        }
+        
+        return await db.inserirEvento(evento).then(function(resposta){
+            if(!resposta.status){
+                console.log("Ocorreu erro na inserção do novo evento");
+                console.log(resposta);
+            }else{
+                let brinquedos = [];
+                /*
+                tudoJunto.brinquedos.forEach(function(brinquedo){
+                    brinquedos.push(brinquedo.id_brinquedo);
+                });
+                */
+                let id_evento = resposta.resultado.insertId;
+                let evento_brinquedo = {evento: id_evento,
+                    brinquedos: tudoJunto.brinquedos
+                }
+                db = new Db(perfil);
+                return db.inserirBrinquedoNoEvento(evento_brinquedo).then(function(resposta){
+                    if(!resposta.status){
+                        console.log("Ocorreu erro na inserção dos brinquedos no evento");
+                        console.log(resposta);
+                    }
+                    resposta.id_evento = id_evento;
+                    return resposta;
+                });
+            }         
+            return resposta;
+        });
+        /*
+        db = new Db(perfil);
+        let resposta_insercao_brinquedos_no_evento = await db.inserirBrinquedoNoEvento(evento_brinquedo).then(function(resposta){
+            if(!resposta.status){
+                console.log("Ocorreu erro na inserção dos brinquedos no evento");
+                console.log(resposta);
+            }
+            return resposta;
+        });
+        let resposta = {
+            resposta_insercao_brinquedos: resposta_insercao_brinquedos_no_evento,
+            resposta_insercao_evento: resposta_insercao_evento
+        }
+        if(resposta_insercao_brinquedos_no_evento.status && resposta_insercao_evento){
+            resposta.status = true;
+        }else{
+            resposta.status = false;
+        }
+        return resposta;
+        */
+    }
 }
 
 module.exports = Interface;

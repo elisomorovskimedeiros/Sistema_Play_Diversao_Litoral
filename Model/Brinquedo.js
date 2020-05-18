@@ -77,6 +77,7 @@ class Brinquedo{
     }
 
     editar_brinquedo(req,res,int){
+        let obj_brinquedo = this;
         const file = req.file;
         let perfil = require("../../perfis/"+req.user.perfil+"/customizacao");
         //edição dos dados do brinquedo no db
@@ -100,10 +101,10 @@ class Brinquedo{
         int.select_nome_imagem_brinquedo(perfil.perfil, brinquedo.id_brinquedo).then(function(resposta){
             if(resposta.status && resposta.resultado.length > 0){
                 if(resposta.resultado[0].nome_brinquedo != brinquedo.nome_brinquedo)
-                    arquivo.renomear_arquivo(this.caminho_imagens_brinquedo+resposta.resultado[0].nome_brinquedo,"public/imagens/brinquedos/"+brinquedo.nome_brinquedo)
+                    arquivo.renomear_arquivo(obj_brinquedo.caminho_imagens_brinquedo+resposta.resultado[0].nome_brinquedo,"public/imagens/brinquedos/"+brinquedo.nome_brinquedo)
                 if(file && resposta.resultado[0].foto_brinquedo != file.originalname){
-                    arquivo.remover_arquivo(this.caminho_imagens_brinquedo+brinquedo.nome_brinquedo+"/"+resposta.resultado[0].foto_brinquedo);
-                    arquivo.remover_arquivo(this.caminho_imagens_brinquedo+brinquedo.nome_brinquedo+"/miniatura/miniatura_"+resposta.resultado[0].foto_brinquedo);
+                    arquivo.remover_arquivo(obj_brinquedo.caminho_imagens_brinquedo+brinquedo.nome_brinquedo+"/"+resposta.resultado[0].foto_brinquedo);
+                    arquivo.remover_arquivo(obj_brinquedo.caminho_imagens_brinquedo+brinquedo.nome_brinquedo+"/miniatura/miniatura_"+resposta.resultado[0].foto_brinquedo);
                 }
             }
             int.editarBrinquedo(brinquedo,perfil.perfil).then(function(brinquedos){

@@ -511,7 +511,14 @@ class Db{
     }  
 
     inserirBrinquedoNoEvento(brinquedosEvento){
-        
+        /*
+        recebo
+        brinquedosEvento = {
+            evento: id_evento,
+            brinquedo: [id_brinquedo]
+        }
+        */
+        console.log(brinquedosEvento);
         let sql = 'INSERT INTO evento_brinquedo (`brinquedo`, `evento`) VALUES';
         let valores = [];
         brinquedosEvento.brinquedos.forEach(brinquedo => {
@@ -790,7 +797,7 @@ class Db{
         "where evento.data BETWEEN CURDATE() AND CURDATE() + INTERVAL 15 DAY ORDER BY evento.data ASC) " +
         "as tab group by id_evento order by data_evento asc; ";*/
         
-        let busca_brinquedo = "'{\"nome\":\"', brinquedo.nome_brinquedo, '\", \"imagem\":\"',brinquedo.foto_brinquedo,'\"}')) ";
+        let busca_brinquedo = "'{\"id_brinquedo\":\"', brinquedo.id_brinquedo, '\", \"nome\":\"', brinquedo.nome_brinquedo, '\", \"imagem\":\"',brinquedo.foto_brinquedo,'\"}'),'')) ";
         let sql = "SELECT evento.bairro as bairro_evento, evento.cidade as cidade_evento, evento.complemento as complemento_evento, "+
             "evento.data as data_evento, evento.id_evento as id_evento, evento.logradouro as logradouro_evento, "+
             "evento.numero as numero_evento, evento.observacao as observacao_endereco_evento, evento.observacao_evento as observacao_evento, "+
@@ -798,12 +805,12 @@ class Db{
             "cliente.bairro as bairro_cliente, cliente.cidade as cidade_cliente, cliente.complemento as complemento_endereco_cliente, "+
             "cliente.email, cliente.id_cliente, cliente.logradouro as logradouro_cliente, cliente.nome as nome_cliente, "+
             "cliente.numero as numero_cliente, cliente.observacao_endereco as observacao_endereco_cliente, cliente.telefone, cliente.telefone_recado, "+
-            "group_concat(CONCAT(" +
+            "group_concat(COALESCE(CONCAT(" +
             busca_brinquedo +
             "as brinquedos FROM brinquedo " +
-            "join evento_brinquedo on brinquedo.id_brinquedo = evento_brinquedo.brinquedo "+
-            "join evento on evento_brinquedo.evento = evento.id_evento "+
-            "join cliente on evento.id_cliente = cliente.id_cliente " +
+            "right join evento_brinquedo on brinquedo.id_brinquedo = evento_brinquedo.brinquedo "+
+            "right join evento on evento_brinquedo.evento = evento.id_evento "+
+            "right join cliente on evento.id_cliente = cliente.id_cliente " +
             "where evento.data BETWEEN CURDATE() AND CURDATE() + INTERVAL 15 DAY "+ 
             "group by evento.id_evento "+
             "order by evento.data asc";
@@ -945,7 +952,7 @@ class Db{
         }else{
             intervalo_de_busca = "between '" + de + "%' and '" + ate + " 23:59:59'";
         }        
-        let busca_brinquedo = "'{\"nome\":\"', brinquedo.nome_brinquedo, '\", \"imagem\":\"',brinquedo.foto_brinquedo,'\"}')) ";
+        let busca_brinquedo = "'{\"id_brinquedo\":\"', brinquedo.id_brinquedo, '\", \"nome\":\"', brinquedo.nome_brinquedo, '\", \"imagem\":\"',brinquedo.foto_brinquedo,'\"}'),'')) ";
         let sql = "SELECT evento.bairro as bairro_evento, evento.cidade as cidade_evento, evento.complemento as complemento_evento, "+
             "evento.data as data_evento, evento.id_evento as id_evento, evento.logradouro as logradouro_evento, "+
             "evento.numero as numero_evento, evento.observacao as observacao_endereco_evento, evento.observacao_evento as observacao_evento, "+
@@ -953,12 +960,12 @@ class Db{
             "cliente.bairro as bairro_cliente, cliente.cidade as cidade_cliente, cliente.complemento as complemento_endereco_cliente, "+
             "cliente.email, cliente.id_cliente, cliente.logradouro as logradouro_cliente, cliente.nome as nome_cliente, "+
             "cliente.numero as numero_cliente, cliente.observacao_endereco as observacao_endereco_cliente, cliente.telefone, cliente.telefone_recado, "+
-            "group_concat(CONCAT(" +
+            "group_concat(COALESCE(CONCAT(" +
             busca_brinquedo +
             "as brinquedos FROM brinquedo " +
-            "join evento_brinquedo on brinquedo.id_brinquedo = evento_brinquedo.brinquedo "+
-            "join evento on evento_brinquedo.evento = evento.id_evento "+
-            "join cliente on evento.id_cliente = cliente.id_cliente " +
+            "right join evento_brinquedo on brinquedo.id_brinquedo = evento_brinquedo.brinquedo "+
+            "right join evento on evento_brinquedo.evento = evento.id_evento "+
+            "right join cliente on evento.id_cliente = cliente.id_cliente " +
             "where evento.data "+ intervalo_de_busca + 
             "group by evento.id_evento "+
             "order by evento.data asc";

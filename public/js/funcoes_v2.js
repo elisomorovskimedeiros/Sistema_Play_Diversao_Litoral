@@ -1,44 +1,94 @@
 
     function habilitar_edicao_evento(){
-        $("#data_destaque_evento, "+
-        "#hora_destaque_evento, "+
-        "#logradouro_destaque_evento, "+
-        "#numero_destaque_evento, "+
-        "#complemento_destaque_evento, "+
-        "#observacao_destaque_event, "+
-        "#bairro_destaque_evento, "+
-        "#cidade_destaque_evento, "+
-        "#valor_total_destaque_evento, "+
-        "#valor_desconto_destaque_evento, "+
-        "#valor_sinal_destaque_evento, "+
-        "#observacao_destaque_evento, "+
-        "#abrigo_destaque_evento").removeAttr("readonly");
+        liberar_campos_para_edicao();
+        $("#botao_editar_evento").removeClass("btn-outline-primary");
+        $("#botao_editar_evento").addClass("btn-primary");
+              
+    }
+
+    function liberar_campos_para_edicao(){
+      $("#data_destaque_evento, "+
+      "#hora_destaque_evento, "+
+      "#logradouro_destaque_evento, "+
+      "#numero_destaque_evento, "+
+      "#complemento_destaque_evento, "+
+      "#observacao_destaque_event, "+
+      "#bairro_destaque_evento, "+
+      "#cidade_destaque_evento, "+
+      "#valor_total_destaque_evento, "+
+      "#valor_desconto_destaque_evento, "+
+      "#valor_sinal_destaque_evento, "+
+      "#observacao_destaque_evento, "+
+      "#abrigo_destaque_evento").removeAttr("readonly");
       $("#botao_trocar_cliente, #btn_editar_brinquedos_evento, #rodape_modal_destaque_evento, #div_botao_copia_endereco").removeClass("invisible");
       brinquedos_do_evento_em_destaque.forEach(function(brinquedo, indice){
         $("#checkbox_brinquedo_no_evento"+indice).show();
         document.getElementById("checkbox_brinquedo_no_evento"+indice).checked = true;
-      });        
+      });
     }
 
     function desabilitar_edicao_evento(){
-        $("#data_destaque_evento, "+
-        "#hora_destaque_evento, "+
-        "#logradouro_destaque_evento, "+
-        "#numero_destaque_evento, "+
-        "#complemento_destaque_evento, "+
-        "#observacao_destaque_event, "+
-        "#bairro_destaque_evento, "+
-        "#cidade_destaque_evento, "+
-        "#valor_total_destaque_evento, "+
-        "#valor_desconto_destaque_evento, "+
-        "#valor_sinal_destaque_evento, "+
-        "#observacao_destaque_evento, "+
-        "#abrigo_destaque_evento").prop("readonly", true);
+      bloquear_campos_para_edicao();
+      $("#linha_lista_brinquedos").html("");
+      $("#botao_editar_evento").removeClass("btn-primary");
+      $("#botao_editar_evento").addClass("btn-outline-primary");
+    }
+    
+    function bloquear_campos_para_edicao(){
       $("#botao_trocar_cliente, #btn_editar_brinquedos_evento, #rodape_modal_destaque_evento, #div_botao_copia_endereco").addClass("invisible");
+      $("#botao_reagendamento_evento").addClass("invisible");
+      $("#data_destaque_evento, "+
+      "#hora_destaque_evento, "+
+      "#logradouro_destaque_evento, "+
+      "#numero_destaque_evento, "+
+      "#complemento_destaque_evento, "+
+      "#observacao_destaque_event, "+
+      "#bairro_destaque_evento, "+
+      "#cidade_destaque_evento, "+
+      "#valor_total_destaque_evento, "+
+      "#valor_desconto_destaque_evento, "+
+      "#valor_sinal_destaque_evento, "+
+      "#observacao_destaque_evento, "+
+      "#abrigo_destaque_evento").attr("readonly", true);
+      console.log(brinquedos_do_evento_em_destaque);
       brinquedos_do_evento_em_destaque.forEach(function(brinquedo, indice){
         $("#checkbox_brinquedo_no_evento"+indice).hide();
       });
     }
+
+    function desabilitar_reagendamento_do_evento(){
+      $("#botao_editar_evento").removeAttr("disabled");
+      $("#botao_reagendar_evento").removeClass("btn-secondary");
+      $("#botao_reagendar_evento").addClass("btn-outline-secondary");
+      $("#data_destaque_evento").attr("readonly", true);
+      $("#hora_destaque_evento").attr("readonly", true);
+      $("#btnEnviarReagendamentoEvento").hide();
+      $("#data_destaque_evento").val(moment(evento_em_destaque.data_evento).format("YYYY-MM-DD"));
+      $("#titulo_div_lista_brinquedos_no_evento, #linha_lista_brinquedos").html("");
+      $("#btn_editar_brinquedos_evento").addClass("invisible");
+    }
+
+    function reagendar_evento(evento){
+      if($("#botao_reagendar_evento").hasClass("btn-outline-secondary")){
+        habilitar_reagendamento();
+        console.log(evento_em_destaque.data_evento);
+      }else{
+        desabilitar_reagendamento_do_evento();
+      }
+    }
+    
+    function habilitar_reagendamento(){
+      $("#data_destaque_evento, #hora_destaque_evento").removeAttr("readonly");
+      $("#btnEnviarReagendamentoEvento").show();
+      $("#btn_editar_brinquedos_evento, #rodape_modal_destaque_evento").removeClass("invisible");
+      $("#botao_reagendar_evento").removeClass("btn-outline-secondary");
+      $("#botao_reagendar_evento").addClass("btn-secondary");  
+      $("#botao_editar_evento").attr("disabled", true);
+      brinquedos_do_evento_em_destaque.forEach(function(brinquedo, indice){
+        document.getElementById("checkbox_brinquedo_no_evento"+indice).checked = true;
+      });
+    }
+    
 
     function exibir_brinquedos_do_evento_em_destaque(){
       if(brinquedos_do_evento_em_destaque && brinquedos_do_evento_em_destaque.length > 0){
@@ -51,14 +101,23 @@
                                                     .removeClass("float")
                                                     .addClass("brinquedo_no_evento"))[0];
           $(div_criada).find(".foto_brinquedo").attr("src", caminho_imagens_brinquedos+"/"+removeAcento(brinquedo.nome_brinquedo)+"/miniatura/miniatura_"+brinquedo.foto_brinquedo);
-          $(div_criada).find(".checkbox_brinquedo").attr("id", "checkbox_brinquedo_no_evento"+indice).attr("id_brinquedo", brinquedo.id_brinquedo).hide();
+          $(div_criada).find(".checkbox_brinquedo").attr("id", "checkbox_brinquedo_no_evento"+indice).attr("id_brinquedo", brinquedo.id_brinquedo).attr("checked", true).hide();
           $(div_criada).find(".nome_brinquedo_troca_brinquedos").html(brinquedo.nome_brinquedo);
           $(div_criada).find(".qtd").addClass("invisible");
         });  
       }            
     }
 
-    function exibir_brinquedos_disponiveis_dentro_do_evento_em_destaque(){      
+    function exibir_brinquedos_disponiveis_dentro_do_evento_em_destaque(){
+      if(evento_em_destaque.data_evento != moment($("#data_destaque_evento")).format("YYYY-MM-DD")){
+        $("#div_lista_brinquedos_no_evento").find(".checkbox_brinquedo").attr("checked", false);
+        $(".brinquedo_no_evento").hide();
+        $("#titulo_div_lista_brinquedos_no_evento").html("<center style='color:red'>Escolha dentre os brinquedos vagos para o dia!</center>")
+        $("#btn_editar_brinquedos_evento").addClass("invisible");
+      }
+        
+    //  }
+      $("#linha_lista_brinquedos").html('');
       if(lista_brinquedos_disponiveis && lista_brinquedos_disponiveis.length > 0){
         lista_brinquedos_disponiveis.forEach(function(brinquedo, indice){
           let div_criada = ($("#divListaBrinquedos").clone()
@@ -72,6 +131,8 @@
           $(div_criada).find(".nome_brinquedo_troca_brinquedos").html(brinquedo.nome_brinquedo);
           $(div_criada).find(".qtd").addClass("invisible");
         });
+
+        
       }      
     }
 
@@ -175,6 +236,7 @@ function pedir_evento_por_data(data_inicio, data_fim){
 }
 
 function carregar_eventos_na_tela(eventos){
+  console.log(eventos);
   let data_evento = moment(eventos[0].data_evento).format("DD/MM/YYYY");
   let div_data_evento = $("#div_data").clone().removeClass("invisible").removeClass("float").appendTo("#listagemFiltros").removeClass("invisible");
   $(div_data_evento).removeAttr("id");
@@ -204,8 +266,8 @@ function carregar_eventos_na_tela(eventos){
     campoData.innerHTML = data_no_array;
     campoNomeCliente.innerHTML = evento.nome_cliente;
     let endereco_evento = evento.logradouro_evento + ", " + evento.numero_evento;
-    if (evento.bairro_evento.length > 2) endereco_evento += ", "+evento.bairro_evento;
-    if (evento.cidade_evento.length > 2) endereco_evento += ", "+evento.cidade_evento + ".";
+    if (evento.bairro_evento && evento.bairro_evento.length > 2) endereco_evento += ", "+evento.bairro_evento;
+    if (evento.cidade_evento && evento.cidade_evento.length > 2) endereco_evento += ", "+evento.cidade_evento + ".";
     else endereco_evento += "."
     campoEndereco.innerHTML = endereco_evento;
     campoTelefone.innerHTML = evento.telefone;
@@ -213,17 +275,22 @@ function carregar_eventos_na_tela(eventos){
     $(campoBrinquedos).attr("id","campo_brinquedos_evento_"+evento.id_evento);
     $(campoBrinquedos).html('');
     //laço que exibe brinquedos dentro do evento
-    evento.brinquedos.forEach(function(brinquedo, indice){
-      let celula_icone_brinquedo = $("#brinquedo_individual").clone();
-      $(celula_icone_brinquedo).removeClass("invisible")
-        .removeClass("float")
-        .attr("id","evento_"+evento.id_evento+"_icone_brinquedo_"+indice)
-        .appendTo(campoBrinquedos);
-      let nome_brinquedo = celula_icone_brinquedo.find(".nome_brinquedo")[0];
-      let icone_brinquedo = celula_icone_brinquedo.find(".icone_brinquedo")[0];
-      nome_brinquedo.innerHTML = brinquedo.nome;
-      $(icone_brinquedo).attr("src",caminho_imagens_brinquedos+"/"+removeAcento(brinquedo.nome)+"/miniatura/miniatura_"+brinquedo.imagem);
-    });
+    if(evento.brinquedos.length > 0){
+      evento.brinquedos.forEach(function(brinquedo, indice){
+        let celula_icone_brinquedo = $("#brinquedo_individual").clone();
+        $(celula_icone_brinquedo).removeClass("invisible")
+          .removeClass("float")
+          .attr("id","evento_"+evento.id_evento+"_icone_brinquedo_"+indice)
+          .appendTo(campoBrinquedos);
+        let nome_brinquedo = celula_icone_brinquedo.find(".nome_brinquedo")[0];
+        let icone_brinquedo = celula_icone_brinquedo.find(".icone_brinquedo")[0];
+        nome_brinquedo.innerHTML = brinquedo.nome;
+        $(icone_brinquedo).attr("src",caminho_imagens_brinquedos+"/"+removeAcento(brinquedo.nome)+"/miniatura/miniatura_"+brinquedo.imagem);
+      });
+    }else{
+      campoBrinquedos.innerHTML = "<span style='margin-left: 1rem;'>Evento ainda sem brinquedos</span>";
+    }
+    
     //lógica para alteração a cor do fieldset
     let fieldset = $(item).find(".field_set_modulo_evento")[0];
     switch (cor_borda_fieldset){
@@ -242,7 +309,7 @@ function carregar_eventos_na_tela(eventos){
     }
     //seletor do status do evento ---- status 0: "Não confirmado", 1: "Confirmado", 2: Cancelado
     switch (evento.status){
-      case 0: $(fieldset).css("background-color","#8bffec67");
+      case 0: $(fieldset).css("background-color","#a7fff0");
               $(status_evento).html("Não Confirmado");
               break;
       case 1: $(fieldset).css("background-color","#ffffff");
@@ -280,14 +347,17 @@ function executar_no_fechamento_do_modal(){
   if(!$("#rodape_modal_destaque_evento").hasClass("invisible")){
     desabilitar_edicao_evento();
   }
+  desabilitar_reagendamento_do_evento();
+  desabilitar_copia_do_evento();
   $("#div_lista_brinquedos_no_evento").html(""); 
   $("#linha_lista_brinquedos").html("");
   evento_em_destaque = {};
-  brinquedos_do_evento_em_destaque = {};
-  lista_de_brinquedos_disponiveis = {};
+  brinquedos_do_evento_em_destaque = [];
+  lista_de_brinquedos_disponiveis = [];
   ultimo_filtro_clientes = {};
   cliente_em_destaque = {};
   refazer_ultimo_filtro();
+  console.log("fechei o modal");
 }
 
 function exibir_barra_de_progresso_no_modal(){
@@ -302,4 +372,141 @@ function remover_barra_de_progresso_do_modal(){
 function cancelar_evento(id_evento){
   exibir_barra_de_progresso_no_modal();
   socket.emit("cancelar_evento", perfil, id_evento);
+}
+
+function capturar_brinquedos_inseridos_no_evento(){
+  //capturando os novos brinquedos inseridos no evento
+  let checkbox_brinquedos_disponiveis = $(".container_troca_dos_brinquedos").find(".checkbox_brinquedo");
+  let brinquedos_inseridos = [];
+  for(let i = 0; i < checkbox_brinquedos_disponiveis.length; i++){
+      if($(checkbox_brinquedos_disponiveis[i]).prop("checked")){
+          brinquedos_inseridos.push($(checkbox_brinquedos_disponiveis[i]).attr("id_brinquedo"));
+      }
+  }
+  return brinquedos_inseridos;
+}
+
+function capturar_brinquedos_retirados_do_evento(){
+  //capturando os brinquedos retirados do evento
+  let checkbox_brinquedos_no_evento = $(".container_dos_brinquedos_no_evento").find(".checkbox_brinquedo");
+  let brinquedos_retirados = [];
+  for(let i = 0; i < checkbox_brinquedos_no_evento.length; i++){
+    if(!$(checkbox_brinquedos_no_evento[i]).prop("checked")){
+        brinquedos_retirados.push($(checkbox_brinquedos_no_evento[i]).attr("id_brinquedo"));
+    }
+  }
+  return brinquedos_retirados;
+}
+
+function editar_evento(){
+  let brinquedos_inseridos = capturar_brinquedos_inseridos_no_evento();
+  let brinquedos_retirados = capturar_brinquedos_retirados_do_evento();
+   
+   
+   //capturando os itens do formulário  
+   let evento = capturar_campos_do_modal_evento_em_destaque();
+      
+   let dados_para_envio = {brinquedos_inseridos: brinquedos_inseridos,brinquedos_retirados: brinquedos_retirados, evento: evento};
+   socket.emit("editar_evento", dados_para_envio, perfil);
+   $("body").addClass("cursor_progresso");        
+
+}
+
+function capturar_campos_do_modal_evento_em_destaque(){
+  let evento = {};
+  evento.id_evento = evento_em_destaque.id_evento;
+  evento.id_cliente = cliente_em_destaque.id_cliente;              
+  evento.data = moment($("#data_destaque_evento").val()).format("YYYY-MM-DD") + " ";//hora sempre deve ser tratada em formato de string
+  evento.data += moment($("#data_destaque_evento").val()).format("HH:mm");
+  evento.logradouro = $("#logradouro_destaque_evento").val();
+  evento.numero = $("#numero_destaque_evento").val();
+  evento.complemento = $("#complemento_destaque_evento").val();
+  evento.observacao = $("#observacao_endereco_destaque_evento").val();
+  evento.bairro = $("#bairro_destaque_evento").val();
+  evento.cidade = $("#cidade_destaque_evento").val();
+  evento.valor_total = $("#valor_total_destaque_evento").val();
+  evento.valor_desconto = $("#valor_desconto_destaque_evento").val();
+  evento.valor_sinal = $("#valor_sinal_destaque_evento").val();        
+  evento.observacao_evento = $("#observacao_destaque_evento").val();
+  evento.possui_local_abrigado = $("#abrigo_destaque_evento").val();
+  return evento;
+}
+
+function carregar_clientes_para_troca_na_edicao_evento(clientes){
+  $("#listaClientes").html("");    
+    ultimo_filtro_clientes = clientes;
+    if(clientes && clientes.length > 0){
+        clientes.forEach(function(cliente, indice){
+            $("#peleCelulaCliente").clone()
+                                .attr("id","cliente"+indice)
+                                .appendTo("#listaClientes")
+                                .removeClass("invisible")
+                                .removeClass("float");
+            $("#id_lista").attr("id", "id_lista_"+indice).attr("indice", indice).html(cliente.id_cliente);
+            $("#nome_lista").attr("id", "nome_lista_"+indice).html(cliente.nome);
+            $("#telefone_lista").attr("id", "telefone_lista_"+indice).html(cliente.telefone);
+            $("#tel_alt_lista").attr("id", "tel_alt_lista_"+indice).html(cliente.telefone_recado);
+            $("#email_lista").attr("id", "email_lista_"+indice).html(cliente.email);
+            $("#cpf_lista").attr("id", "cpf_lista_"+indice).html(cliente.cpf);
+            $("#end_lista").attr("id", "end_lista_"+indice).html(cliente.logradouro + ", " + cliente.numero);
+            $("#cidade_lista").attr("id", "cidade_lista_"+indice).html(cliente.cidade); 
+        });
+    }
+}
+
+function copiar_evento(){
+  let evento = capturar_campos_do_modal_evento_em_destaque();
+  evento.brinquedos = capturar_brinquedos_inseridos_no_evento();
+  console.log(evento);
+  socket.emit("copiar_evento", perfil, evento);
+  exibir_barra_de_progresso_no_modal();
+}
+
+function receber_evento_copiado(resposta){
+  remover_barra_de_progresso_do_modal();
+  if(resposta.status){
+    emitirAviso("Evento copiado com sucesso.", "snackbar", 4000);
+  }else{
+    emitirAviso("Ocorreu algum erro ao copiar o evento.", "snackbar", 3000);
+  }
+  executar_no_fechamento_do_modal();
+}
+
+function enviar_brinquedos_vagos_na_data(data){
+  console.log("enviar");
+  socket.emit("enviar_brinquedos_vagos", perfil, data);
+}
+
+function habilitar_copia_do_evento(){
+  liberar_campos_para_edicao();
+  evento_em_destaque.brinquedos = [];
+  
+  let lista_de_brinquedos_no_evento_copiado = $("#div_lista_brinquedos_no_evento").find(".checkbox_brinquedo");//achar os brinquedos para desmarcá-los
+  
+  for(let i = 0; i < lista_de_brinquedos_no_evento_copiado.length; i++ ){
+    lista_de_brinquedos_no_evento_copiado[i].checked = false;
+    $(lista_de_brinquedos_no_evento_copiado[i]).parent().parent().parent().hide();
+  }
+  $("#titulo_div_lista_brinquedos_no_evento").html("<center style='color: red;'>Escolha os brinquedos do evento copiado</center>");
+  $("#btn_editar_brinquedos_evento").click().hide();
+
+  $("#motivo_edicao").html("<center style='color: red;'>Modifique o dados necessários e clique em concluir cópia na parte de baixo.</center>")
+  $("#btn_concluir_copia_evento").attr("hidden", false);
+  $("#botao_reagendar_evento, #botao_cancelar_evento, #botao_confirmar_evento, #botao_editar_evento")
+    .attr("disabled", true);
+  $("#btnEnviarEdicaoEvento").attr("hidden", true);
+  $("#botao_copiar_evento").removeClass("btn-outline-warning").addClass("btn-warning");
+}
+
+function desabilitar_copia_do_evento(){
+  bloquear_campos_para_edicao();
+  exibir_brinquedos_do_evento_em_destaque();
+  $("#btn_editar_brinquedos_evento, #rodape_modal_destaque_evento").addClass("invisible");
+  $("#motivo_edicao, #linha_lista_brinquedos").html('');
+  $("#btn_concluir_copia_evento").attr("hidden", true);
+  $("#btnEnviarEdicaoEvento").attr("hidden", false);
+  $("#botao_reagendar_evento, #botao_cancelar_evento, #botao_confirmar_evento, #botao_editar_evento")
+    .removeAttr("disabled", false);
+  $("#botao_copiar_evento").removeClass("btn-warning").addClass("btn-outline-warning");
+  $("#titulo_div_lista_brinquedos_no_evento").html($("#titulo_div_lista_brinquedos_no_evento").innerHTML);
 }

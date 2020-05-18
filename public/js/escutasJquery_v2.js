@@ -79,13 +79,16 @@ $(document).ready(function(){
 
         if(evento.status == 2){//evento cancelado
             $("#botao_cancelar_evento").attr("disabled", true);
+            $("#texto_botao_confirmar_evento").html("Reconfirmar");
         }else{
             $("#botao_cancelar_evento").attr("disabled", false);
+            $("#texto_botao_confirmar_evento").html("Confirmar Evento");
         }
+
     });
 
     $("#botao_editar_evento").click(function(){
-        if($("#rodape_modal_destaque_evento").hasClass("invisible")){
+        if($("#botao_editar_evento").hasClass("btn-outline-primary")){
             habilitar_edicao_evento();
         }else{
             desabilitar_edicao_evento();
@@ -106,46 +109,7 @@ $(document).ready(function(){
     });
 
     $("#btnEnviarEdicaoEvento").click(function(){
-        //capturando os novos brinquedos inseridos no evento
-        let checkbox_brinquedos_disponiveis = $(".container_troca_dos_brinquedos").find(".checkbox_brinquedo");
-        let brinquedos_inseridos = [];
-        for(let i = 0; i < checkbox_brinquedos_disponiveis.length; i++){
-            if($(checkbox_brinquedos_disponiveis[i]).prop("checked")){
-                brinquedos_inseridos.push($(checkbox_brinquedos_disponiveis[i]).attr("id_brinquedo"));
-            }
-        }
-
-        //capturando os brinquedos retirados do evento
-        let checkbox_brinquedos_no_evento = $(".container_dos_brinquedos_no_evento").find(".checkbox_brinquedo");
-        let brinquedos_retirados = [];
-        for(let i = 0; i < checkbox_brinquedos_no_evento.length; i++){
-            if(!$(checkbox_brinquedos_no_evento[i]).prop("checked")){
-                brinquedos_retirados.push($(checkbox_brinquedos_no_evento[i]).attr("id_brinquedo"));
-            }
-        }
-        
-        //capturando os itens do formulário  
-        let evento = {};
-        evento.id_evento = evento_em_destaque.id_evento;
-        evento.id_cliente = cliente_em_destaque.id_cliente;              
-        evento.data = moment($("#data_destaque_evento").val()).format("YYYY-MM-DD") + " ";//hora sempre deve ser tratada em formato de string
-        evento.data += moment($("#data_destaque_evento").val()).format("HH:mm");
-        evento.logradouro = $("#logradouro_destaque_evento").val();
-        evento.numero = $("#numero_destaque_evento").val();
-        evento.complemento = $("#complemento_destaque_evento").val();
-        evento.observacao = $("#observacao_endereco_destaque_evento").val();
-        evento.bairro = $("#bairro_destaque_evento").val();
-        evento.cidade = $("#cidade_destaque_evento").val();
-        evento.valor_total = $("#valor_total_destaque_evento").val();
-        evento.valor_desconto = $("#valor_desconto_destaque_evento").val();
-        evento.valor_sinal = $("#valor_sinal_destaque_evento").val();        
-        evento.observacao_evento = $("#observacao_destaque_evento").val();
-        evento.possui_local_abrigado = $("#abrigo_destaque_evento").val();
-        
-        let dados_para_envio = {brinquedos_inseridos: brinquedos_inseridos,brinquedos_retirados: brinquedos_retirados, evento: evento};
-        socket.emit("editar_evento", dados_para_envio, perfil);
-        $("body").addClass("cursor_progresso");        
-
+        editar_evento();
     });
 /*
     $("#botao_trocar_cliente").click(function(){
@@ -180,7 +144,7 @@ $(document).ready(function(){
     });
 
     //pegar digitação nos campos da seleção do cliente para o evento já existente
-    $("#nome_cliente_no_evento, #logradouro_cliente_no_evento, #cidade_cliente_no_evento").on("keyup change paste input", function(){
+    $("#nome_cliente_no_evento, #logradouro_cliente_no_evento, #cidade_cliente_no_evento").on("keyup change paste input", function(e){
         let nome= $("#nome_cliente_no_evento").val();
         let logradouro = $("#logradouro_cliente_no_evento").val();
         let cidade = $("#cidade_cliente_no_evento").val();
@@ -202,7 +166,11 @@ $(document).ready(function(){
                 cidade : cidade
             }
             socket.emit("filtroCliente", filtroCliente, perfil);//resposta vem no escutasSocketIO => mandarClientes
-        };        
+        };
+        //tira o foco do campo utilizando para filtro
+        setTimeout(function(){
+            $(e.currentTarget).blur();
+        },1500);        
     });
 
     $("#janela_troca_cliente_no_evento").on("hide.bs.modal", function(){
@@ -211,7 +179,7 @@ $(document).ready(function(){
         }, 500);
         exibir_brinquedos_do_evento_em_destaque();
         habilitar_edicao_evento();        
-        exibir_brinquedos_disponiveis();
+        exibir_brinquedos_disponiveis_dentro_do_evento_em_destaque();
         $("#nome_cliente_no_evento, #logradouro_cliente_no_evento, #cidade_cliente_no_evento, #data_cliente_no_evento").val('');
         $("#listaClientes").html("");
     });
@@ -221,9 +189,10 @@ $(document).ready(function(){
     });
 
     //seleção do novo cliente para o evento
-    $("body").on("click", ".celula_cliente", function(div_clicada){
+    $(document).on("click",".celula_cliente", function(div_clicada){
         let posicao_array_clientes = $(div_clicada.currentTarget).find(".campo_id").attr("indice");
         cliente_em_destaque = ultimo_filtro_clientes[posicao_array_clientes];
+        console.log(posicao_array_clientes);
         $("#nome_cliente_destaque_evento").val(cliente_em_destaque.nome);
         $("#telefone_destaque_evento").val(cliente_em_destaque.telefone);
         $("#telefone_alternativo_destaque_evento").val(cliente_em_destaque.telefone_recado);
@@ -290,10 +259,30 @@ $(document).ready(function(){
     $("#botao_cancelar_evento").click(function(){
         cancelar_evento(evento_em_destaque.id_evento);
     });
-/*
-    $("#iniciarBuscaPorData").click(function(){
-        let de = $("#de").val();
-        let ate = $("#ate").val();
-        socket.emit("consulta_intervalo_data", de, ate);
-    });*/
+
+    $("#botao_reagendar_evento").click(function(){
+        reagendar_evento();
+    });
+
+    $("#btnEnviarReagendamentoEvento").click(function(){
+        editar_evento();
+    });
+
+    $("#botao_copiar_evento").click(function(){
+        if($("#botao_copiar_evento").hasClass("btn-outline-warning")){
+            habilitar_copia_do_evento();
+        }else{
+            desabilitar_copia_do_evento();
+        }
+    });
+
+    $("#data_destaque_evento").change(function(e){
+        let data = $(e.currentTarget).val();
+        enviar_brinquedos_vagos_na_data(data);
+    });
+
+    $("#btn_concluir_copia_evento").click(function(){
+        copiar_evento();
+        desabilitar_copia_do_evento();
+    });
 });

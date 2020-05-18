@@ -15,6 +15,7 @@ socket.on("receber_eventos", function(resposta){
 
 // exibe os brinquedos disponíveis para o dia do evento
 socket.on("receber_brinquedos_vagos", function(resposta){
+    console.log("recebi brinquedos vagos");
     if(resposta.status){
         lista_brinquedos_disponiveis = resposta.resultado;
         exibir_brinquedos_disponiveis_dentro_do_evento_em_destaque();
@@ -38,25 +39,7 @@ socket.on("lista_brinquedos_do_evento", function(resultado){
 //função que recebe a consulta da lista de clientes no bd, conforme o filtro solicitado
 //usada em: inserirEvento.ejs, listarCliente.ejs
 socket.on("mandarClientes", function(clientes){
-    $("#listaClientes").html("");    
-    ultimo_filtro_clientes = clientes;
-    if(clientes && clientes.length > 0){
-        clientes.forEach(function(cliente, indice){
-            $("#peleCelulaCliente").clone()
-                                .attr("id","cliente"+indice)
-                                .appendTo("#listaClientes")
-                                .removeClass("invisible")
-                                .removeClass("float");
-            $("#id_lista").attr("id", "id_lista_"+indice).attr("indice", indice).html(cliente.id_cliente);
-            $("#nome_lista").attr("id", "nome_lista_"+indice).html(cliente.nome);
-            $("#telefone_lista").attr("id", "telefone_lista_"+indice).html(cliente.telefone);
-            $("#tel_alt_lista").attr("id", "tel_alt_lista_"+indice).html(cliente.telefone_recado);
-            $("#email_lista").attr("id", "email_lista_"+indice).html(cliente.email);
-            $("#cpf_lista").attr("id", "cpf_lista_"+indice).html(cliente.cpf);
-            $("#end_lista").attr("id", "end_lista_"+indice).html(cliente.logradouro + ", " + cliente.numero);
-            $("#cidade_lista").attr("id", "cidade_lista_"+indice).html(cliente.cidade); 
-        });
-    }
+    carregar_clientes_para_troca_na_edicao_evento(clientes);
 });
 
 
@@ -77,6 +60,9 @@ socket.on("retorno_mudanca_status_evento", function(mensagem){
     remover_barra_de_progresso_do_modal();
     if(mensagem.status){
         $("#status_evento_em_destaque").html(funcao_status_evento(mensagem.status_evento));
+    }
+    if(mensagem.status_evento == 2){
+        $("#texto_botao_confirmar_evento").html("Reconfirmar");
     } 
 });
 
@@ -111,6 +97,10 @@ socket.on("resposta_consulta_evento_por_intervalo_data", function(resposta){
             + " até " + moment(eventos[eventos.length - 1].data_evento).format("DD/MM/YYYY"));
         carregar_eventos_na_tela(eventos);
     }
+});
+
+socket.on("receber_evento_copiado", function(resposta){
+    receber_evento_copiado(resposta);
 });
 
 

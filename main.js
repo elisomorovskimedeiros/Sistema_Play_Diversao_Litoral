@@ -419,6 +419,16 @@ var socketio = io.on("connect", function(socketio){
             }
         });
     });
+
+    socketio.on("copiar_evento", function(perfil, evento){
+        int.inserirEventoComClienteEBrinquedo(perfil, evento).then(function(resposta){
+            if(!resposta.status){
+                console.log(resposta);
+            }
+            socketio.emit("receber_evento_copiado", resposta);
+        });
+        
+    });
 });
 
 

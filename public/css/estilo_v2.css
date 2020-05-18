@@ -96,6 +96,16 @@ td > div{
     cursor: pointer;
 }
 
+.barra_progresso{
+    visibility: hidden;
+    left: 50%;
+    top: 50%;
+    position: fixed;
+  }
+  .barra_progresso.show{
+    visibility: visible;
+  }
+
 /*Início estilos módulo_evento*/
 .field_set_modulo_evento{
     border: 2px solid !important;
@@ -137,6 +147,19 @@ hr{
     margin-top: 5px;
 }
 
+.container_painel_evento{
+    padding-top: 1rem;
+    margin-bottom: 1rem;
+}
+.painel{
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+.titulo-evento-destaque{
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
 
 /*Fim estilos módulo_evento*/
 
@@ -166,15 +189,13 @@ hr{
 	animation: fadein 0.5s, fadeout 0.5s 2.5s;
   }
 
-  .barra_progresso{
-    visibility: hidden;
-    left: 50%;
-    top: 50%;
-    position: fixed;
+  #formulario_evento_em_destaque{
+      margin-left: 0px;
+      margin-right: 0px;
+      padding-top: 1rem;
   }
-  .barra_progresso.show{
-    visibility: visible;
-  }
+
+ 
 
 
 /*CONFIGURAÇÕES PARA RESPONSIVIDADE DE TELA*/
@@ -185,4 +206,7 @@ hr{
         margin-right: auto;
         margin-left: auto;
     }       
+    .painel{
+        width: 200px;
+    }
 }

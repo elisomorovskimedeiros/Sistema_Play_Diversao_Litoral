@@ -129,7 +129,6 @@
                                 <div class="nomeBotao escondida">Adicionar Brinquedo</div>
                             </span>                            
                         </div>
-                       
                         <div class="row form-group caixa_separada">
                             <div class="col-sm-12">
                                 Brinquedos vagos:
@@ -246,9 +245,9 @@
                             <form name="form-destaque-evento" id="form-destaque-evento">
                                 <div class="modal-header">
                                     <h4 class="modal-title d-flex flex-row justify-content-around" style="width: 100%; margin: 0px;">
-                                        <div id="titulo_modal_destaque_evento">
+                                        <div id="titulo_modal_destaque_evento" class="titulo-evento-destaque">
                                         </div>
-                                        <div>
+                                        <div class="titulo-evento-destaque">
                                             <span>Status: </span><span id="status_evento_em_destaque"></span>
                                         </div>
                                     </h4>
@@ -259,13 +258,46 @@
                         
                                 <!-- corpo -->
                                 <div class="modal-body" id="corpoModal">
-                                    <div class="d-flex justify-content-around form-group">
-                                        <button type="button" id="botao_editar_evento" class="btn btn-outline-primary">Editar Evento</button>                                        
-                                        <button type="button" id="botao_confirmar_evento" class="btn btn-outline-success">Confirmar Evento</button>
-                                        <button type="button" id="botao_cancelar_evento" class="btn btn-outline-danger">Cancelar Evento</button>
-                                    </div>
+                                    <div class="card container_painel_evento">
+                                        <div class="d-md-flex justify-content-around">
+                                            <center class="form-group">
+                                                <button type="button" id="botao_editar_evento" class="btn btn-outline-primary painel">
+                                                    <i class="fa fa-edit"></i>
+                                                    <span id="texto_botao_editar_evento">Editar Evento</span>                                                
+                                                </button>
+                                            </center>
+                                            <center class="form-group">
+                                                <button type="button" id="botao_confirmar_evento" class="btn btn-outline-success painel">
+                                                    <i class="fa fa-check"></i>
+                                                    <span id="texto_botao_confirmar_evento">Confirmar Evento</span>                                                
+                                                </button>
+                                            </center>
+                                            <center class="form-group">
+                                                <button type="button" id="botao_cancelar_evento" class="btn btn-outline-danger painel">
+                                                    <i class="fas fa-ban"></i>
+                                                    <span id="texto_botao_cancelar_evento">Cancelar Evento</span>
+                                                </button>
+                                            </center>
+                                        </div>
 
+                                        <div class="d-md-flex justify-content-around form-group">
+                                            <center class="form-group">
+                                                <button type="button" id="botao_reagendar_evento" class="btn btn-outline-secondary painel">
+                                                    <i class="fa fa-calendar-alt"></i>&nbsp;
+                                                    <span>Reagendar</span>
+                                                </button>
+                                            </center>
+                                            <center class="form-group">
+                                                <button type="button" id="botao_copiar_evento" class="btn btn-outline-warning painel">
+                                                    <i class="fa fa-clone"></i>
+                                                    <span>Copiar Evento</span>
+                                                </button>
+                                            </center>
+                                        </div>
+                                    </div>
+                                    <div class="card">
                                     <div class="row" id="formulario_evento_em_destaque">
+                                        <div class="col-md-12" id="motivo_edicao"></div>
                                         <div class="form-group col-md-10">
                                             <label for="cliente">Cliente</label>
                                             <input type="text" readonly class="form-control" id="nome_cliente_destaque_evento">
@@ -286,6 +318,7 @@
                                             <label for="email_destaque_evento">Email</label>
                                             <input type="text" readonly class="form-control" id="email_destaque_evento">
                                         </div>
+                                        <div class="col-md-12" id="motivo_mudanca_da_data"></div>
                                         <div class="col-md-12 row">
                                             <div class="col-md-4 form-group">
                                                 <label for="data_destaque_evento">Data</label>
@@ -294,7 +327,7 @@
                                             <div class="col-md-4 form-group">
                                                 <label for="hora_destaque_evento">Hora</label>
                                                 <input type="time" readonly class="form-control" id="hora_destaque_evento">
-                                            </div>                                
+                                            </div>                                                                       
                                         </div>
                                         <hr>
                                         <div id="div_botao_copia_endereco" class="form-group col-md-12 d-flex justify-content-center invisible">
@@ -349,29 +382,32 @@
                                         <div class="form-group col-md-12">
                                             <label for="abrigo_destaque_evento">Possui local abrigado?</label>
                                             <input type="text" readonly class="form-control" id="abrigo_destaque_evento">
-                                        </div>                                        
-                                        <div class="container_listagem_de_brinquedos">
-                                            <h4 id="titulo_div_lista_brinquedos_no_evento"></h4> 
-                                            <div class="container_dos_brinquedos_no_evento">
-                                                <div>
-                                                    <div class="row linha_lista_brinquedos" id="div_lista_brinquedos_no_evento">
+                                        </div> 
+                                        <div class="col-md-12" id="container_de_controle_de_brinquedos">
+                                            <div class="container_listagem_de_brinquedos">
+                                                <h4 id="titulo_div_lista_brinquedos_no_evento"></h4> 
+                                                <div class="container_dos_brinquedos_no_evento">
+                                                    <div>
+                                                        <div class="row linha_lista_brinquedos" id="div_lista_brinquedos_no_evento">
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <button type="button" id="btn_editar_brinquedos_evento" class="btn btn-primary form-control invisible btn_principal_central">Trocar Brinquedos</button>
-                                        </div>
-                                        <div class="container_listagem_de_brinquedos">
-                                            <h4 class="titulo_div_lista_brinquedos"></h4> 
-                                            <div class="container_troca_dos_brinquedos">
-                                                <div>
-                                                    <div class="row" id="linha_lista_brinquedos">                                                        
-                                                    </div>
-                                                </div>                  
-                                            </div>    
-                                        </div>                                                                                  
+                                            <div class="form-group col-md-12">
+                                                <button type="button" id="btn_editar_brinquedos_evento" class="btn btn-primary form-control invisible btn_principal_central">Trocar Brinquedos</button>
+                                            </div>
+                                            <div class="container_listagem_de_brinquedos">
+                                                <h4 class="titulo_div_lista_brinquedos"></h4> 
+                                                <div class="container_troca_dos_brinquedos">
+                                                    <div>
+                                                        <div class="d-sm-flex flex-row" id="linha_lista_brinquedos">                                                        
+                                                        </div>
+                                                    </div>                  
+                                                </div>    
+                                            </div>   
+                                        </div>                                                               
                                     </div>
+                                </div>
                                 </div>
                         
                                 <!-- rodape -->
@@ -379,6 +415,12 @@
                                     <button type="button" class="btn btn-default" data-dismiss="modal">
                                         Cancelar
                                     </button>
+                                    <button type="button" class="btn btn-warning" hidden id="btn_concluir_copia_evento">
+                                        Concluir cópia do evento
+                                    </button>
+                                    <button type="button" id="btnEnviarReagendamentoEvento" hidden class="btn btn-primary">
+                                        Reagendar o Evento
+                                    </button>                                      
                                     <button type="button" id="btnEnviarEdicaoEvento" class="btn btn-primary">
                                         Concluir Edição
                                     </button>
@@ -426,8 +468,8 @@
                                 <div id="listaClientes" class="row area_lista_clientes">
                                 </div>                                 
                             </div>
-                        
                             <!-- rodape -->
+                            <!--
                             <div class="modal-footer invisible" id="rodape_modal_destaque_evento">                                    
                                 <button type="button" class="btn btn-default" data-dismiss="modal">
                                     Cancelar
@@ -436,6 +478,7 @@
                                     Concluir Edição
                                 </button>
                             </div>
+                        -->
                     </div>
                 </div>     
             </div>
@@ -486,9 +529,9 @@
                             <div class="col-md-12">
                                 Brinquedos:
                             </div>
-                            <div class="col-md-12 row brinquedosListaEventos">
-                                <div class="col-md-3" id="brinquedo_individual">
-                                    <div class="modulo_brinquedo">
+                            <div class="col-md-12 brinquedosListaEventos d-flex flex-row">
+                                <div id="brinquedo_individual">
+                                    <div class="modulo_brinquedo p-2">
                                         <div class="nome_brinquedo letra_bem_pequena"></div>
                                         <div class="modulo_brinquedo">
                                             <img class="icone_brinquedo" src="" height="40px">
@@ -513,38 +556,39 @@
 
             
             <!-- CÉLULA INDIVIDUAL COM CADA CLIENTE LISTADO -->
-            <div id="peleCelulaCliente" class="col-sm-6 margin-bottom-15px invisible float">
-                <div class="celula celula_cliente">
-                    <table cellpadding="4">
-                        <tr>
-                            <td colspan="4">Id:&nbsp;<span id = "id_lista" class="campo_id campoLista">sdfsa</span>
-                            Nome:&nbsp;<span id = "nome_lista" class="campoLista">sadfdsa</span></td> 
-                        </tr>
-                        <tr>
-                            <td>Telefone:&nbsp;</td><td><div id = "telefone_lista" class="campoLista">dasfsa</div></td>
-                        </tr>
-                        <tr>
-                            <td>Tel. Recado</td><td><div id = "tel_alt_lista" class="campoLista">fasfasfsa</div></td>
-                        </tr>
-                        <tr>
-                            <td>email:&nbsp;</td><td><div id = "email_lista" class="campoLista">dfasfasdfsda</div></td>
-                        </tr>
-                        <tr>
-                            <td>CPF:&nbsp;</td><td><div id = "cpf_lista" class="campoLista">dfasfasdfsda</div></td>
-                        </tr>
-                        <tr>
-                            <td>Endereço:&nbsp;</td><td><div id = "end_lista" class="campoLista">dfasfasdfsda</div></td>
-                        </tr>
-                        <tr>
-                            <td>Cidade:&nbsp;</td><td><div id = "cidade_lista" class="campoLista">dfasfasdfsda</div></td>
-                        </tr>
-                    </table>
+            <div id="peleCelulaCliente" class="col-sm-12 margin-bottom-15px invisible float">
+                <div class="celula celula_cliente link_fake">
+                    <fieldset class="p-2 field_set_modulo_evento borda_azul" style="border: 2px;">
+                        <legend class="w-auto"><span id = "nome_lista"></span></legend>
+                        <div class="row" style="margin-top: -15px;">
+                            <div class="col-md-2"><span>Id: </span><span id="id_lista" class="campo_id"></span></div>
+                            <div class="col-md-5">
+                                <span>Telefone: </span><span id="telefone_lista"></span>
+                            </div>
+                            <div class="col-md-5">
+                                <span>Telefone Recado: </span><span id="tel_alt_lista"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <div>Email: </div><div id="email_lista"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <div>CPF: </div><div id="cpf_lista"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <div>Endereço: </div><div id="end_lista"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <div>Cidade: </div><div id="cidade_lista"></div>
+                            </div>
+                            <div class="col-md-12 enderecoListaEventos"></div>
+                        </div>
+                    </fieldset>
                 </div>                        
-            </div>                   
+            </div>               
             <!-- FIM DA CÉLULA DO CLIENTE -->
 
             <!-- CÉLULA DE EXIBIÇÃO DE BRINQUEDOS -->
-            <div class='col-md-3 celulaBrinquedo invisible float' id="divListaBrinquedos">
+            <div class='celulaBrinquedo invisible float' id="divListaBrinquedos">
                 <div>
                     <span>
                         <img class="foto_brinquedo" width='50px'>
@@ -561,8 +605,6 @@
 
             <!--BOTÕES DE OPÇÕES DE CONTROLE DE TELA-->
                 
-
-
             <!--FIM BOTÕES DE OPÇÕES DE CONTROLE DE TELA-->
 
             <div id="snackbar"></div>
