@@ -18,6 +18,31 @@ class Db{
             }else{
             }
         });
+        this.queryDeBuscaEvento = function(){
+            let busca_brinquedo = "'{\"id_brinquedo\":\"', brinquedo.id_brinquedo, '\", \"nome\":\"', brinquedo.nome_brinquedo, '\", \"imagem\":\"',brinquedo.foto_brinquedo,'\"}'),'')) ";
+            let sql = "SELECT evento.bairro as bairro_evento, evento.cidade as cidade_evento, evento.complemento as complemento_evento, "+
+            "evento.data as data_evento, evento.id_evento as id_evento, evento.logradouro as logradouro_evento, "+
+            "evento.numero as numero_evento, evento.observacao as observacao_endereco_evento, evento.observacao_evento as observacao_evento, "+
+            "evento.valor_desconto, evento.valor_sinal, evento.valor_total, evento.possui_local_abrigado as abrigo, evento.status,"+
+            "cliente.bairro as bairro_cliente, cliente.cidade as cidade_cliente, cliente.complemento as complemento_endereco_cliente, "+
+            "cliente.email, cliente.id_cliente, cliente.logradouro as logradouro_cliente, cliente.nome as nome_cliente, "+
+            "cliente.numero as numero_cliente, cliente.observacao_endereco as observacao_endereco_cliente, cliente.telefone, cliente.telefone_recado, "+
+            "group_concat(COALESCE(CONCAT(" +
+            busca_brinquedo +
+            "as brinquedos FROM brinquedo " +
+            "right join evento_brinquedo on brinquedo.id_brinquedo = evento_brinquedo.brinquedo "+
+            "right join evento on evento_brinquedo.evento = evento.id_evento "+
+            "right join cliente on evento.id_cliente = cliente.id_cliente ";
+            return sql;
+        }
+        this.fazerListaObjetosBrinquedos = function(results){
+            if(results[0].brinquedos && results.length > 0){
+                results.forEach(function(linha){
+                    linha.brinquedos = "["+linha.brinquedos+"]";
+                    linha.brinquedos = JSON.parse(linha.brinquedos);
+                });
+            }                               
+        }
     }
 
     selectTodosBrinquedos(){
@@ -101,7 +126,7 @@ class Db{
     
     selectUmEvento(idEvento){
         var db = this;
-        let sql = 'SELECT * FROM evento WHERE evento.id_evento = ?';
+        let sql = db.queryDeBuscaEvento() + ' WHERE evento.id_evento = ?';
         return new Promise(function (resolve, reject) {
             db.connection.query(sql, idEvento, function (err, results, fields) {   
                 db.connection.end();             
@@ -109,6 +134,7 @@ class Db{
                     return resolve({status: false,
                                     resultado: err});
                 }
+                db.fazerListaObjetosBrinquedos(results);
                 return resolve({status: true,
                                 resultado: results});
             });

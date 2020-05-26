@@ -9,7 +9,8 @@ const     express = require("express"),
             Email = require("./Model/Email"),
            moment = require("moment");
              Jimp = require('jimp'),//redimensionador de imagens
-               fs = require("fs-extra");
+               fs = require("fs-extra"),
+ eventoController = require("./Controller/eventoController");
 
 const app = express(),
       int = new Interface();
@@ -428,6 +429,20 @@ var socketio = io.on("connect", function(socketio){
             socketio.emit("receber_evento_copiado", resposta);
         });
         
+    });
+
+    socketio.on("buscaEvento", async function(perfil, itemDeBusca){
+        let resposta = await eventoController.buscaPorEvento(perfil, itemDeBusca);
+        if(!itemDeBusca && itemDeBusca == ''){
+            socketio.emit("receber_eventos", {erro: "Sem resultados"});
+        }else{
+            if(resposta.status){
+                socketio.emit("receber_eventos", resposta.resultado);
+            }else{
+                console.log(resposta);
+                socketio.emit("receber_eventos", {erro: "Ocorreu um erro no filtro de eventos"});
+            }
+        }      
     });
 });
 

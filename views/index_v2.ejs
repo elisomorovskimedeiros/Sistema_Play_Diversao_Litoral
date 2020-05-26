@@ -201,7 +201,7 @@
                             </li>
                             <!--FIM BOTÃO ADICIONAR BRINQUEDOS EM EVENTO -->
                             <li class="nav-item active evento brinquedo" id="gerar_link_cadastro">
-                                <a class="nav-link" href="#">
+                                <a class="nav-link" href="/criarSessaoCliente">
                                     <div class="d-flex botaoControle">
                                         <span>
                                             <i class="fa fa-id-card" aria-hidden="true"></i>
@@ -602,6 +602,48 @@
             </div>
 
             <!-- FIM DA CÉLULA DE EXIBIÇÃO DE BRINQUEDOS -->
+
+            <!-- INSERSÃO DE NOVO BRINQUEDO -->
+            <div class="container invisible" id="matriz_tela_insercao_brinquedos">
+   		
+                <div class="page-header">
+                    <h1>Inserir novo brinquedo</h1>
+                </div>
+                <form method="post" action="/inserirBrinquedo" name="form-inserir-brinquedo" id="form-inserir-brinquedo" enctype="multipart/form-data">
+                    <div class="row">  
+                        <div class="form-group col-md-6">
+                            <label for="nome_insercao_brinquedo">Nome do brinquedo</label>
+                            <input type="text" class="form-control" name="nome_insercao_brinquedo" id="nome_insercao_brinquedo">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="caracteristicas_insercao_brinquedo">Características</label>
+                            <input type="text" class="form-control" name="caracteristicas_insercao_brinquedo" id="caracteristicas_insercao_brinquedo">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="valor_insercao_brinquedo">Valor do Aluguel</label>
+                            <input type="number" class="form-control" name="valor_insercao_brinquedo" id="valor_insercao_brinquedo">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="quantidade_insercao_brinquedo">Quantidade no Estoque</label>
+                            <input type="number" class="form-control" name="quantidade_insercao_brinquedo" id="quantidade_insercao_brinquedo">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="observacao_insercao_brinquedo">Observação</label>
+                            <input type="text" class="form-control" name="observacao_insercao_brinquedo" id="observacao_insercao_brinquedo">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="foto_insercao_brinquedo">Foto</label>
+                            <input type="file" class="form-control-file" name="foto_insercao_brinquedo" id="foto_insercao_brinquedo">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label></label>
+                            <input type="submit" class="btn btn-primary form-control" value="Cadastrar" script="">
+                        </div>            
+                    </div>
+                </form>
+            </div>
+
+            <!-- FIM DA INSERSÃO DE NOVO BRINQUEDO -->
 
             <!--BOTÕES DE OPÇÕES DE CONTROLE DE TELA-->
                 

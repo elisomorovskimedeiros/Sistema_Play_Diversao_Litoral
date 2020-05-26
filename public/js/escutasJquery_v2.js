@@ -285,4 +285,26 @@ $(document).ready(function(){
         copiar_evento();
         desabilitar_copia_do_evento();
     });
+
+    $("#adicionarEvento").click(function(){
+        window.open("/inserirEvento");
+    });
+
+    //filtro de eventos por id, nome cliente ou endereço do evento
+    $("#procurarEvento").on("change paste input", function(){
+        socket.emit("buscaEvento", perfil, $("#procurarEvento").val());
+    });
+
+    //#################################################################
+    //CLIENTES
+    $("#adicionarCliente").click(function(){
+        window.open("/inserirCliente");
+    });
+
+
+    //#################################################################
+    //BRINQUEDOS
+    $("#adicionarBrinquedo").click(function(){
+        brinquedo.janelaInserirBrinquedo();
+    });
 });

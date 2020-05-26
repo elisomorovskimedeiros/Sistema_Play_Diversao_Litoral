@@ -4,8 +4,10 @@ var socket = io("/");
 socket.on("receber_eventos", function(resposta){
     selecionar_botoes_controle_a_serem_exibidos("evento"); 
     if(resposta.erro){
-        $("#listagemFiltros").html(resposta.erro);
+        $("#info_exibicao").html(resposta.erro);
+        $("#listagemFiltros").html("");
     }else{
+        $("#info_exibicao").html("");
         $("#listagemFiltros").html("");
         ultimo_filtro_eventos = resposta;
         $("#info_exibicao").html("Eventos até dia " + moment().add(15, "days").format("DD/MM/YYYY"));
@@ -101,6 +103,10 @@ socket.on("resposta_consulta_evento_por_intervalo_data", function(resposta){
 
 socket.on("receber_evento_copiado", function(resposta){
     receber_evento_copiado(resposta);
+});
+
+socket.on("pedirJanelaAdicionarBrinquedo", function(janela){
+    brinquedo.renderizarAdicionarBrinquedo(janela);
 });
 
 

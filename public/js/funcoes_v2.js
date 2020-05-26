@@ -237,6 +237,7 @@ function pedir_evento_por_data(data_inicio, data_fim){
 
 function carregar_eventos_na_tela(eventos){
   console.log(eventos);
+
   let data_evento = moment(eventos[0].data_evento).format("DD/MM/YYYY");
   let div_data_evento = $("#div_data").clone().removeClass("invisible").removeClass("float").appendTo("#listagemFiltros").removeClass("invisible");
   $(div_data_evento).removeAttr("id");
@@ -509,4 +510,20 @@ function desabilitar_copia_do_evento(){
     .removeAttr("disabled", false);
   $("#botao_copiar_evento").removeClass("btn-warning").addClass("btn-outline-warning");
   $("#titulo_div_lista_brinquedos_no_evento").html($("#titulo_div_lista_brinquedos_no_evento").innerHTML);
+}
+
+
+
+//#################################################################
+//CLIENTES
+
+//#################################################################
+//BRINQUEDOS
+const brinquedo = {
+  janelaInserirBrinquedo: function(){
+    $("#listagemFiltros").html("");
+    $("#info_exibicao").html("");
+    let janela = $("#matriz_tela_insercao_brinquedos").clone();
+    $(janela).attr("id", "tela_insercao_brinquedos").removeClass("invisible").appendTo("#listagemFiltros");
+  }
 }
