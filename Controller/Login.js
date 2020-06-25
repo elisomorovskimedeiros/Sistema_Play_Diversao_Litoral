@@ -27,14 +27,13 @@ let login = function(passport){
                 return done(null, false, req.flash('message','Preencher todos os campos.'), req.flash('username', '')); 
             }
             var salt = '7fa73b47df808d36c5fe328546ddef8b9011b2c6';
-            connection.query("select * from usuario where username = ?", [username], function(err, rows){
-                
+            connection.query("select * from usuario where username = ?", username, function(err, rows){
                 if (err) 
                 return done(null, false, req.flash('message',err), req.flash('username', username));
                 if(!rows.length){ 
                     return done(null, false, req.flash('message','Usuário ou senha inválidos.'), req.flash('username', username));
                 }
-
+                
                 let perfil = new Perfil();
                 usuario = rows[0];
                 
