@@ -49,7 +49,6 @@ app.use(expressSession({
         failureFlash: true
         }), function(req, res, info){            
             //res.render('index',{'message' :req.flash('message')});
-            //console.log("logou");
             //res.send({status: true});
     });
 
@@ -222,22 +221,33 @@ var socketio = io.on("connect", function(socketio){
     });
 
     socketio.on("excluirCliente", function(idCliente, perfil){
-        int.excluirEventosPorIdCliente(idCliente,perfil).then(function(resposta){
+        int.excluitEventoBrinquedoPorIdCliente(idCliente,perfil).then(function(resposta){
             if(resposta.status){
-                int.excluirCliente(idCliente,perfil).then(function(resposta){
-                    socketio.emit("resultadoExclusaoCliente", resposta.status);
-                    if(!resposta.status){
-                        console.log("Ocorreu erro na exclusão do cliente");
+                int.excluirEventosPorIdCliente(idCliente,perfil).then(function(resposta){
+                    if(resposta.status){
+                        int.excluirCliente(idCliente,perfil).then(function(resposta){
+                            console.log(resposta);                            
+                            if(!resposta.status){
+                                console.log("Ocorreu erro na exclusão do cliente");
+                                console.log(resposta);
+                            }
+                            socketio.emit("resultadoExclusaoCliente", resposta);
+                        });          
+                    }else{
+                        console.log("Ocorreu o seguinte erro na remoção dos eventos:");
                         console.log(resposta.resultado);
-                    }
-                });          
+                        socketio.emit("resultadoExclusaoCliente", resposta);                
+                    }           
+                });
+            
             }else{
-                console.log("Ocorreu o seguinte erro na remoção dos eventos:");
-                console.log(resposta.resultado);
-                socketio.emit("resultadoExclusaoCliente", resposta.status);                
-            }           
+                console.log("Ocorreu um erro ao excluir os brinquedos dos eventos relacionados ao cliente");
+                console.log(resposta);
+                socketio.emit("resultadoExclusaoCliente", resposta);
+            }
         });
     });
+        
 
     socketio.on("listaBrinquedosDisponiveis", function(perfil){
         int.listarTodosBrinquedos(perfil).then(function(resposta){
