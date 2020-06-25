@@ -539,16 +539,6 @@ router.get("/cadastroPlay/:perfil/:idEvento", async function(req, res){
         }else{
             let idEvento = sessao.evento;
             res.render("cadastro_play",{idEvento,perfil});
-            /*
-            int.filtrarEventoPorIdEvento(req.params.idEvento,perfil).then(function(resposta){
-                if(resposta.status){
-                    res.render("cadastro_play",{idEvento,perfil});
-                }else{
-                    res.send("Houve erro no banco de dados");
-                    console.log(resposta);
-                }
-            });
-            */
         }   
     }else{
         res.render("cadastroVencido",{perfil});

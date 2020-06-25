@@ -225,8 +225,7 @@ var socketio = io.on("connect", function(socketio){
             if(resposta.status){
                 int.excluirEventosPorIdCliente(idCliente,perfil).then(function(resposta){
                     if(resposta.status){
-                        int.excluirCliente(idCliente,perfil).then(function(resposta){
-                            console.log(resposta);                            
+                        int.excluirCliente(idCliente,perfil).then(function(resposta){   
                             if(!resposta.status){
                                 console.log("Ocorreu erro na exclusão do cliente");
                                 console.log(resposta);

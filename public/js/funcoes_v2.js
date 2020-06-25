@@ -24,29 +24,6 @@ function cancelar_evento(id_evento){
 }
 
 
-
-function carregar_clientes_para_troca_na_edicao_evento(clientes){
-  $("#listaClientes").html("");    
-    ultimo_filtro_clientes = clientes;
-    if(clientes && clientes.length > 0){
-        clientes.forEach(function(cliente, indice){
-            $("#peleCelulaCliente").clone()
-                                .attr("id","cliente"+indice)
-                                .appendTo("#listaClientes")
-                                .removeClass("invisible")
-                                .removeClass("float");
-            $("#id_lista").attr("id", "id_lista_"+indice).attr("indice", indice).html(cliente.id_cliente);
-            $("#nome_lista").attr("id", "nome_lista_"+indice).html(cliente.nome);
-            $("#telefone_lista").attr("id", "telefone_lista_"+indice).html(cliente.telefone);
-            $("#tel_alt_lista").attr("id", "tel_alt_lista_"+indice).html(cliente.telefone_recado);
-            $("#email_lista").attr("id", "email_lista_"+indice).html(cliente.email);
-            $("#cpf_lista").attr("id", "cpf_lista_"+indice).html(cliente.cpf);
-            $("#end_lista").attr("id", "end_lista_"+indice).html(cliente.logradouro + ", " + cliente.numero);
-            $("#cidade_lista").attr("id", "cidade_lista_"+indice).html(cliente.cidade); 
-        });
-    }
-}
-
 function receber_evento_copiado(resposta){
   tela.remover_barra_de_progresso_do_modal();
   if(resposta.status){
@@ -297,9 +274,9 @@ const evento = {
       eventoEditado.observacao = $("#observacao_endereco_destaque_evento").val();
       eventoEditado.bairro = $("#bairro_destaque_evento").val();
       eventoEditado.cidade = $("#cidade_destaque_evento").val();
-      eventoEditado.valor_total = $("#valor_total_destaque_evento").val();
-      eventoEditado.valor_desconto = $("#valor_desconto_destaque_evento").val();
-      eventoEditado.valor_sinal = $("#valor_sinal_destaque_evento").val();        
+      eventoEditado.valor_total = Number($("#valor_total_destaque_evento").val());
+      eventoEditado.valor_desconto = Number($("#valor_desconto_destaque_evento").val());
+      eventoEditado.valor_sinal = Number($("#valor_sinal_destaque_evento").val());        
       eventoEditado.observacao_evento = $("#observacao_destaque_evento").val();
       eventoEditado.possui_local_abrigado = $("#abrigo_destaque_evento").val();
       return eventoEditado;
@@ -347,6 +324,9 @@ const evento = {
       case 1: return "Confirmado";
       case 2: return "CANCELADO";
     }
+  },
+  atualizarCampoReceberNoAto: function(total, desconto, sinal){
+    $("#receber_no_ato_destaque_evento").val(total-desconto-sinal);
   }
 }
 
@@ -358,11 +338,18 @@ const cliente = {
   procurarCliente: function(valorDeBusca){
     socket.emit("buscarClientePorIdouNome", valorDeBusca, perfil);
   },
-  receberBuscaCliente: function(resultado){
+  receberBuscaCliente: function(resultado){//clientes buscados por id ou nome
     if(resultado && resultado.status){
+      ultimo_filtro_clientes = resultado.resultado;
       if(resultado.resultado.length && resultado.resultado.length > 0){
-        ultimo_filtro_clientes = resultado.resultado;
+        tela.info_exibicao("Exibindo os seguintes clientes:");
         tela.exibirClientes(resultado.resultado, "#listagemFiltros");        
+      }else if(resultado.resultado.length == 1){
+        tela.info_exibicao("Exibindo o cliente " + resultado.resultado.id_cliente);
+        tela.exibirClientes(resultado.resultado, "#listagemFiltros");  
+      }else{
+        tela.info_exibicao("Sem resultados");
+        tela.exibirClientes("", "#listagemFiltros");  
       }
     }
   },
@@ -414,7 +401,6 @@ const cliente = {
     }     
   },
   async solicitarExclusaoCliente(listaEventos){
-    console.log(listaEventos);
     let mensagem = "VOCÊ TEM ABSOLUTA CERTEZA DISSO?";    
     if(listaEventos && listaEventos.length > 0){
       mensagem += "\nLista de eventos desse cliente que serão removidos também:\n";
@@ -454,6 +440,35 @@ const cliente = {
     });
     return false;
   },
+  carregar_clientes_para_troca_na_edicao_evento: function(clientes){
+    $("#listaClientes").html("");    
+      ultimo_filtro_clientes = clientes;
+      if(clientes && clientes.length > 0){
+          clientes.forEach(function(cliente, indice){
+              $("#peleCelulaCliente").clone()
+                                  .attr("id","cliente"+indice)
+                                  .appendTo("#listaClientes")
+                                  .removeClass("invisible")
+                                  .removeClass("float");
+              $("#id_lista").attr("id", "id_lista_"+indice).attr("indice", indice).html(cliente.id_cliente);
+              $("#nome_lista").attr("id", "nome_lista_"+indice).html(cliente.nome);
+              $("#telefone_lista").attr("id", "telefone_lista_"+indice).html(cliente.telefone);
+              $("#tel_alt_lista").attr("id", "tel_alt_lista_"+indice).html(cliente.telefone_recado);
+              $("#email_lista").attr("id", "email_lista_"+indice).html(cliente.email);
+              $("#cpf_lista").attr("id", "cpf_lista_"+indice).html(cliente.cpf);
+              $("#end_lista").attr("id", "end_lista_"+indice).html(cliente.logradouro + ", " + cliente.numero);
+              $("#cidade_lista").attr("id", "cidade_lista_"+indice).html(cliente.cidade);    
+          });
+          if(clientes.length > 1){
+            tela.info_exibicao("Exibindo os seguintes clientes:");
+          }else{
+            tela.info_exibicao("Exibindo o cliente " + clientes[0].id_cliente);
+          }                    
+      }else{
+        $("#listaClientes").html("");
+        TextTrackList.info_exibicao("Sem resultados");
+      }
+  }
 }
 
 //#################################################################

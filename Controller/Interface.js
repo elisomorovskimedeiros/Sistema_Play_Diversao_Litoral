@@ -394,6 +394,13 @@ class Interface{
             return resposta;
         });   
     }
+
+    async excluitEventoBrinquedoPorIdCliente(idCliente,perfil){
+        let db = new Db(perfil);
+        return await db.excluitEventoBrinquedoPorIdCliente(idCliente).then(function(resposta){
+            return resposta;
+        });
+    }
 }
 
 module.exports = Interface;

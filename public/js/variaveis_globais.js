@@ -481,7 +481,6 @@ var campoBrinquedosNoEventoEmDestaque = {
         let brinquedos_inseridos = [];
         for(let i = 0; i < checkbox_brinquedos_disponiveis.length; i++){
             if($(checkbox_brinquedos_disponiveis[i]).prop("checked")){
-                console.log($(checkbox_brinquedos_disponiveis[i]).attr("id_brinquedo"));
                 brinquedos_inseridos.push($(checkbox_brinquedos_disponiveis[i]).attr("id_brinquedo"));
             }
         }

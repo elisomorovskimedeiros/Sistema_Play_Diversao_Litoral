@@ -47,8 +47,9 @@ socket.on("lista_brinquedos_do_evento", function(resultado){
 //função que recebe a consulta da lista de clientes no bd, conforme o filtro solicitado
 //usada em: inserirEvento.ejs, listarCliente.ejs
 socket.on("mandarClientes", function(clientes){
+    console.log("evento");
     //tela.exibirClientes(clientes, "#listaClientes");
-    carregar_clientes_para_troca_na_edicao_evento(clientes);
+    cliente.carregar_clientes_para_troca_na_edicao_evento(clientes);
 });
 
 

@@ -585,13 +585,14 @@ class Db{
     }
 
     editarEvento(evento){
-        if(!evento.valor_total || evento.valor_total == '' || isNaN(evento.valor_total)){
+        
+        if(evento.valor_total && (evento.valor_total == '' || isNaN(evento.valor_total))){
             evento.valor_total = 0;
         }
-        if(!evento.valor_desconto || evento.valor_desconto == '' || isNaN(evento.valor_desconto)){
+        if(evento.valor_desconto && (evento.valor_desconto == '' || isNaN(evento.valor_desconto))){
             evento.valor_desconto = 0;
         }
-        if(!evento.valor_sinal || evento.valor_sinal == '' || isNaN(evento.valor_sinal)){
+        if(evento.valor_sinal && (evento.valor_sinal == '' || isNaN(evento.valor_sinal))){
             evento.valor_sinal = 0;
         }
         let sql = "UPDATE evento SET ? WHERE evento.id_evento = " + evento.id_evento;
@@ -770,7 +771,6 @@ class Db{
                                     resultado: err
                                     });
                 }
-                console.log(result);
                 return resolve({status: true,
                                 resultado: result});                
             });
@@ -1051,6 +1051,32 @@ class Db{
         let sql = "SELECT * FROM cliente WHERE id_cliente = ?";
         return new Promise(function(resolve){
             db.connection.query(sql, id_cliente, function(err, resultado){
+                db.connection.end();
+                if(err){
+                    console.log(err);
+                    return resolve({
+                        status: false,
+                        resultado: err
+                    });
+                }else{
+                    return resolve({
+                        status: true,
+                        resultado: resultado
+                    })
+                }
+            });
+        });
+    }
+
+    excluitEventoBrinquedoPorIdCliente(idCliente){
+        let db = this;
+        let sql = "delete evento_brinquedo from evento_brinquedo inner join evento " +
+            "on evento_brinquedo.evento = evento.id_evento " +
+            "inner join cliente " + 
+            "on evento.id_cliente = cliente.id_cliente " +
+            "where cliente.id_cliente = ?";
+        return new Promise(function(resolve){
+            db.connection.query(sql, idCliente, function(err, resultado){
                 db.connection.end();
                 if(err){
                     console.log(err);

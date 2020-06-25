@@ -152,7 +152,7 @@ $(document).ready(function(){
         //tira o foco do campo utilizando para filtro
         setTimeout(function(){
             $(e.currentTarget).blur();
-        },1500);        
+        },5000);        
     });
 
     $("#janela_troca_cliente_no_evento").on("hide.bs.modal", function(){
@@ -296,7 +296,9 @@ $(document).ready(function(){
 
     //retirar o bug que faz com que seja necessário dar dois cliques no cliente
     $("#listagemFiltros").hover(function(){
-        $("#procurarCliente").blur();
+        setTimeout(function(){
+            $("#procurarCliente").blur();
+        },5000);        
     });
 
     //#################################################################
@@ -331,6 +333,10 @@ $(document).ready(function(){
 
     $("#janelaDeEdicaoBrinquedo").on("hide.modal.bs", function(){
         tela.fecharModalEdicaoBrinquedo();
+    });
+
+    $("#valor_total_destaque_evento, #valor_desconto_destaque_evento, #valor_sinal_destaque_evento").on("keyup change paste input", function(){
+        evento.atualizarCampoReceberNoAto($("#valor_total_destaque_evento").val(), $("#valor_desconto_destaque_evento").val(), $("#valor_sinal_destaque_evento").val());
     });
 });
 
