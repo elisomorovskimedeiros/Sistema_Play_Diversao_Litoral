@@ -44,7 +44,7 @@ function isLoggedIn(req, res, next){
 
 //executa o login do usuario
 router.get('/login', function(req, res, next){
-    res.render('login',{'message' :req.flash('message'), perfil});
+    res.render('login',{'message' :req.flash('message'),'username' :req.flash('username'), perfil});
 });   
 
     
@@ -58,13 +58,13 @@ router.get("/logout", function(req, res){
 router.get("/", isLoggedIn, function(req, res){
     let perfil = require(caminho_perfil+req.user.perfil+"/customizacao");
     let usuario = req.user.nome;
-    res.render("index",{perfil, usuario});
+    res.render("index_v2",{perfil, usuario});
 });
 
-router.get("/teste_v2", isLoggedIn, function(req, res){
+router.get("/index_v1", isLoggedIn, function(req, res){
     let perfil = require(caminho_perfil+req.user.perfil+"/customizacao");
     let usuario = req.user.nome;
-    res.render("index_v2",{perfil, usuario});
+    res.render("index",{perfil, usuario});
 });
 
 router.get("/inserirCliente", isLoggedIn, function(req, res){
@@ -162,7 +162,7 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage});//variável que manipula o post
 
 router.post('/inserirBrinquedo', upload.single("foto_insercao_brinquedo"), function(req, res){
-    obj_brinquedo.processo_de_insercao_do_brinquedo(req,res, int)
+    obj_brinquedo.processo_de_insercao_do_brinquedo(req,res, int);
 });
 
 router.post("/editarBrinquedo", upload.single('foto'), (req, res, next) =>{
@@ -176,7 +176,12 @@ router.get("/listarBrinquedos", isLoggedIn, function(req, res){
 });
 
 router.get("/listarTodosBrinquedos", isLoggedIn, function(req, res){
-    obj_brinquedo.listar_todos_brinquedos(req, res, int);
+    let perfil = require("../../perfis/"+req.user.perfil+"/customizacao");
+    let nomePerfil = perfil.perfil;
+    obj_brinquedo.listar_todos_brinquedos(int, nomePerfil).then(function(brinquedos){
+        res.render("listarBrinquedos.ejs",{brinquedos, perfil});
+    });
+    
 });
 
 
@@ -522,6 +527,7 @@ router.get("/cadastroPlay/:perfil/:idEvento", async function(req, res){
     let perfil = req.params.perfil;
     let sessao = await int.acharSessao(idEvento, perfil).then(function(resposta){
         if(resposta){
+            console.log(resposta);
             return resposta;
         }else{
             return undefined;
@@ -531,6 +537,9 @@ router.get("/cadastroPlay/:perfil/:idEvento", async function(req, res){
         if (sessao.length < 1 || sessao.evento.length < 1){ //caso não haja nenhuma sessão com aquele id de evento                     
             res.render("cadastroVencido",{perfil});
         }else{
+            let idEvento = sessao.evento;
+            res.render("cadastro_play",{idEvento,perfil});
+            /*
             int.filtrarEventoPorIdEvento(req.params.idEvento,perfil).then(function(resposta){
                 if(resposta.status){
                     res.render("cadastro_play",{idEvento,perfil});
@@ -539,6 +548,7 @@ router.get("/cadastroPlay/:perfil/:idEvento", async function(req, res){
                     console.log(resposta);
                 }
             });
+            */
         }   
     }else{
         res.render("cadastroVencido",{perfil});
@@ -658,7 +668,7 @@ function dadosSegundaTela(req, idEvento, perfil){
             sessao.evento.logradouro = req.body.logradouroFesta;
             sessao.evento.numero = Number(req.body.numeroFesta);
             sessao.evento.complemento = req.body.complementoFesta;
-            sessao.cliente.bairro = req.body.bairro;
+            sessao.evento.bairro = req.body.bairroFesta;
             sessao.evento.cidade = req.body.cidadeFesta;
         }else{
             console.log("sessão não encontrada");

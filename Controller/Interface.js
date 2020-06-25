@@ -248,6 +248,8 @@ class Interface{
             let sessao;
             if(resposta.status && resposta.resultado.length > 0){
                 sessao = resposta.resultado[0];
+                return sessao;
+                /*
                 return db.selectUmEvento(sessao.evento, perfil).then(function(resposta){
                     if(resposta.status){
                         sessao.evento = resposta.resultado;
@@ -255,7 +257,7 @@ class Interface{
                     }else{
                         return false;
                     }
-                });
+                });*/
             }else{
                 return false;
             }
@@ -342,8 +344,10 @@ class Interface{
     }
 
     async inserirEventoComClienteEBrinquedo(perfil, tudoJunto){
-        console.log(tudoJunto.brinquedos);
         let db = new Db(perfil);
+        if(tudoJunto.data){
+            tudoJunto.data_evento = tudoJunto.data;
+        }
         let evento = {
             bairro: tudoJunto.bairro,
             cidade: tudoJunto.cidade,
@@ -366,11 +370,6 @@ class Interface{
                 console.log(resposta);
             }else{
                 let brinquedos = [];
-                /*
-                tudoJunto.brinquedos.forEach(function(brinquedo){
-                    brinquedos.push(brinquedo.id_brinquedo);
-                });
-                */
                 let id_evento = resposta.resultado.insertId;
                 let evento_brinquedo = {evento: id_evento,
                     brinquedos: tudoJunto.brinquedos
@@ -387,26 +386,13 @@ class Interface{
             }         
             return resposta;
         });
-        /*
-        db = new Db(perfil);
-        let resposta_insercao_brinquedos_no_evento = await db.inserirBrinquedoNoEvento(evento_brinquedo).then(function(resposta){
-            if(!resposta.status){
-                console.log("Ocorreu erro na inserção dos brinquedos no evento");
-                console.log(resposta);
-            }
+    }
+
+    async buscarClientePorId(itemDeBusca, perfil){
+        let db = new Db(perfil);
+        return await db.select_cliente_por_id(itemDeBusca).then(function(resposta){
             return resposta;
-        });
-        let resposta = {
-            resposta_insercao_brinquedos: resposta_insercao_brinquedos_no_evento,
-            resposta_insercao_evento: resposta_insercao_evento
-        }
-        if(resposta_insercao_brinquedos_no_evento.status && resposta_insercao_evento){
-            resposta.status = true;
-        }else{
-            resposta.status = false;
-        }
-        return resposta;
-        */
+        });   
     }
 }
 

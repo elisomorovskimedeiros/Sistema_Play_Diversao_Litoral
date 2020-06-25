@@ -135,6 +135,9 @@ class Db{
                                     resultado: err});
                 }
                 db.fazerListaObjetosBrinquedos(results);
+                if(!results[0].id_evento){
+                    results = [];
+                }
                 return resolve({status: true,
                                 resultado: results});
             });
@@ -537,14 +540,6 @@ class Db{
     }  
 
     inserirBrinquedoNoEvento(brinquedosEvento){
-        /*
-        recebo
-        brinquedosEvento = {
-            evento: id_evento,
-            brinquedo: [id_brinquedo]
-        }
-        */
-        console.log(brinquedosEvento);
         let sql = 'INSERT INTO evento_brinquedo (`brinquedo`, `evento`) VALUES';
         let valores = [];
         brinquedosEvento.brinquedos.forEach(brinquedo => {
@@ -590,6 +585,15 @@ class Db{
     }
 
     editarEvento(evento){
+        if(!evento.valor_total || evento.valor_total == '' || isNaN(evento.valor_total)){
+            evento.valor_total = 0;
+        }
+        if(!evento.valor_desconto || evento.valor_desconto == '' || isNaN(evento.valor_desconto)){
+            evento.valor_desconto = 0;
+        }
+        if(!evento.valor_sinal || evento.valor_sinal == '' || isNaN(evento.valor_sinal)){
+            evento.valor_sinal = 0;
+        }
         let sql = "UPDATE evento SET ? WHERE evento.id_evento = " + evento.id_evento;
         var db = this;
         return new Promise(function (resolve){
@@ -766,6 +770,7 @@ class Db{
                                     resultado: err
                                     });
                 }
+                console.log(result);
                 return resolve({status: true,
                                 resultado: result});                
             });
@@ -1020,7 +1025,6 @@ class Db{
     }
 
     select_nome_imagem_brinquedo(id_brinquedo){
-        console.log(id_brinquedo);
         let db = this;
         let sql = "SELECT nome_brinquedo, foto_brinquedo FROM brinquedo WHERE brinquedo.id_brinquedo = ?";
         return new Promise(function(resolve){
@@ -1037,6 +1041,28 @@ class Db{
                         status: true,
                         resultado: resultado
                     });
+                }
+            });
+        });
+    }
+
+    select_cliente_por_id(id_cliente){
+        let db = this;
+        let sql = "SELECT * FROM cliente WHERE id_cliente = ?";
+        return new Promise(function(resolve){
+            db.connection.query(sql, id_cliente, function(err, resultado){
+                db.connection.end();
+                if(err){
+                    console.log(err);
+                    return resolve({
+                        status: false,
+                        resultado: err
+                    });
+                }else{
+                    return resolve({
+                        status: true,
+                        resultado: resultado
+                    })
                 }
             });
         });

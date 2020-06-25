@@ -23,7 +23,7 @@
                     <div class="afastar-em-cima">
                         <div class="d-flex justify-content-around">
                             <span class="d-flex align-self-end">
-                                Opções
+                                Busca por Id
                             </span>
                             <span id="adicionarEvento" class="botaoControle">
                                 <i class="fa fa-plus fa-2x"></i>
@@ -31,7 +31,7 @@
                             </span>                            
                         </div>
                         <div class="form-group">
-                            <input id="procurarEvento" type="text" placeholder="Busca rápida" class="form-control">
+                            <input id="procurarEvento" type="text" placeholder="Informe o Id" class="form-control">
                         </div>
                         <div class="row caixa_separada" id="buscaPorDatas">
                             <div class="col-sm-12">
@@ -54,6 +54,7 @@
                             <div id="iniciarBuscaPorData" class="col-sm-2 d-flex align-self-center botaoControle">
                                 <i class="fa fa-chevron-right fa-2x"></i>
                                 <i class="fa fa-chevron-right fa-2x"></i>
+                                <div class="nomeBotao escondida">Buscar</div>
                             </div>
                         </div>
                         <div class="afastar-em-cima centralizar">
@@ -63,6 +64,7 @@
                                 <i class="fa fa-chevron-right"></i>
                             </button>
                         </div>
+                        <!--
                         <div class="afastar-em-cima centralizar">
                             <button class="btn btn-primary">
                                 Mais Opções 
@@ -70,6 +72,7 @@
                                 <i class="fa fa-chevron-right"></i>
                             </button>
                         </div>
+                    -->
                     </div>                        
                 </div>
             </div>
@@ -92,7 +95,7 @@
                     <div class="afastar-em-cima">
                         <div class="d-flex justify-content-around">
                             <span class="d-flex align-self-end">
-                                Informe algo:
+                                Id ou Nome:
                             </span>
                             <span id="adicionarCliente" class="botaoControle">
                                 <i class="fa fa-plus fa-2x"></i>
@@ -123,7 +126,7 @@
                 <div id="opcoesBrinquedos" class="caixaOpcoes" style="display:none;">
                     <div class="afastar-em-cima">
                         <div class="d-flex justify-content-around">
-                            <button class="btn btn-primary">Listar Brinquedos</button>
+                            <button id="botao_listar_todos_brinquedos" class="btn btn-primary">Listar Brinquedos</button>
                             <span id="adicionarBrinquedo" class="botaoControle">
                                 <i class="fa fa-plus fa-2x"></i>
                                 <div class="nomeBotao escondida">Adicionar Brinquedo</div>
@@ -146,6 +149,7 @@
                                     <span>
                                         <i class="fa fa-chevron-right fa-2x"></i>
                                     </span>
+                                    <div class="nomeBotao escondida">Buscar</div>
                                 </center>
                             </div>
                         </div>       
@@ -176,6 +180,7 @@
                         <ul class="nav navbar-nav ml-auto">                            
                             <li class="nav-item active evento" id="mais_filtros">
                                 <a class="nav-link" href="#">
+                                    <!--
                                     <div class="d-flex botaoControle">
                                         <span>
                                             <i class="fa fa-search" aria-hidden="true"></i>
@@ -183,11 +188,12 @@
                                         <span>
                                             &nbsp;&nbsp;Mais Filtros
                                         </span>                                                                   
-                                    </div>                                
+                                    </div>  
+                                -->                              
                                 </a>
                             </li>
                             <!--BOTÃO ADICIONAR BRINQUEDOS EM EVENTO-->
-                            <li class="nav-item active brinquedo" id="botao_controle_adicionar_a_evento" style="display: none">
+                            <li class="nav-item active " id="botao_controle_adicionar_a_evento" style="display: none">
                                 <a class="nav-link" a href="/criarSessaoCliente">
                                     <div class="d-flex botaoControle">
                                         <span id="figurinha">
@@ -322,7 +328,8 @@
                                         <div class="col-md-12 row">
                                             <div class="col-md-4 form-group">
                                                 <label for="data_destaque_evento">Data</label>
-                                                <input type="date" readonly class="form-control" id="data_destaque_evento">
+                                                <input type="date" required readonly class="form-control" id="data_destaque_evento">
+                                                <div class="invalid-feedback">Insira uma data</div>
                                             </div>
                                             <div class="col-md-4 form-group">
                                                 <label for="hora_destaque_evento">Hora</label>
@@ -393,14 +400,23 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="container_listagem_de_brinquedos">
+                                                <h4 id="titulo_div_brinquedos_indisponiveis_para_data"></h4> 
+                                                <div>
+                                                    <div>
+                                                        <div class="row linha_lista_brinquedos" id="div_lista_brinquedos_indisponiveis">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="form-group col-md-12">
-                                                <button type="button" id="btn_editar_brinquedos_evento" class="btn btn-primary form-control invisible btn_principal_central">Trocar Brinquedos</button>
+                                                <button type="button" id="btn_editar_brinquedos_evento" style="display: none" class="btn btn-primary form-control btn_principal_central">Trocar Brinquedos</button>
                                             </div>
                                             <div class="container_listagem_de_brinquedos">
-                                                <h4 class="titulo_div_lista_brinquedos"></h4> 
-                                                <div class="container_troca_dos_brinquedos">
+                                                <h4 id="titulo_div_lista_brinquedos_ainda_disponiveis"></h4> 
+                                                <div style="width: 110%" class="container_troca_dos_brinquedos">
                                                     <div>
-                                                        <div class="d-sm-flex flex-row" id="linha_lista_brinquedos">                                                        
+                                                        <div class="d-flex flex-wrap" id="linha_lista_brinquedos">                                                        
                                                         </div>
                                                     </div>                  
                                                 </div>    
@@ -529,7 +545,7 @@
                             <div class="col-md-12">
                                 Brinquedos:
                             </div>
-                            <div class="col-md-12 brinquedosListaEventos d-flex flex-row">
+                            <div class="col-md-12 brinquedosListaEventos d-flex flex-wrap">
                                 <div id="brinquedo_individual">
                                     <div class="modulo_brinquedo p-2">
                                         <div class="nome_brinquedo letra_bem_pequena"></div>
@@ -569,16 +585,16 @@
                                 <span>Telefone Recado: </span><span id="tel_alt_lista"></span>
                             </div>
                             <div class="col-md-6">
-                                <div>Email: </div><div id="email_lista"></div>
+                                <span>Email: </span><span id="email_lista"></span>
                             </div>
                             <div class="col-md-6">
-                                <div>CPF: </div><div id="cpf_lista"></div>
+                                <span>CPF: </span><span id="cpf_lista"></span>
                             </div>
                             <div class="col-md-6">
-                                <div>Endereço: </div><div id="end_lista"></div>
+                                <span>Endereço: </span><span id="end_lista"></span>
                             </div>
                             <div class="col-md-6">
-                                <div>Cidade: </div><div id="cidade_lista"></div>
+                                <span>Cidade: </span><span id="cidade_lista"></span>
                             </div>
                             <div class="col-md-12 enderecoListaEventos"></div>
                         </div>
@@ -586,6 +602,158 @@
                 </div>                        
             </div>               
             <!-- FIM DA CÉLULA DO CLIENTE -->
+
+            <!-- FORM INSERÇÃO DE NOVO CLIENTE -->
+            <div id="matriz_inserir_cliente" class="invisible container">
+                    <form method="post" action="/inserirCliente" name="form-cliente" id="matriz-form-inserir-cliente">
+                        <div class="row">                        
+                                    <div class="form-group col-md-6">
+                                        <label for="nome_novo_cliente">Nome</label>
+                                        <input type="text" class="form-control" required name="nome_novo_cliente" id="nome_novo_cliente">
+                                        <input type="text" class="invisible float" name="v2" value=" ">
+                                    </div>
+    
+                                    <div class="form-group col-md-6">
+                                        <label for="email">E-mail</label>
+                                        <input type="email_novo_cliente" class="form-control" name="email_novo_cliente" id="email_novo_cliente">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="cpf_novo_cliente">CPF</label>
+                                        <input type="text" class="form-control" required name="cpf_novo_cliente" id="cpf_novo_cliente">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="telefone_novo_cliente">Telefone</label>
+                                        <input type="text" class="form-control" required name="telefone_novo_cliente" id="telefone_novo_cliente">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="telefone_novo_cliente">Telefone para recado</label>
+                                        <input type="text" class="form-control" name="telefone_recado_novo_cliente" id="telefone_recado_novo_cliente">
+                                    </div>  
+                                    <div class="form-group col-md-9">
+                                        <label for="logradouro_novo_cliente">Endereço</label>
+                                        <input type="text" class="form-control" required placeholder="Rua, Avenida, Praça" name="logradouro_novo_cliente" id="logradouro_novo_cliente">
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="numero_novo_cliente">Número</label>
+                                        <input type="number" class="form-control" required placeholder="Número" name="numero_novo_cliente" id="numero_novo_cliente">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="complemento_novo_cliente">Complemento</label>
+                                        <input type="text" class="form-control" placeholder="Complemento" name="complemento_novo_cliente" id="complemento_novo_cliente">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="observacao_endereco_novo_cliente">Observação do endereço</label>
+                                        <input type="text" class="form-control" placeholder="Observacao Endereco" name="observacao_endereco_novo_cliente" id="observacao_endereco_novo_cliente">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="bairro_novo_cliente">Bairro</label>
+                                        <input type="text" class="form-control" placeholder="Bairro" name="bairro_novo_cliente" id="bairro_novo_cliente">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="cidade_novo_cliente">Cidade</label>
+                                        <input type="text" class="form-control" required placeholder="Cidade" name="cidade_novo_cliente" id="cidade_novo_cliente">
+                                    </div>                        
+                                    <div class="form-group col-md-12">
+                                        <label for="observacao_novo_cliente">Observação sobre o cliente</label>
+                                        <input type="text" class="form-control" name="observacao_cliente_novo_cliente" id="observacao_cliente_novo_cliente">
+                                    </div>
+                                    <div class="form-group"  style="margin-top: 32px; margin-left: 20px">
+                                        <input type="submit" class="btn btn-primary form-control" value="Cadastrar">
+                                    </div>                                
+                                </div>
+                            </form>
+            </div>
+            <!-- FIM DO FORM INSERÇÃO DE NOVO CLIENTE -->
+
+            <!-- CAMPOS PARA EDIÇÃO DO CLIENTE -->
+
+            <!-- Janela de Edição do Cliente -->
+            <div class="modal fade" id="janelaDeEdicaoCliente">
+                    
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <!-- cabecalho -->
+                        <form method="post" action="/editarCliente" name="form-cliente" id="form-cliente">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="tituloEdicaoCliente">Edição de Clientes</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar"  id="fecharModal">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>            
+                            <!-- corpo -->
+                            <div class="modal-body" id="corpoModal">            
+                                <div class="row">
+                                    <div class="form-group col-md-12" style="display: none;">                                
+                                        <input type="text" class="form-control" name="id_cliente_edicao" id="id_cliente_edicao">
+                                    </div>              
+                                    <div class="form-group col-md-12">
+                                        <label for="nome" name="labelDoNome" id="labelDoNome">Nome</label>
+                                        <input type="text" class="form-control" required name="nome_edicao_edicao" id="nome_edicao_edicao">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="email">E-mail</label>
+                                        <input type="email" class="form-control" required name="email_edicao" id="email_edicao">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="cpf">CPF</label>
+                                        <input type="text" class="form-control" required name="cpf_edicao" id="cpf_edicao">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="telefone">Telefone</label>
+                                        <input type="text" class="form-control" required name="telefone_edicao" id="telefone_edicao">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="telefone">Telefone para recado</label>
+                                        <input type="text" class="form-control" name="telefone_recado_edicao" id="telefone_recado_edicao">
+                                    </div>                          
+                                    <div class="form-group col-md-8">
+                                        <label for="endereco">Rua, Avenida, Praça, etc...</label>
+                                        <input type="text" class="form-control" required placeholder="Rua, Avenida, Praça" name="logradouro_edicao" id="logradouro_edicao">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="numero">Número</label>
+                                        <input type="numero" class="form-control" required placeholder="Número" name="numero_edicao" id="numero_edicao">
+                                    </div>                                
+                                    <div class="form-group col-md-6">
+                                        <label for="complemento">Complemento</label>
+                                        <input type="text" class="form-control" placeholder="Complemento" name="complemento_edicao" id="complemento_edicao">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="bairro">Bairro</label>
+                                        <input type="text" class="form-control" placeholder="Bairro" name="bairro_edicao" id="bairro_edicao">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="cidade">Cidade</label>
+                                        <input type="text" class="form-control" required placeholder="Cidade" name="cidade_edicao" id="cidade_edicao"> 
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="observacao_endereco">Observação do Endereço</label>
+                                        <input type="text" class="form-control" placeholder="Observacao do Endereco" name="observacao_endereco_edicao" id="observacao_endereco_edicao"> 
+                                    </div>  
+                                    <div class="form-group col-md-12">
+                                        <label for="observacao">Observação sobre o cliente</label>
+                                        <input type="text" class="form-control" name="observacao_cliente_edicao" id="observacao_cliente_edicao">
+                                    </div>                                
+                                </div>
+                            </div>
+                    
+                            <!-- rodape -->
+                            <div class="modal-footer d-flex mb-3">
+                                <button type="button" id="btn_exluir_cliente" class="btn btn-danger mr-auto p-2" data-dismiss="modal">
+                                    Excluir Cliente
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary p-2" data-dismiss="modal">
+                                    Cancelar
+                                </button>
+                                <button type="button" id="btnEnviarEdicaoCliente" class="btn btn-primary p-2">
+                                    Concluir Edição
+                                </button>   
+                            </div>
+                        </form>
+                    </div>
+                </div>    
+            </div>
+            <!-- FIM DOS CAMPOS PARA EDIÇÃO DO CLIENTE -->
 
             <!-- CÉLULA DE EXIBIÇÃO DE BRINQUEDOS -->
             <div class='celulaBrinquedo invisible float' id="divListaBrinquedos">
@@ -598,6 +766,7 @@
                     </span>
                 </div>
                 Nome: <span class="nome_brinquedo_troca_brinquedos"></span><br>
+                <div><span>id: </span><span class="id_brinquedo"></span></div>
                 <div class="qtd">Qtd disponível: <span class="qtd_disponivel_troca_brinquedos"></span></div>
             </div>
 
@@ -609,41 +778,104 @@
                 <div class="page-header">
                     <h1>Inserir novo brinquedo</h1>
                 </div>
-                <form method="post" action="/inserirBrinquedo" name="form-inserir-brinquedo" id="form-inserir-brinquedo" enctype="multipart/form-data">
-                    <div class="row">  
+                <form method="post" name="form-inserir-brinquedo" id="matriz-form-inserir-brinquedo" action="/inserirBrinquedo" enctype="multipart/form-data">
+                    <div class="row">
+                        <input type="checkbox" name="v2" class="invisible float">  
                         <div class="form-group col-md-6">
                             <label for="nome_insercao_brinquedo">Nome do brinquedo</label>
-                            <input type="text" class="form-control" name="nome_insercao_brinquedo" id="nome_insercao_brinquedo">
+                            <input type="text" class="form-control" required name="nome_insercao_brinquedo" id="nome_insercao_brinquedo">
+                            <input type="text" name="v2" value=" " class="invisible float">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="caracteristicas_insercao_brinquedo">Características</label>
-                            <input type="text" class="form-control" name="caracteristicas_insercao_brinquedo" id="caracteristicas_insercao_brinquedo">
+                            <input type="text" class="form-control" required name="caracteristicas_insercao_brinquedo" id="caracteristicas_insercao_brinquedo">
                         </div>
                         <div class="form-group col-md-3">
                             <label for="valor_insercao_brinquedo">Valor do Aluguel</label>
-                            <input type="number" class="form-control" name="valor_insercao_brinquedo" id="valor_insercao_brinquedo">
+                            <input type="number" class="form-control" required name="valor_insercao_brinquedo" id="valor_insercao_brinquedo">
                         </div>
                         <div class="form-group col-md-3">
                             <label for="quantidade_insercao_brinquedo">Quantidade no Estoque</label>
-                            <input type="number" class="form-control" name="quantidade_insercao_brinquedo" id="quantidade_insercao_brinquedo">
+                            <input type="number" class="form-control" required name="quantidade_insercao_brinquedo" id="quantidade_insercao_brinquedo">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="observacao_insercao_brinquedo">Observação</label>
-                            <input type="text" class="form-control" name="observacao_insercao_brinquedo" id="observacao_insercao_brinquedo">
+                            <input type="text" class="form-control" required name="observacao_insercao_brinquedo" id="observacao_insercao_brinquedo">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="foto_insercao_brinquedo">Foto</label>
-                            <input type="file" class="form-control-file" name="foto_insercao_brinquedo" id="foto_insercao_brinquedo">
+                            <input type="file" class="form-control-file" required name="foto_insercao_brinquedo" id="foto_insercao_brinquedo">
                         </div>
                         <div class="form-group col-md-3">
                             <label></label>
-                            <input type="submit" class="btn btn-primary form-control" value="Cadastrar" script="">
+                            <input id="matriz_botao_cadastrar_novo_brinquedo" type="submit" class="btn btn-primary form-control" value="Cadastrar" script="">
                         </div>            
                     </div>
                 </form>
             </div>
 
             <!-- FIM DA INSERSÃO DE NOVO BRINQUEDO -->
+
+            <!-- MODAL EDIÇÃO DE UM BRINQUEDO -->
+            <div class="modal fade" id="janelaDeEdicaoBrinquedo">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <form method="post" action="/editarBrinquedo" name="form-editar-brinquedo" enctype="multipart/form-data" id="form-brinquedo">
+                            <!-- cabecalho -->
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="tituloEdicaoBrinquedo">Edição de Brinquedo</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar"  id="fecharModal">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <!-- corpo -->
+                            <div class="modal-body" id="corpoModalEdicaoBrinquedo" style="margin-left: 15px;">            
+                                <div class="row">
+                                    <div class="form-group col-md-12" style="display: none;">                                
+                                        <input type="text" class="form-control" name="id_brinquedo" id="id_brinquedo_edicao">
+                                    </div>                                              
+                                    <div class="form-group col-md-6">
+                                        <label for="nome">Nome do brinquedo</label>
+                                        <input type="text" class="form-control" name="nome_edicao" id="nome_edicao">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="carac">Características</label>
+                                        <input type="text" class="form-control" name="caracteristicas_edicao" id="caracteristicas_edicao">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="valor">Valor do Aluguel</label>
+                                        <input type="number" class="form-control" name="valor_edicao" id="valor_edicao">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="quantidade">Quantidade no Estoque</label>
+                                        <input type="number" class="form-control" name="quantidade_edicao" id="quantidade_edicao">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="obs">Observação</label>
+                                        <input type="text" class="form-control" name="observacao_edicao" id="observacao_edicao">
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <label for="foto">Foto</label>
+                                        <input type="file" class="form-control-file" name="foto" id="foto">
+                                    </div>                                                         
+                                </div>
+                                <!-- rodape -->
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                                        Cancelar
+                                    </button>
+                                    <button type="submit" id="btnEnviarEdicaoBrinquedo" class="btn btn-primary">
+                                        Concluir Edição
+                                    </button>
+                                </div>                
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+        <!-- FIM MODAL EDIÇÃO DE UM BRINQUEDO -->
 
             <!--BOTÕES DE OPÇÕES DE CONTROLE DE TELA-->
                 

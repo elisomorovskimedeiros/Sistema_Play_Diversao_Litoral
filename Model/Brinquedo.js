@@ -48,9 +48,16 @@ class Brinquedo{
                 resposta = "Brinquedo inserido com sucesso!";
             }else{
                 console.log(resultado);
+                if(req.body.v2){//indica que quem solicitou o request foi uma tela da v2
+                    res.send({status: false});
+                }
                 resposta = "Ocorreu um erro na inserção do brinquedo";
             }
-            res.render("inserirBrinquedo", {resposta, perfil});
+            if(req.body.v2){//indica que quem solicitou o request foi uma tela da v2
+                res.send({status: true});
+            }else{
+                res.render("inserirBrinquedo", {resposta, perfil});
+            }            
         });
         //remover foto antiga do brinquedo
         //arquivo.remover_foto_brinquedo(perfil.perfil, brinquedo.nome_brinquedo, int);        
@@ -99,12 +106,14 @@ class Brinquedo{
             arquivo.redimensionar_imagem(caminho_arquivo_origem, caminho_arquivo_origem, 200);//imagem usada para a tela de detalhes 
         }
         int.select_nome_imagem_brinquedo(perfil.perfil, brinquedo.id_brinquedo).then(function(resposta){
-            if(resposta.status && resposta.resultado.length > 0){
-                if(resposta.resultado[0].nome_brinquedo != brinquedo.nome_brinquedo)
-                    arquivo.renomear_arquivo(obj_brinquedo.caminho_imagens_brinquedo+resposta.resultado[0].nome_brinquedo,"public/imagens/brinquedos/"+brinquedo.nome_brinquedo)
-                if(file && resposta.resultado[0].foto_brinquedo != file.originalname){
-                    arquivo.remover_arquivo(obj_brinquedo.caminho_imagens_brinquedo+brinquedo.nome_brinquedo+"/"+resposta.resultado[0].foto_brinquedo);
-                    arquivo.remover_arquivo(obj_brinquedo.caminho_imagens_brinquedo+brinquedo.nome_brinquedo+"/miniatura/miniatura_"+resposta.resultado[0].foto_brinquedo);
+            if(file){
+                if(resposta.status && resposta.resultado.length > 0){
+                    if(resposta.resultado[0].nome_brinquedo != brinquedo.nome_brinquedo)
+                        arquivo.renomear_arquivo(obj_brinquedo.caminho_imagens_brinquedo+resposta.resultado[0].nome_brinquedo,"public/imagens/brinquedos/"+brinquedo.nome_brinquedo)
+                    if(resposta.resultado[0].foto_brinquedo != file.originalname){
+                        arquivo.remover_arquivo(obj_brinquedo.caminho_imagens_brinquedo+brinquedo.nome_brinquedo+"/"+resposta.resultado[0].foto_brinquedo);
+                        arquivo.remover_arquivo(obj_brinquedo.caminho_imagens_brinquedo+brinquedo.nome_brinquedo+"/miniatura/miniatura_"+resposta.resultado[0].foto_brinquedo);
+                    }
                 }
             }
             int.editarBrinquedo(brinquedo,perfil.perfil).then(function(brinquedos){
@@ -112,23 +121,23 @@ class Brinquedo{
                 if(brinquedos.status){
                     resposta = "Brinquedo editado com sucesso!";            
                 }else{
-                    resposta = "Ocorreu um erro na edição do brinquedo";
+                    resposta = "Ocorreu um erro na edição do brinquedo";                    
                 }
-                res.render("listarBrinquedos", {brinquedos, perfil});
+                //res.render("listarBrinquedos", {brinquedos, perfil});
+                res.send(brinquedos);
             });
         });        
     }
     
-    listar_todos_brinquedos(req, res, int){
-        let perfil = require("../../perfis/"+req.user.perfil+"/customizacao");
-        int.listarTodosBrinquedos(perfil.perfil).then(function(resposta){  
+    async listar_todos_brinquedos(int, perfil){        
+        return await int.listarTodosBrinquedos(perfil).then(function(resposta){  
             let brinquedos;
             if(resposta.status){
                 brinquedos = resposta.resultado;
                 brinquedos.forEach(brinquedo => {
                     brinquedo.nome_brinquedo = arquivo.removeAcento(brinquedo.nome_brinquedo);
-                });                
-                res.render("listarBrinquedos.ejs",{brinquedos, perfil});
+                });
+                return brinquedos;
             }else{
                 console.log(resposta.resultado);
             }             

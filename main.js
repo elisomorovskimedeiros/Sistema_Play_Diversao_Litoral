@@ -10,8 +10,10 @@ const     express = require("express"),
            moment = require("moment");
              Jimp = require('jimp'),//redimensionador de imagens
                fs = require("fs-extra"),
- eventoController = require("./Controller/eventoController");
+ eventoController = require("./Controller/eventoController"),
+        Brinquedo = require("./Model/Brinquedo");
 
+const obj_brinquedo = new Brinquedo();
 const app = express(),
       int = new Interface();
 
@@ -40,13 +42,16 @@ app.use(expressSession({
     const Login = require("./Controller/Login");
     const login = Login(passport);
     
-    app.post("/login", login.passport.authenticate('local', {
+    
+    app.post("/login", login.passport.authenticate('local', {        
         successRedirect: '/',
         failureRedirect: '/login',
         failureFlash: true
-        }), function(req, res, info){
-            res.render('index',{'message' :req.flash('message')});
-    });    
+        }), function(req, res, info){            
+            //res.render('index',{'message' :req.flash('message')});
+            //console.log("logou");
+            //res.send({status: true});
+    });
 
     //funcao que será usada como middleware para verificar se o usuário está logado antes de mostrar a página
 function isLoggedIn(req, res, next){
@@ -357,9 +362,7 @@ var socketio = io.on("connect", function(socketio){
     }); 
     
     socketio.on("editar_evento", function(dados_recebidos, perfil){
-        console.log(dados_recebidos);
         int.excluir_brinquedos_de_determinado_evento(perfil, dados_recebidos.brinquedos_retirados, dados_recebidos.evento.id_evento).then(function(resposta){
-            console.log(resposta);
             if(resposta.status){
                 let brinquedos_inseridos = {brinquedos: dados_recebidos.brinquedos_inseridos,
                                             evento: dados_recebidos.evento.id_evento};
@@ -443,6 +446,47 @@ var socketio = io.on("connect", function(socketio){
                 socketio.emit("receber_eventos", {erro: "Ocorreu um erro no filtro de eventos"});
             }
         }      
+    });
+
+    socketio.on("buscarClientePorIdouNome", function(itemDeBusca, perfil){
+        const regex = /[0-9]/;
+        let naoEhNumero = false;
+        for(let i = 0; i < itemDeBusca.length; i++){
+            if(!regex.test(itemDeBusca[i])){ //teste para verificar se existem letras, caracterizando busca por nome
+                naoEhNumero = true;
+                break;
+            }
+        }
+        if(naoEhNumero && itemDeBusca.length > 2){
+            let cliente = {
+                nome: itemDeBusca,
+                cidade: '',
+                logradouro: ''};
+            int.listarCliente(cliente, perfil).then(function(resposta){
+                socketio.emit("receberFiltroClientes", resposta);
+            });
+        }else{
+            int.buscarClientePorId(itemDeBusca, perfil).then(function(resposta){
+                socketio.emit("receberFiltroClientes", resposta);
+            });
+        }          
+    });
+    socketio.on("editarCliente", function(cliente, perfil){
+        int.editarCliente(cliente,perfil).then(function(resposta){
+            socketio.emit("respostaEdicaoCliente", resposta);
+        });
+    });
+
+    socketio.on("listarTodosBrinquedos", function(perfil){
+        obj_brinquedo.listar_todos_brinquedos(int, perfil).then(function(brinquedos){
+            socketio.emit("listaDeTodosBrinquedos", brinquedos);
+        });
+    });
+
+    socketio.on("deletarCliente", function(id_cliente, perfil){
+        int.excluirCliente(id_cliente, perfil).then(function(resposta){
+            socketio.emit("respostaRemocaoCliente", resposta);
+        });
     });
 });
 

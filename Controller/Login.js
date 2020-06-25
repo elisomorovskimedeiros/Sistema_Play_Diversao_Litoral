@@ -23,17 +23,16 @@ let login = function(passport){
         passwordField: 'password',
         passReqToCallback: true //passback entire req to call back
     } , function (req, username, password, done){
-
             if(!username || !password ) { 
-                return done(null, false, req.flash('message','Preencher todos os campos.')); 
+                return done(null, false, req.flash('message','Preencher todos os campos.'), req.flash('username', '')); 
             }
             var salt = '7fa73b47df808d36c5fe328546ddef8b9011b2c6';
             connection.query("select * from usuario where username = ?", [username], function(err, rows){
-
+                
                 if (err) 
-                    return done(req.flash('message',err));
+                return done(null, false, req.flash('message',err), req.flash('username', username));
                 if(!rows.length){ 
-                    return done(null, false, req.flash('message','Usuário ou senha inválidos.')); 
+                    return done(null, false, req.flash('message','Usuário ou senha inválidos.'), req.flash('username', username));
                 }
 
                 let perfil = new Perfil();
@@ -43,7 +42,7 @@ let login = function(passport){
                 var encPassword = crypto.createHash('sha1').update(salt).digest('hex');
                 var dbPassword  = usuario.password;
                 if(!(dbPassword == encPassword)){
-                    return done(null, false, req.flash('message','Usuário ou senha inválidos.'));
+                    return done(null, false, req.flash('message','Usuário ou senha inválidos.'), req.flash('username', username));
                 }
                 
                 return done(null, usuario);                                        

@@ -36,7 +36,6 @@ listaDeEventos = socket.on("receberEventos", function(eventos){
     let paiDaListaDeEventos = document.getElementById("listaEventos").parentElement.attributes.id.value;
     let listaDeEventos = '';
     listaEventosGlobal = eventos;
-    console.log(eventos);
     if(eventos.length > 0 && eventos[0]){
         eventos.forEach( evento => {
             let brinquedos = '';
@@ -174,4 +173,10 @@ socket.on("mandarEssesEventos", function(resultado){
         listaDeBrinquedos += "</div>";
         document.getElementById("listaBrinquedos").innerHTML = listaDeBrinquedos;
     });
+
+    //retorno do envio de confirmação via email
+    socket.on("retorno_mudanca_status_evento", function(mensagem){
+        alert(mensagem.mensagem);
+    });
+
         

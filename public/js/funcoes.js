@@ -319,3 +319,31 @@ function removeAcento(text){
     text = text.replace(new RegExp('[Ç]','gi'), 'c');
     return text;                 
 }
+
+function exibirMensagem(mensagem){
+    let snackbar = document.getElementById("snackbar");
+    snackbar.innerHTML = mensagem;
+    snackbar.className = "show";
+    setTimeout(function(){snackbar.className = snackbar.className.replace("show", ""); }, 3000);
+}
+
+function editarBrinquedo(dados){
+    $.ajax({
+      type: "POST",
+      url: "/editarBrinquedo",
+      data: dados,
+      cache: false,
+      contentType: false,
+      processData: false,
+      success: function(resposta){
+        if(resposta.status){
+          exibirMensagem("Brinquedo Editado com Sucesso");
+        }else{
+          exibirMensagem("Ocorreu um erro na edição do brinquedo");
+        }
+        $("#janelaDeEdicaoBrinquedo").modal("hide");
+        location.reload();
+      }
+    });
+    return false;
+  }

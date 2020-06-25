@@ -252,13 +252,19 @@ $(document).ready(function(){
     });
 
     //Controle da div que exibe a lista de brinquedos para cada evento na janela de edição
-    $("#exibirListaBrinquedos").click(function(){
+    $("#exibirBrinquedoTodos").click(function(e){
+        console.log(e.currentTarget);
+        controle();
+    });
+
+    function controle(){
+        console.log($("#listaBrinquedos").hasClass("naoMostrar"));
         if($("#listaBrinquedos").hasClass("naoMostrar")){
             $("#listaBrinquedos").removeClass("naoMostrar");
         }else{
             $("#listaBrinquedos").addClass("naoMostrar");
-        }        
-    });
+        }  
+    }
 
     $("#valor_total, #valor_sinal, #valor_desconto").keyup(function(){        
         let valor = $("#valor_total").val() - $("#valor_sinal").val() - $("#valor_desconto").val();
@@ -290,7 +296,6 @@ $(document).ready(function(){
             url: "/editarEvento",
             data: dados,
             success: function( data ){
-                console.log("data");
                 $("#fecharModalEditar").trigger("click");
                 emitirAviso(data, "snackbar", 1000);
                 setTimeout(function() {     
@@ -356,5 +361,10 @@ $(document).ready(function(){
 
     $("#enviarCadastrosPendentes", "").click(function(){
         socket.emit("pendenciasCadastro", perfil);//recebe resposta por escutasSocketIO => receberEventos
+    });
+//AJAX da edição de brinquedo
+    $("#form-brinquedo").submit(function(){
+        var dados = new FormData(this);
+        return editarBrinquedo(dados);
     });
 });
