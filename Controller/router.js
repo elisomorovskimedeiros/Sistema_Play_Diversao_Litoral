@@ -527,7 +527,6 @@ router.get("/cadastroPlay/:perfil/:idEvento", async function(req, res){
     let perfil = req.params.perfil;
     let sessao = await int.acharSessao(idEvento, perfil).then(function(resposta){
         if(resposta){
-            console.log(resposta);
             return resposta;
         }else{
             return undefined;

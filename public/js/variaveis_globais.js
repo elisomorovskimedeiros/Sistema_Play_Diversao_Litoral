@@ -33,6 +33,7 @@ class Tela{
                 let campoTelefone = item.find(".telefone_cliente")[0];
                 let campoTelefoneRecado = item.find(".telefone_recado")[0];
                 let status_evento = item.find(".status")[0];
+                let campo_valor_evento = item.find(".valor")[0];
                 $(campoId).html(eventoNoFor.id_evento);
                 $(campoData).html(data_no_array);
                 $(campoNomeCliente).html(eventoNoFor.nome_cliente);
@@ -43,6 +44,7 @@ class Tela{
                 $(campoEndereco).html(endereco_evento);
                 $(campoTelefone).html(eventoNoFor.telefone);
                 $(campoTelefoneRecado).html(eventoNoFor.telefone_recado);
+                $(campo_valor_evento).html(Number(eventoNoFor.valor_total) - Number(eventoNoFor.valor_desconto) - Number(eventoNoFor.valor_sinal));
                 $(campoBrinquedos).attr("id","campo_brinquedos_evento_"+eventoNoFor.id_evento);
                 $(campoBrinquedos).html('');
                 //laço que exibe brinquedos dentro do evento
