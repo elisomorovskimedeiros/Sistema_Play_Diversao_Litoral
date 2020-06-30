@@ -43,7 +43,7 @@ class Tela{
                 else endereco_evento += "."
                 $(campoEndereco).html(endereco_evento);
                 $(campoTelefone).html(eventoNoFor.telefone);
-                $(campoTelefoneRecado).html(eventoNoFor.telefone_recado);
+                $(campoTelefoneRecado).html((eventoNoFor.telefone_recado && eventoNoFor.telefone_recado != 'null')?(eventoNoFor.telefone_recado):"");
                 $(campo_valor_evento).html(Number(eventoNoFor.valor_total) - Number(eventoNoFor.valor_desconto) - Number(eventoNoFor.valor_sinal));
                 $(campoBrinquedos).attr("id","campo_brinquedos_evento_"+eventoNoFor.id_evento);
                 $(campoBrinquedos).html('');

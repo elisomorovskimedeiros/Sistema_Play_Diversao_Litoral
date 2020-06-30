@@ -51,6 +51,8 @@ class Email{
             let textos = new Textos(evento);
      
             let mensagem = textos.mensagemConfirmacaoEvento();
+            console.log("mensagem no email.js");
+            console.log(mensagem);
             email.mailOptions.to = evento.cliente.email +", "+perfil.email;
             email.mailOptions.subject = perfil.subjectConfirmacaoEvento;
             email.mailOptions.text = mensagem;                          
@@ -74,9 +76,10 @@ class Email{
         });
         const Textos = require(caminho_perfil+email.perfil.perfil+"/Textos");
         let textos = new Textos(evento);
+        
         let mensagemCliente = textos.mensagemCadastroCliente();
         let mensagemSistema =  textos.mensagemCadastroPlay();
-   
+
         email.mailOptions.to = email.perfil.email;
         email.mailOptions.subject = "Cadastro preenchido por " + evento.cliente.nome;
         email.mailOptions.text = mensagemSistema;                           
