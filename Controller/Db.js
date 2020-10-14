@@ -6,18 +6,21 @@ class Db{
     constructor(perfil){
         if(perfil){
             this.esquemaConexao = require("../../perfis/"+perfil+"/conexaoDb");
-        }/*else{
-            this.esquemaConexao = require("../Model/perfis/play_litoral/conexaoDb");
-        }*/
-        
-        this.connection = mysql.createConnection(this.esquemaConexao);
-        this.connection.connect(function(err){
-            if(err){
-                console.log("Deu erro!");
-                console.log(err);
-            }else{
-            }
-        });
+        }
+        try {
+            this.connection = mysql.createConnection(this.esquemaConexao);
+            this.connection.connect(function(err){
+                if(err){
+                    console.log("Deu erro!");
+                    console.log(err);
+                }else{
+                }
+            });
+        } catch (error) {
+            console.log("deu erro");
+            console.log(error);
+        }
+       
         this.queryDeBuscaEvento = function(){
             let busca_brinquedo = "'{\"id_brinquedo\":\"', brinquedo.id_brinquedo, '\", \"nome\":\"', brinquedo.nome_brinquedo, '\", \"imagem\":\"',brinquedo.foto_brinquedo,'\"}'),'')) ";
             let sql = "SELECT evento.bairro as bairro_evento, evento.cidade as cidade_evento, evento.complemento as complemento_evento, "+
@@ -601,6 +604,8 @@ class Db{
             db.connection.query(sql, evento, function(err, results, fields){
                 db.connection.end();
                 if (err) {
+                    console.log("Deu erro");
+                    console.log(err);
                     return resolve({status: false,
                                     resultado: err});
                 }
