@@ -1,0 +1,6 @@
+Relação de bugs a serem corrigidos:
+
+- Redirecionar para a página correte de cada regional ao final do cadastro;
+- Data nos emails está errada;
+- Bug das datas de novembro;
+- Fazer o último filtro continuar ativo ao fechamento do modal.
