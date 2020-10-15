@@ -594,7 +594,7 @@ router.post("/cadastro/:tela/:perfil", function(req, res){
                         sessao.evento.id_cliente = resposta.resultado.insertId;
                         int.editarEvento(sessao.evento,sessao.perfil).then(function(resposta){
                             if(resposta.status){
-                                res.render("quartaTelaCadastroPlay",{perfil});
+                                res.render("quartaTelaCadastroPlay",{perfil, dadosPerfil});
                                 let enviarEmail = new Email(perfil);
                                 enviarEmail.enviarPreenchimentoCadastro(idEvento);
                                 let i;
@@ -635,11 +635,6 @@ function dadosPrimeiraTela(req, idEvento, perfil){
     let cliente = new Cliente(req.body.nome,req.body.cpf,null,null,null,null,null,null,
         req.body.telefone,req.body.telefoneAltarnativo,null,req.body.email,null);
     sessoes.forEach(function(sessao){
-        console.log("primeira tela");
-        console.log("Sessão: ");
-        console.log(sessao);
-        console.log("Id evento: " + idEvento);
-        console.log("Perfil: "+ perfil);
         if(sessao.evento.id_evento == idEvento && sessao.perfil == perfil){
             sessao.cliente = cliente;
         }else{
@@ -652,11 +647,6 @@ function dadosPrimeiraTela(req, idEvento, perfil){
 
 function dadosSegundaTela(req, idEvento, perfil){ 
     sessoes.forEach(function(sessao){
-        console.log("segunda tela");
-        console.log("Sessão: " + sessao);
-        console.log(sessao);
-        console.log("Id evento: " + idEvento);
-        console.log("Perfil: "+ perfil);
         if(sessao.evento.id_evento == idEvento && sessao.perfil == perfil){
             sessao.cliente.logradouro = req.body.logradouro;
             sessao.cliente.numero = req.body.numero;

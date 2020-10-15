@@ -5,7 +5,7 @@ const nodemailer = require("nodemailer"),
 const caminho_perfil = "../../perfis/";
 class Email{
     constructor(perfil){
-        this.perfil = perfil = require(caminho_perfil+perfil+"/customizacao");
+        this.perfil = require(caminho_perfil+perfil+"/customizacao");
         this.int = new Interface();
         this.transporter = nodemailer.createTransport({
             pool: true,
@@ -51,8 +51,6 @@ class Email{
             let textos = new Textos(evento);
      
             let mensagem = textos.mensagemConfirmacaoEvento();
-            console.log("mensagem no email.js");
-            console.log(mensagem);
             email.mailOptions.to = evento.cliente.email +", "+perfil.email;
             email.mailOptions.subject = perfil.subjectConfirmacaoEvento;
             email.mailOptions.text = mensagem;                          
