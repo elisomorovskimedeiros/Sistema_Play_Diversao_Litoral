@@ -8,14 +8,15 @@ class Db{
             this.esquemaConexao = require("../../perfis/"+perfil+"/conexaoDb");
         }
         try {
-            this.connection = mysql.createConnection(this.esquemaConexao);
+            this.connection = mysql.createPool(this.esquemaConexao);
+            /*
             this.connection.connect(function(err){
                 if(err){
                     console.log("Deu erro!");
                     console.log(err);
                 }else{
                 }
-            });
+            });*/
         } catch (error) {
             console.log("deu erro");
             console.log(error);
