@@ -169,7 +169,7 @@ const evento = {
       "#logradouro_destaque_evento, "+
       "#numero_destaque_evento, "+
       "#complemento_destaque_evento, "+
-      "#observacao_destaque_event, "+
+      "#observacao_endereco_destaque_evento, "+
       "#bairro_destaque_evento, "+
       "#cidade_destaque_evento, "+
       "#valor_total_destaque_evento, "+
@@ -278,6 +278,7 @@ const evento = {
       eventoEditado.valor_sinal = Number($("#valor_sinal_destaque_evento").val());        
       eventoEditado.observacao_evento = $("#observacao_destaque_evento").val();
       eventoEditado.possui_local_abrigado = $("#abrigo_destaque_evento").val();
+      console.log(eventoEditado);
       return eventoEditado;
     },
     executar: function(){

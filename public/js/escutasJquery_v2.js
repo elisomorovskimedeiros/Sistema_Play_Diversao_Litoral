@@ -45,10 +45,10 @@ $(document).ready(function(){
         $("#status_evento_em_destaque").html(status_evento);
         $("#nome_cliente_destaque_evento").val(evento_em_destaque.nome_cliente);
         $("#telefone_destaque_evento").val(evento_em_destaque.telefone);
-        $("#telefone_alternativo_destaque_evento").val(evento_em_destaque.telefone_alternativo);
+        $("#telefone_alternativo_destaque_evento").val(evento_em_destaque.telefone_recado);
         $("#email_destaque_evento").val(evento_em_destaque.email);
         $("#data_destaque_evento").val(moment(evento_em_destaque.data_evento).format("YYYY-MM-DD"));
-        $("#hora_destaque_evento").val(moment(evento_em_destaque.data_evento).format("HH:mm"));
+        $("#hora_destaque_evento").val(moment(evento_em_destaque.data_evento).format("HH:mm:ss"));
         $("#email_destaque_evento").val(evento_em_destaque.email);
         $("#logradouro_destaque_evento").val(evento_em_destaque.logradouro_evento);
         $("#numero_destaque_evento").val(evento_em_destaque.numero_evento);
