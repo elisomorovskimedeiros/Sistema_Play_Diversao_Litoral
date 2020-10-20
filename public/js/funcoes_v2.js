@@ -265,9 +265,8 @@ const evento = {
     capturar_campos_do_modal_evento_em_destaque: function(){
       let eventoEditado = {};
       eventoEditado.id_evento = evento_em_destaque.id_evento;
-      eventoEditado.id_cliente = cliente_em_destaque.id_cliente;              
-      eventoEditado.data = moment($("#data_destaque_evento").val()).format("YYYY-MM-DD") + " ";//hora sempre deve ser tratada em formato de string
-      eventoEditado.data += moment($("#data_destaque_evento").val()).format("HH:mm");
+      eventoEditado.id_cliente = cliente_em_destaque.id_cliente;
+      eventoEditado.data = moment($("#data_destaque_evento").val() + " " + $("#hora_destaque_evento").val()).format("YYYY/MM/DD HH:mm:ss");               
       eventoEditado.logradouro = $("#logradouro_destaque_evento").val();
       eventoEditado.numero = $("#numero_destaque_evento").val();
       eventoEditado.complemento = $("#complemento_destaque_evento").val();
