@@ -7,7 +7,6 @@ const   LocalStrategy  = require('passport-local').Strategy,
 
 
 let login = function(passport){
-   
     connection = mysql.createPool({
         supportBigNumbers: true,
         bigNumberStrings: true,
