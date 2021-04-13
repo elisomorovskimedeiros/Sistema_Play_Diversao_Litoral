@@ -2,7 +2,7 @@ const   LocalStrategy  = require('passport-local').Strategy,
         mysql          = require("mysql"),
         crypto         = require('crypto'),
         Perfil         = require('../Model/Perfil'),
-        ConexaoDbLogin = require("../../perfis/play_litoral/configuracaoConexao");
+        ConexaoDbLogin = require("../../perfis/play_litoral/conexaoDb.js");
         
 
 
@@ -28,7 +28,7 @@ let login = function(passport){
             var salt = '7fa73b47df808d36c5fe328546ddef8b9011b2c6';
             connection.query("select * from usuario where username = ?", username, function(err, rows){
                 if (err) 
-                return done(null, false, req.flash('message',err), req.flash('username', username));
+                return done(null, false, req.flash('message', "Banco de dados fora do ar! Chama o Eli!!"), req.flash('username', username));
                 if(!rows.length){ 
                     return done(null, false, req.flash('message','Usuário ou senha inválidos.'), req.flash('username', username));
                 }
@@ -54,6 +54,7 @@ let login = function(passport){
 
     passport.deserializeUser(function(id, done){
         this.connection.query("select * from usuario where id = "+ id, function (err, rows){
+            if (err) console.log("Banco de dados fora do ar! Chama o Eli!!");
             done(err, rows[0]);
         });
     });   
