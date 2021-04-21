@@ -594,7 +594,8 @@ router.post("/cadastro/:tela/:perfil", function(req, res){
                         sessao.evento.id_cliente = resposta.resultado.insertId;
                         int.editarEvento(sessao.evento,sessao.perfil).then(function(resposta){
                             if(resposta.status){
-                                res.render("quartaTelaCadastroPlay",{perfil, dadosPerfil});
+                                res.redirect(dadosPerfil.encaminhamentoPosCadastro);
+                                //res.render("quartaTelaCadastroPlay",{perfil, dadosPerfil});
                                 let enviarEmail = new Email(perfil);
                                 enviarEmail.enviarPreenchimentoCadastro(idEvento);
                                 let i;
