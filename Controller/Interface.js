@@ -351,7 +351,7 @@ class Interface{
         let evento = {
             bairro: tudoJunto.bairro,
             cidade: tudoJunto.cidade,
-            complemento: tudoJunto.complemento_evento,
+            complemento: tudoJunto.complemento,
             data: moment(tudoJunto.data_evento).format("YYYY-MM-DD HH:mm"),
             logradouro: tudoJunto.logradouro,
             numero: tudoJunto.numero,

@@ -71,12 +71,13 @@ function preencherJanelaDeListarCliente(clientes){
 
 //recebe a lista de clientes e preenche na janela inserirEvento.ejs
 function preencherJanelaDeInserirEvento(clientes){
+    clientesGlobal = clientes;
     let listaClientes = '';
     //preenchimento da lista de clientes filtrada na variável listaClientes
     clientes.forEach(cliente => {
         listaClientes += 
         '<div id="cliente_individual" style="margin-top: 30px; width: max-content;">' +
-            'Id de Cliente: '+ cliente.id_cliente +'<br>' +
+            'Id de Cliente: <span>'+ cliente.id_cliente +'</span> <br>' +
             'Nome: <span>'+ cliente.nome +'</span> <br>' +
             'CPF: '+ cliente.cpf +'<br>' +
             'Endereço: '+ cliente.logradouro +'&nbsp;&nbsp;' +
@@ -215,20 +216,21 @@ function trocarCliente(){
 //o envio do id do cliente via post foi feito colocando um input type text oculto abaixo do botão "trocar cliente";
 function inserirClienteNoEvento(botao){
     let paiBotao = botao.parentElement;//verifica o nome do elemento pai do botão inserir 
-    let nomeClienteSelecionado = paiBotao.childNodes[3].innerText;//o terceiro elemento da div que contém o botão para inserir é o nome do cliente, portanto ele é copiado para a variável   
+    let clienteSelecionado = {};
+    clientesGlobal.forEach((cliente) => {
+        if (String(cliente.id_cliente) == paiBotao.childNodes[1].innerText){//o item 1 da div que contém o id do cliente
+            clienteSelecionado = cliente;
+            return;
+        }
+    });
+    let nomeClienteSelecionado = clienteSelecionado.nome;   
     let dadosDoClienteSelecionado = "Cliente Selecionado: "+ nomeClienteSelecionado + ", id: " + botao.getAttribute("id_cliente");
-    //"<input type='button' value='Trocar cliente' class='btn btn-default' id='botaoTrocarCliente' onclick='trocarCliente()'>" +
-    //'<input type="text" class="form-control" value=' + botao.getAttribute("id_cliente") + ' id="id_cliente" name="id_cliente" style="display: none;">';
-    //na variável dadosDoClienteSelecionado fica o html que contém o nome e o id do cliente selecionado
-    console.log(dadosDoClienteSelecionado);
-    /*
-    document.getElementById("logradouro_evento").value = botao.getAttribute("logradouro");
-    document.getElementById("numero").value = botao.getAttribute("numero");
-    document.getElementById("complemento").value = botao.getAttribute("complemento");
-    document.getElementById("bairro_evento").value = botao.getAttribute("bairro");
-    document.getElementById("cidade_evento").value = botao.getAttribute("cidade");
-    */
     document.getElementById("espacoNomeCliente").value = dadosDoClienteSelecionado;
+    document.getElementById("logradouro_evento").value = clienteSelecionado.logradouro;
+    document.getElementById("numero").value = clienteSelecionado.numero;
+    document.getElementById("complemento").value = clienteSelecionado.complemento;
+    document.getElementById("bairro_evento").value = clienteSelecionado.bairro;
+    document.getElementById("cidade_evento").value = clienteSelecionado.cidade;
     document.getElementById("listaClientes").innerHTML = '';
     document.getElementById("idClienteEscolhido").value = botao.getAttribute("id_cliente");
     $("#fecharModalCliente").trigger("click");

@@ -278,7 +278,6 @@ const evento = {
       eventoEditado.valor_sinal = Number($("#valor_sinal_destaque_evento").val());        
       eventoEditado.observacao_evento = $("#observacao_destaque_evento").val();
       eventoEditado.possui_local_abrigado = $("#abrigo_destaque_evento").val();
-      console.log(eventoEditado);
       return eventoEditado;
     },
     executar: function(){
