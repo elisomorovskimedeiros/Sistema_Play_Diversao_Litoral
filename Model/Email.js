@@ -9,7 +9,7 @@ class Email{
         this.int = new Interface();
         this.transporter = nodemailer.createTransport({
             pool: true,
-            host: 'smtp.gmail.com',
+            host: 'smtp.hostinger.com',
             port: 465,
             secure: true,
             auth: {
