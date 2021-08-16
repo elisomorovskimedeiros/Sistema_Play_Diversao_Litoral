@@ -1,0 +1,86 @@
+2021-07-27T12:41:33: PM2 log: ===============================================================================
+2021-07-27T12:41:33: PM2 log: --- New PM2 Daemon started ----------------------------------------------------
+2021-07-27T12:41:33: PM2 log: Time                 : Tue Jul 27 2021 12:41:33 GMT+0000 (Coordinated Universal Time)
+2021-07-27T12:41:33: PM2 log: PM2 version          : 5.1.0
+2021-07-27T12:41:33: PM2 log: Node.js version      : 14.17.2
+2021-07-27T12:41:33: PM2 log: Current arch         : x64
+2021-07-27T12:41:33: PM2 log: PM2 home             : /home/divertech/Sistema_Play_Diversao_Litoral/.pm2
+2021-07-27T12:41:33: PM2 log: PM2 PID file         : /home/divertech/Sistema_Play_Diversao_Litoral/.pm2/pm2.pid
+2021-07-27T12:41:33: PM2 log: RPC socket file      : /home/divertech/Sistema_Play_Diversao_Litoral/.pm2/rpc.sock
+2021-07-27T12:41:33: PM2 log: BUS socket file      : /home/divertech/Sistema_Play_Diversao_Litoral/.pm2/pub.sock
+2021-07-27T12:41:33: PM2 log: Application log path : /home/divertech/Sistema_Play_Diversao_Litoral/.pm2/logs
+2021-07-27T12:41:33: PM2 log: Worker Interval      : 30000
+2021-07-27T12:41:33: PM2 log: Process dump file    : /home/divertech/Sistema_Play_Diversao_Litoral/.pm2/dump.pm2
+2021-07-27T12:41:33: PM2 log: Concurrent actions   : 2
+2021-07-27T12:41:33: PM2 log: SIGTERM timeout      : 1600
+2021-07-27T12:41:33: PM2 log: ===============================================================================
+2021-07-27T12:42:51: PM2 log: PM2 successfully stopped
+2021-07-27T12:42:52: PM2 log: ===============================================================================
+2021-07-27T12:42:52: PM2 log: --- New PM2 Daemon started ----------------------------------------------------
+2021-07-27T12:42:52: PM2 log: Time                 : Tue Jul 27 2021 12:42:52 GMT+0000 (Coordinated Universal Time)
+2021-07-27T12:42:52: PM2 log: PM2 version          : 5.1.0
+2021-07-27T12:42:52: PM2 log: Node.js version      : 14.17.2
+2021-07-27T12:42:52: PM2 log: Current arch         : x64
+2021-07-27T12:42:52: PM2 log: PM2 home             : /home/divertech/Sistema_Play_Diversao_Litoral/.pm2
+2021-07-27T12:42:52: PM2 log: PM2 PID file         : /home/divertech/Sistema_Play_Diversao_Litoral/.pm2/pm2.pid
+2021-07-27T12:42:52: PM2 log: RPC socket file      : /home/divertech/Sistema_Play_Diversao_Litoral/.pm2/rpc.sock
+2021-07-27T12:42:52: PM2 log: BUS socket file      : /home/divertech/Sistema_Play_Diversao_Litoral/.pm2/pub.sock
+2021-07-27T12:42:52: PM2 log: Application log path : /home/divertech/Sistema_Play_Diversao_Litoral/.pm2/logs
+2021-07-27T12:42:52: PM2 log: Worker Interval      : 30000
+2021-07-27T12:42:52: PM2 log: Process dump file    : /home/divertech/Sistema_Play_Diversao_Litoral/.pm2/dump.pm2
+2021-07-27T12:42:52: PM2 log: Concurrent actions   : 2
+2021-07-27T12:42:52: PM2 log: SIGTERM timeout      : 1600
+2021-07-27T12:42:52: PM2 log: ===============================================================================
+2021-07-27T12:43:50: PM2 log: PM2 successfully stopped
+2021-07-27T12:43:51: PM2 log: ===============================================================================
+2021-07-27T12:43:51: PM2 log: --- New PM2 Daemon started ----------------------------------------------------
+2021-07-27T12:43:51: PM2 log: Time                 : Tue Jul 27 2021 12:43:51 GMT+0000 (Coordinated Universal Time)
+2021-07-27T12:43:51: PM2 log: PM2 version          : 5.1.0
+2021-07-27T12:43:51: PM2 log: Node.js version      : 14.17.2
+2021-07-27T12:43:51: PM2 log: Current arch         : x64
+2021-07-27T12:43:51: PM2 log: PM2 home             : /home/divertech/Sistema_Play_Diversao_Litoral/.pm2
+2021-07-27T12:43:51: PM2 log: PM2 PID file         : /home/divertech/Sistema_Play_Diversao_Litoral/.pm2/pm2.pid
+2021-07-27T12:43:51: PM2 log: RPC socket file      : /home/divertech/Sistema_Play_Diversao_Litoral/.pm2/rpc.sock
+2021-07-27T12:43:51: PM2 log: BUS socket file      : /home/divertech/Sistema_Play_Diversao_Litoral/.pm2/pub.sock
+2021-07-27T12:43:51: PM2 log: Application log path : /home/divertech/Sistema_Play_Diversao_Litoral/.pm2/logs
+2021-07-27T12:43:51: PM2 log: Worker Interval      : 30000
+2021-07-27T12:43:51: PM2 log: Process dump file    : /home/divertech/Sistema_Play_Diversao_Litoral/.pm2/dump.pm2
+2021-07-27T12:43:51: PM2 log: Concurrent actions   : 2
+2021-07-27T12:43:51: PM2 log: SIGTERM timeout      : 1600
+2021-07-27T12:43:51: PM2 log: ===============================================================================
+2021-07-27T14:00:04: PM2 log: PM2 successfully stopped
+2021-07-27T14:00:20: PM2 log: ===============================================================================
+2021-07-27T14:00:20: PM2 log: --- New PM2 Daemon started ----------------------------------------------------
+2021-07-27T14:00:20: PM2 log: Time                 : Tue Jul 27 2021 14:00:20 GMT+0000 (Coordinated Universal Time)
+2021-07-27T14:00:20: PM2 log: PM2 version          : 5.1.0
+2021-07-27T14:00:20: PM2 log: Node.js version      : 14.17.2
+2021-07-27T14:00:20: PM2 log: Current arch         : x64
+2021-07-27T14:00:20: PM2 log: PM2 home             : /home/divertech/Sistema_Play_Diversao_Litoral/.pm2
+2021-07-27T14:00:20: PM2 log: PM2 PID file         : /home/divertech/Sistema_Play_Diversao_Litoral/.pm2/pm2.pid
+2021-07-27T14:00:20: PM2 log: RPC socket file      : /home/divertech/Sistema_Play_Diversao_Litoral/.pm2/rpc.sock
+2021-07-27T14:00:20: PM2 log: BUS socket file      : /home/divertech/Sistema_Play_Diversao_Litoral/.pm2/pub.sock
+2021-07-27T14:00:20: PM2 log: Application log path : /home/divertech/Sistema_Play_Diversao_Litoral/.pm2/logs
+2021-07-27T14:00:20: PM2 log: Worker Interval      : 30000
+2021-07-27T14:00:20: PM2 log: Process dump file    : /home/divertech/Sistema_Play_Diversao_Litoral/.pm2/dump.pm2
+2021-07-27T14:00:20: PM2 log: Concurrent actions   : 2
+2021-07-27T14:00:20: PM2 log: SIGTERM timeout      : 1600
+2021-07-27T14:00:20: PM2 log: ===============================================================================
+2021-07-27T14:03:47: PM2 log: PM2 successfully stopped
+2021-07-27T14:04:00: PM2 log: ===============================================================================
+2021-07-27T14:04:00: PM2 log: --- New PM2 Daemon started ----------------------------------------------------
+2021-07-27T14:04:00: PM2 log: Time                 : Tue Jul 27 2021 14:04:00 GMT+0000 (Coordinated Universal Time)
+2021-07-27T14:04:00: PM2 log: PM2 version          : 5.1.0
+2021-07-27T14:04:00: PM2 log: Node.js version      : 14.17.2
+2021-07-27T14:04:00: PM2 log: Current arch         : x64
+2021-07-27T14:04:00: PM2 log: PM2 home             : /home/divertech/Sistema_Play_Diversao_Litoral/.pm2
+2021-07-27T14:04:00: PM2 log: PM2 PID file         : /home/divertech/Sistema_Play_Diversao_Litoral/.pm2/pm2.pid
+2021-07-27T14:04:00: PM2 log: RPC socket file      : /home/divertech/Sistema_Play_Diversao_Litoral/.pm2/rpc.sock
+2021-07-27T14:04:00: PM2 log: BUS socket file      : /home/divertech/Sistema_Play_Diversao_Litoral/.pm2/pub.sock
+2021-07-27T14:04:00: PM2 log: Application log path : /home/divertech/Sistema_Play_Diversao_Litoral/.pm2/logs
+2021-07-27T14:04:00: PM2 log: Worker Interval      : 30000
+2021-07-27T14:04:00: PM2 log: Process dump file    : /home/divertech/Sistema_Play_Diversao_Litoral/.pm2/dump.pm2
+2021-07-27T14:04:00: PM2 log: Concurrent actions   : 2
+2021-07-27T14:04:00: PM2 log: SIGTERM timeout      : 1600
+2021-07-27T14:04:00: PM2 log: ===============================================================================
+2021-07-31T01:03:12: PM2 log: pm2 has been killed by signal, dumping process list before exit...
+2021-07-31T01:03:12: PM2 log: Exited peacefully
