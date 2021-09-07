@@ -11,11 +11,26 @@ const     express = require("express"),
              Jimp = require('jimp'),//redimensionador de imagens
                fs = require("fs-extra"),
  eventoController = require("./Controller/eventoController"),
-        Brinquedo = require("./Model/Brinquedo");
+        Brinquedo = require("./Model/Brinquedo"),
+             cors = require('cors');
 
 const obj_brinquedo = new Brinquedo();
 const app = express(),
       int = new Interface();
+
+//CORS MIDLEWARE
+app.options('/loginReact', cors());
+app.use((req, res, next) => {
+    //definição do site com permissão
+    res.header("Access-Control-Allow-Origin", "*");
+    //metodos de requisições aceitos
+    //res.header("Access-Control-Allow-Methods", 'GET,PUT,POST,DELETE');
+    //res.header( 'Content-Type', 'application/json');
+    
+    app.use(cors());
+    next();
+});
+//FIM DO CORS
 
 app.set("view engine", "ejs");
 
@@ -47,7 +62,8 @@ app.use(expressSession({
         successRedirect: '/',
         failureRedirect: '/login',
         failureFlash: true
-        }), function(req, res, info){            
+        }), function(req, res, info){ 
+                      
             //res.render('index',{'message' :req.flash('message')});
             //res.send({status: true});
     });
@@ -58,7 +74,53 @@ function isLoggedIn(req, res, next){
         return next(); //prossegue com a execucao
     }
     res.redirect("/login"); //não prossegue com a execução e redireciona para a página login
-}    
+} 
+
+// ######## FUNÇÕES REACT #############
+function dataReqToJson(req, res, next){
+    let body = [];
+    req.on('error', (err) => {
+        console.log(err);
+    }).on('data', (chunk) => {
+        body.push(chunk);
+    }).on('end', () => {
+        body = Buffer.concat(body).toString();
+        body = JSON.parse(body);
+        // at this point, `body` has the entire request body stored in it as a string
+        req.body = body;
+        next();
+    });   
+}
+
+app.post("/logarReact",dataReqToJson, function(req, res, next) {
+    passport.authenticate('local', function(err, user, info) {
+      if (err) { return next(err); }
+      if (!user) { return  res.send('[{"logado": false}]') }
+      req.logIn(user, function(err) {
+        if (err) { return next(err); }
+        let dadosUsuario = {logado: true, nome: user.nome, username: user.username, nivel: user.nivel, perfil: user.perfil, email: user.email};
+        return res.send(JSON.stringify(dadosUsuario));
+      });
+    })(req, res, next);
+});
+
+
+app.get("/logoutReact", function(req, res){
+    req.logout();
+   // res.send('[{"logado": false}]');
+});
+
+app.get("/isLoggedin", function(req, res){
+    console.log("tentou");
+    if(req.isAuthenticated()){
+        let dadosUsuario = {logado: true, nome: user.nome, username: user.username, nivel: user.nivel, perfil: user.perfil, email: user.email};
+        return res.send(JSON.stringify(dadosUsuario));
+    }else{
+        return res.send('[{"logado": false}]');
+    }
+});
+
+// ######## FIM DAS FUNÇÕES REACT #############
 
     
 //################################## ROTAS HTTP ###################################
