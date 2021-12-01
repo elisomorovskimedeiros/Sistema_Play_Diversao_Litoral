@@ -639,8 +639,7 @@ function dadosPrimeiraTela(req, idEvento, perfil){
         if(sessao.evento.id_evento == idEvento && sessao.perfil == perfil){
             sessao.cliente = cliente;
         }else{
-            console.log("sessão não encontrada" + moment().format("HH:mm DD/MM/YYYY"));
-        }
+            console.log("sessão não enc        }
     });
     
     
